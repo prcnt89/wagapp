@@ -22,6 +22,7 @@
 
         .players-container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
         }
@@ -58,23 +59,9 @@
             margin-top: 5px;
         }
 
-        /* Begrenzung der Eingabe auf 15 Zeichen */
+	/* Begrenzung der Eingabe auf 15 Zeichen */
         .player-name[contenteditable] {
             max-length: 15;
-        }
-
-        /* Media Query für das Querformat */
-        @media screen and (orientation: landscape) {
-            .players-container {
-                flex-direction: row;
-            }
-        }
-
-        /* Media Query für das Hochformat */
-        @media screen and (orientation: portrait) {
-            .players-container {
-                flex-direction: column;
-            }
         }
     </style>
 </head>
