@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>What a Goal!</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -75,6 +75,14 @@
     	.player-container:nth-child(2) {
         border: 4px solid #0e477c;
     	}
+
+	/* Media Query für iPhones in Hoch- und Querformat */
+	@media only screen and (max-width: 768px) {
+	.player-container {
+        min-width: 90%;
+        max-width: 90%;
+	}
+	}
 </style>
 </head>
 
