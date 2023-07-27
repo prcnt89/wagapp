@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Punkteanzeige für 2 Spieler</title>
+    <title>What a Goal! - Spielanzeige</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -109,9 +109,9 @@
             let score = parseInt(playerScoreElement.textContent);
 
             // Eingabeaufforderung für Spielminute und Torschützen
-            const minuteInput = prompt("Bitte die Spielminute eingeben (2-stellige Zahl):");
+            const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
             if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-                const scorerName = prompt("Name des Torschützen eingeben (falls leer, wird 'Standardspieler' verwendet):");
+                const scorerName = prompt("Torschützen eingeben (leer = 'Standardspieler'):");
                 const playerName = scorerName || "Standardspieler";
 
                 // Erstellen der neuen Einträge mit Ball-Symbol und Informationen
@@ -120,10 +120,10 @@
                 entryElement.innerHTML = `<span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> ${minuteInput}' ${playerName}`;
                 playerScoreElement.parentElement.appendChild(entryElement);
 
-                // Punktzahl des Spielers um 1 erhöhen
+                // Torzahl des Spielers um 1 erhöhen
                 playerScoreElement.textContent = score + 1;
             } else {
-                alert("Ungültige Eingabe. Die Punktzahl wird nicht erhöht.");
+                alert("Ungültige Eingabe. Die Torzahl wird nicht erhöht.");
             }
         }
 
@@ -147,14 +147,13 @@
         }
 
         if (lastEntryWithIcon) {
-            // Punktzahl des Spielers um 1 verringern und den letzten Eintrag mit dem Symbol entfernen
+            // Torzahl des Spielers um 1 verringern und den letzten Eintrag mit dem Symbol entfernen
             playerScoreElement.textContent = score - 1;
             lastEntryWithIcon.remove();
         } else {
-            alert("Der letzte Eintrag mit dem Ball-Symbol wurde nicht gefunden.");
+            alert("Kein Eintrag gefunden.");
         }
     } else {
-        alert("Die Punktzahl des Spielers ist bereits 0.");
     }
 }
 
@@ -162,9 +161,9 @@
             const playerScoreElement = document.getElementById(playerId);
 
             // Eingabeaufforderung für Spielminute und Spielername
-            const minuteInput = prompt("Bitte die Spielminute eingeben (2-stellige Zahl):");
+            const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
             if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-                const scorerName = prompt("Name des Spielers eingeben (falls leer, wird 'Standardspieler' verwendet):");
+                const scorerName = prompt("Spielernamen eingeben (leer = 'Standardspieler'):");
                 const playerName = scorerName || "Standardspieler";
                 // Erstellen der neuen Einträge mit gelber Karte und Informationen
                 const entryElement = document.createElement("div");
@@ -193,16 +192,15 @@ function decreaseYellow(playerId) {
         }
       }
     } else {
-      alert("Es gibt keine Listeneinträge für diesen Spieler.");
     }
   }
 function addRedCard(playerId) {
             const playerScoreElement = document.getElementById(playerId);
 
             // Eingabeaufforderung für Spielminute und Spielername
-            const minuteInput = prompt("Bitte die Spielminute eingeben (2-stellige Zahl):");
+            const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
             if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-                const scorerName = prompt("Name des Spielers eingeben (falls leer, wird 'Standardspieler' verwendet):");
+                const scorerName = prompt("Spielernamen eingeben (leer = 'Standardspieler'):");
                 const playerName = scorerName || "Standardspieler";
 
                 // Erstellen der neuen Einträge mit roter Karte und Informationen
@@ -232,7 +230,6 @@ function decreaseRed(playerId) {
         }
       }
     } else {
-      alert("Es gibt keine Listeneinträge für diesen Spieler.");
     }
   }
 // Event Listener hinzufügen, um die Zeichenanzahl bei der Eingabe zu überwachen
