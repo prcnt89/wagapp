@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punkteanzeige für 2 Spieler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://as1.ftcdn.net/v2/jpg/01/97/47/24/1000_F_197472443_bQa3Z7YmVuuR5IMPeDkjiZ0B5uC3cQd3.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .players-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .player-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            min-width: 300px;
+            max-width: 300px;
+        }
+
+        .player-name {
+            font-size: 24px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .player-score {
+            font-size: 90px;
+            font-weight: bold;
+        }
+
+        .icons {
+            font-size: 30px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Stil für die Listeneinträge */
+        .entry {
+            text-align: left;
+            margin-top: 5px;
+        }
+
+	/* Begrenzung der Eingabe auf 15 Zeichen */
+        .player-name[contenteditable] {
+            max-length: 15;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="players-container">
+        <!-- Spieler 1 -->
+        <div class="player-container">
+            <img src="https://www.selbstlernen.net/wp-content/uploads/sites/23/2021/06/selbstlernen.net-%E2%80%93-Icon-rot-1.png"
+                alt="Spieler 1" width="100" height="100">
+            <div class="player-name" contenteditable>Spieler 1</div>
+            <div class="player-score" id="player1Score">0</div>
+            <div class="icons">
+                <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player1Score')"></span>
+                <span class="fas fa-minus-circle" onclick="decreaseScore('player1Score')"></span>
+                <span class="fas fa-plus-circle" style="color: #f3e03b;" onclick="addYellowCard('player1Score')"></span>
+                <span class="fas fa-minus-circle" style="color: #f3e03b;" onclick="decreaseYellow('player1Score')"></span>
+                <span class="fas fa-plus-circle" style="color: red;" onclick="addRedCard('player1Score')"></span>
+        <span class="fas fa-minus-circle" style="color: red;" onclick="decreaseRed('player1Score')"></span>
+            </div>
+            <!-- Listeneinträge für Spieler 1 -->
+        </div>
+
+        <!-- Spieler 2 -->
+        <div class="player-container">
+            <img src="https://www.selbstlernen.net/wp-content/uploads/sites/23/2021/06/selbstlernen.net-%E2%80%93-Icon-blau-1.png"
+                alt="Spieler 2" width="100" height="100">
+            <div class="player-name" contenteditable>Spieler 2</div>
+            <div class="player-score" id="player2Score">0</div>
+            <div class="icons">
+                <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player2Score')"></span>
+                <span class="fas fa-minus-circle" onclick="decreaseScore('player2Score')"></span>
+                <span class="fas fa-plus-circle" style="color: #f3e03b;" onclick="addYellowCard('player2Score')"></span>
+                <span class="fas fa-minus-circle" style="color: #f3e03b;" onclick="decreaseYellow('player2Score')"></span>
+                <span class="fas fa-plus-circle" style="color: red;" onclick="addRedCard('player2Score')"></span>
+        <span class="fas fa-minus-circle" style="color: red;" onclick="decreaseRed('player2Score')"></span>
+            </div>
+            <!-- Listeneinträge für Spieler 2 -->
+        </div>
+    </div>
+
+    <script>
+        function increaseScore(playerId) {
+            const playerScoreElement = document.getElementById(playerId);
+            let score = parseInt(playerScoreElement.textContent);
+
+            // Eingabeaufforderung für Spielminute und Torschützen
+            const minuteInput = prompt("Bitte die Spielminute eingeben (2-stellige Zahl):");
+            if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+                const scorerName = prompt("Name des Torschützen eingeben (falls leer, wird 'Standardspieler' verwendet):");
+                const playerName = scorerName || "Standardspieler";
+
+                // Erstellen der neuen Einträge mit Ball-Symbol und Informationen
+                const entryElement = document.createElement("div");
+                entryElement.classList.add("entry");
+                entryElement.innerHTML = `<span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> ${minuteInput}' ${playerName}`;
+                playerScoreElement.parentElement.appendChild(entryElement);
+
+                // Punktzahl des Spielers um 1 erhöhen
+                playerScoreElement.textContent = score + 1;
+            } else {
+                alert("Ungültige Eingabe. Die Punktzahl wird nicht erhöht.");
+            }
+        }
+
+       function decreaseScore(playerId) {
+    const playerScoreElement = document.getElementById(playerId);
+    let score = parseInt(playerScoreElement.textContent);
+
+    if (score > 0) {
+        // Alle Listeneinträge des Spielers auswählen
+        const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+        let lastEntryWithIcon = null;
+
+        // Den letzten Eintrag finden, der das "fas fa-futbol" Symbol enthält
+        for (let i = entryElements.length - 1; i >= 0; i--) {
+            const entry = entryElements[i];
+            const iconElement = entry.querySelector(".fas.fa-futbol");
+            if (iconElement) {
+                lastEntryWithIcon = entry;
+                break;
+            }
+        }
+
+        if (lastEntryWithIcon) {
+            // Punktzahl des Spielers um 1 verringern und den letzten Eintrag mit dem Symbol entfernen
+            playerScoreElement.textContent = score - 1;
+            lastEntryWithIcon.remove();
+        } else {
+            alert("Der letzte Eintrag mit dem Ball-Symbol wurde nicht gefunden.");
+        }
+    } else {
+        alert("Die Punktzahl des Spielers ist bereits 0.");
+    }
+}
+
+        function addYellowCard(playerId) {
+            const playerScoreElement = document.getElementById(playerId);
+
+            // Eingabeaufforderung für Spielminute und Spielername
+            const minuteInput = prompt("Bitte die Spielminute eingeben (2-stellige Zahl):");
+            if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+                const scorerName = prompt("Name des Spielers eingeben (falls leer, wird 'Standardspieler' verwendet):");
+                const playerName = scorerName || "Standardspieler";
+                // Erstellen der neuen Einträge mit gelber Karte und Informationen
+                const entryElement = document.createElement("div");
+                entryElement.classList.add("entry");
+                entryElement.innerHTML = `<span class="fas fa-circle" style="color: #f3e03b; font-size: 16px;"></span> ${minuteInput}' ${playerName}`;
+                playerScoreElement.parentElement.appendChild(entryElement);
+            } else {
+                alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
+            }
+        }
+function decreaseYellow(playerId) {
+    const playerScoreElement = document.getElementById(playerId);
+
+    // Alle Listeneinträge des Spielers auswählen
+    const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+
+    if (entryElements.length > 0) {
+      // Den letzten Eintrag finden, der ein gelbes Icon mit Farbcode #f3e03b enthält
+      for (let i = entryElements.length - 1; i >= 0; i--) {
+        const entry = entryElements[i];
+        const iconElement = entry.querySelector(".fas.fa-circle");
+        if (iconElement && iconElement.style.color === "rgb(243, 224, 59)") {
+          // Den Eintrag entfernen und die Schleife beenden
+          entry.remove();
+          break;
+        }
+      }
+    } else {
+      alert("Es gibt keine Listeneinträge für diesen Spieler.");
+    }
+  }
+function addRedCard(playerId) {
+            const playerScoreElement = document.getElementById(playerId);
+
+            // Eingabeaufforderung für Spielminute und Spielername
+            const minuteInput = prompt("Bitte die Spielminute eingeben (2-stellige Zahl):");
+            if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+                const scorerName = prompt("Name des Spielers eingeben (falls leer, wird 'Standardspieler' verwendet):");
+                const playerName = scorerName || "Standardspieler";
+
+                // Erstellen der neuen Einträge mit roter Karte und Informationen
+                const entryElement = document.createElement("div");
+                entryElement.classList.add("entry");
+                entryElement.innerHTML = `<span class="fas fa-circle" style="color: red; font-size: 16px;"></span> ${minuteInput}' ${playerName}`;
+                playerScoreElement.parentElement.appendChild(entryElement);
+            } else {
+                alert("Ungültige Eingabe. Die rote Karte wird nicht hinzugefügt.");
+            }
+        }
+function decreaseRed(playerId) {
+    const playerScoreElement = document.getElementById(playerId);
+
+    // Alle Listeneinträge des Spielers auswählen
+    const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+
+    if (entryElements.length > 0) {
+      // Den letzten Eintrag finden, der ein rotes Icon enthält
+      for (let i = entryElements.length - 1; i >= 0; i--) {
+        const entry = entryElements[i];
+        const iconElement = entry.querySelector(".fas.fa-circle");
+        if (iconElement && iconElement.style.color === "red") {
+          // Den Eintrag entfernen und die Schleife beenden
+          entry.remove();
+          break;
+        }
+      }
+    } else {
+      alert("Es gibt keine Listeneinträge für diesen Spieler.");
+    }
+  }
+// Event Listener hinzufügen, um die Zeichenanzahl bei der Eingabe zu überwachen
+    const playerNameElements = document.querySelectorAll(".player-name[contenteditable]");
+    playerNameElements.forEach((element) => {
+        element.addEventListener("input", handlePlayerNameInput);
+    });
+
+    // Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert (Spieler 1)
+        const playerNameElementPlayer1 = document.querySelector(".player-container:nth-child(1) .player-name[contenteditable]");
+        playerNameElementPlayer1.addEventListener("input", handlePlayerNameInput);
+
+        // Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert (Spieler 2)
+        const playerNameElementPlayer2 = document.querySelector(".player-container:nth-child(2) .player-name[contenteditable]");
+        playerNameElementPlayer2.addEventListener("input", handlePlayerNameInput);
+
+        // Gemeinsame Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert
+        function handlePlayerNameInput(event) {
+            const playerNameElement = event.target;
+            const playerName = playerNameElement.textContent.trim();
+            const maxNameLength = 15;
+
+            // Setze den Standardnamen (Spieler 1 oder Spieler 2) falls kein Name eingegeben wurde
+            if (playerName === "" || playerName === "Spieler 1" || playerName === "Spieler 2") {
+                playerNameElement.textContent = "Spieler " + (playerNameElement === playerNameElementPlayer1 ? "1" : "2");
+            } else if (playerName.length > maxNameLength) {
+                // Begrenze den Spielernamen auf die maximale Länge
+                playerNameElement.textContent = playerName.slice(0, maxNameLength);
+            }
+
+            // Positioniere den Cursor am Ende des Textes, um zu verhindern, dass Zeichen am Anfang hinzugefügt werden
+            const range = document.createRange();
+            const selection = window.getSelection();
+            range.selectNodeContents(playerNameElement);
+            range.collapse(false);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+</script>
+</body>
+
+</html>
