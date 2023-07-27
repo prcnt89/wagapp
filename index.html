@@ -82,7 +82,7 @@
     <div class="players-container">
         <!-- Spieler 1 -->
         <div class="player-container">
-            <div class="player-name" contenteditable onclick="selectPlayerName(this)">Spieler 1</div>
+            <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 1</div>
             <div class="player-score" id="player1Score">0</div>
             <div class="icons">
                 <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player1Score')"></span>
@@ -97,7 +97,7 @@
 
         <!-- Spieler 2 -->
         <div class="player-container">
-            <div class="player-name" contenteditable onclick="selectPlayerName(this)">Spieler 2</div>
+            <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 2</div>
             <div class="player-score" id="player2Score">0</div>
             <div class="icons">
                 <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player2Score')"></span>
@@ -290,6 +290,15 @@
 
 // Funktion, um den Spielername auszuwählen, wenn darauf geklickt wird
         function selectPlayerName(element) {
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+// Fügen Sie die Funktion selectAllText hinzu, um den Inhalt des Eingabefelds zu markieren, wenn es den Fokus erhält.
+        function selectAllText(element) {
             const range = document.createRange();
             range.selectNodeContents(element);
             const selection = window.getSelection();
