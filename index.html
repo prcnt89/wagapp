@@ -262,10 +262,6 @@
         const playerNameElementPlayer2 = document.querySelector(".player-container:nth-child(2) .player-name[contenteditable]");
         playerNameElementPlayer2.addEventListener("blur", handlePlayerNameInput);
 
-// Entferne den Event-Listener vom Typ "blur" nach Abschluss der Bearbeitung
-    playerNameElement.removeEventListener("blur", handlePlayerNameInput);
-}
-
         // Gemeinsame Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert
         function handlePlayerNameInput(event) {
             const playerNameElement = event.target;
