@@ -263,27 +263,30 @@
         playerNameElementPlayer2.addEventListener("blur", handlePlayerNameInput);
 
         // Gemeinsame Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert
-        function handlePlayerNameInput(event) {
-            const playerNameElement = event.target;
-            const playerName = playerNameElement.textContent.trim();
-            const maxNameLength = 20;
+    function handlePlayerNameInput(event) {
+        const playerNameElement = event.target;
+        const playerName = playerNameElement.textContent.trim();
+        const maxNameLength = 20;
 
-            // Setze den Standardnamen (Spieler 1 oder Spieler 2) falls kein Name eingegeben wurde oder leer ist
-            if (playerName === "" || playerName === "Spieler 1" || playerName === "Spieler 2") {
-                playerNameElement.textContent = "Spieler " + (playerNameElement === playerNameElementPlayer1 ? "1" : "2");
-            } else if (playerName.length > maxNameLength) {
-                // Begrenze den Spielernamen auf die maximale Länge
-                playerNameElement.textContent = playerName.slice(0, maxNameLength);
-            }
-
-            // Positioniere den Cursor am Ende des Textes, um zu verhindern, dass Zeichen am Anfang hinzugefügt werden
-            const range = document.createRange();
-            const selection = window.getSelection();
-            range.selectNodeContents(playerNameElement);
-            range.collapse(false);
-            selection.removeAllRanges();
-            selection.addRange(range);
+        // Setze den Standardnamen (Spieler 1 oder Spieler 2) falls kein Name eingegeben wurde oder leer ist
+        if (playerName === "" || playerName === "Spieler 1" || playerName === "Spieler 2") {
+            playerNameElement.textContent = "Spieler " + (playerNameElement === playerNameElementPlayer1 ? "1" : "2");
+        } else if (playerName.length > maxNameLength) {
+            // Begrenze den Spielernamen auf die maximale Länge
+            playerNameElement.textContent = playerName.slice(0, maxNameLength);
         }
+
+        // Positioniere den Cursor am Ende des Textes, um zu verhindern, dass Zeichen am Anfang hinzugefügt werden
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(playerNameElement);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Fokus vom "contenteditable"-Element entfernen, wenn der Benutzer außerhalb davon klickt
+        playerNameElement.blur();
+    }
     </script>
 </body>
 
