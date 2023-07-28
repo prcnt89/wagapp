@@ -65,7 +65,46 @@
             height: 30px;
             border-radius: 50%;
             background-color: black;
+	    margin-right: -3px;
         }
+
+	.fas.fa-minus-circle {
+        margin-right: 3px;
+    	}
+
+	.yellow-rectangle {
+	    display: inline-block;
+	    width: 12px;
+	    height: 17px;
+	    background-color: #f3e03b;
+	    transform: rotate(5deg);
+	}
+
+	.yellow-rectangle-list {
+	    display: inline-block;
+	    width: 11px;
+	    height: 16px;
+	    background-color: #f3e03b;
+	    transform: rotate(5deg);
+	    margin-right: 5px;
+	}
+
+	.red-rectangle {
+	    display: inline-block;
+	    width: 12px;
+	    height: 17px;
+	    background-color: red;
+	    transform: rotate(5deg);
+	}
+
+	.red-rectangle-list {
+	    display: inline-block;
+	    width: 11px;
+	    height: 16px;
+	    background-color: red;
+	    transform: rotate(5deg);
+	    margin-right: 5px;
+	}
 
         .entry {
             text-align: left;
@@ -96,16 +135,20 @@
             <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 1</div>
             <div class="player-score" id="player1Score">0</div>
             <div class="icons">
-                <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player1Score')"></span>
+                <span class="fas fa-futbol" style="color: black; margin-right: -3px;" onclick="increaseScore('player1Score')"></span>
                 <span class="fas fa-minus-circle" onclick="decreaseScore('player1Score')"></span>
                 <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player1Score')">
                 <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
                 </span>
                 <span class="fas fa-minus-circle" onclick="decreaseFoul('player1Score')"></span>
-                <span class="fas fa-plus-circle" style="color: #f3e03b;" onclick="addYellowCard('player1Score')"></span>
-                <span class="fas fa-minus-circle" style="color: #f3e03b;" onclick="decreaseYellow('player1Score')"></span>
-                <span class="fas fa-plus-circle" style="color: red;" onclick="addRedCard('player1Score')"></span>
-                <span class="fas fa-minus-circle" style="color: red;" onclick="decreaseRed('player1Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -3px;" onclick="addYellowCard('player1Score')">
+    		<span class="yellow-rectangle" style="position: relative; top: 1px"></span>
+		</span>
+                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseYellow('player1Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -3px;" onclick="addRedCard('player1Score')">
+    		<span class="red-rectangle" style="position: relative; top: 1px"></span>
+		</span>
+                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseRed('player1Score')"></span>
             </div>
             <!-- Listeneinträge für Spieler 1 -->
         </div>
@@ -115,16 +158,20 @@
             <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 2</div>
             <div class="player-score" id="player2Score">0</div>
             <div class="icons">
-                <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player2Score')"></span>
+                <span class="fas fa-futbol" style="color: black; margin-right: -3px;" onclick="increaseScore('player2Score')"></span>
                 <span class="fas fa-minus-circle" onclick="decreaseScore('player2Score')"></span>
                 <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player2Score')">
                 <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
                 </span>
                 <span class="fas fa-minus-circle" onclick="decreaseFoul('player2Score')"></span>
-                <span class="fas fa-plus-circle" style="color: #f3e03b;" onclick="addYellowCard('player2Score')"></span>
-                <span class="fas fa-minus-circle" style="color: #f3e03b;" onclick="decreaseYellow('player2Score')"></span>
-                <span class="fas fa-plus-circle" style="color: red;" onclick="addRedCard('player2Score')"></span>
-                <span class="fas fa-minus-circle" style="color: red;" onclick="decreaseRed('player2Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -3px;" onclick="addYellowCard('player2Score')">
+    		<span class="yellow-rectangle" style="position: relative; top: 1px"></span>
+		</span>
+                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseYellow('player2Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -3px;" onclick="addRedCard('player2Score')">
+    		<span class="red-rectangle" style="position: relative; top: 1px"></span>
+		</span>
+                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseRed('player2Score')"></span>
             </div>
             <!-- Listeneinträge für Spieler 2 -->
         </div>
@@ -196,7 +243,7 @@
             // Erstellen der neuen Einträge mit Foul und Informationen
             const entryElement = document.createElement("div");
             entryElement.classList.add("entry");
-            entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 16px; position: relative; top: 2px">sports</span> ${minuteInput}' Foul`;
+            entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px; margin-right: -5px;">sports</span> ${minuteInput}' Foul`;
             playerScoreElement.parentElement.appendChild(entryElement);
         } else {
             alert("Ungültige Eingabe. Das Foul wird nicht hinzugefügt.");
@@ -235,7 +282,7 @@
             // Erstellen der neuen Einträge mit gelber Karte und Informationen
             const entryElement = document.createElement("div");
             entryElement.classList.add("entry");
-            entryElement.innerHTML = `<span class="fas fa-circle" style="color: #f3e03b; font-size: 16px;"></span> ${minuteInput}' Gelbe Karte`;
+            entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px;"></span> ${minuteInput}' Gelbe Karte`;
             playerScoreElement.parentElement.appendChild(entryElement);
         } else {
             alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
@@ -250,16 +297,16 @@
             const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
 
             if (entryElements.length > 0) {
-                // Den letzten Eintrag finden, der ein gelbes Icon mit Farbcode #f3e03b enthält
-                for (let i = entryElements.length - 1; i >= 0; i--) {
-                    const entry = entryElements[i];
-                    const iconElement = entry.querySelector(".fas.fa-circle");
-                    if (iconElement && iconElement.style.color === "rgb(243, 224, 59)") {
-                        // Den Eintrag entfernen und die Schleife beenden
-                        entry.remove();
-                        break;
-                    }
-                }
+                // Den letzten Eintrag finden, der ein rotes Icon enthält
+		for (let i = entryElements.length - 1; i >= 0; i--) {
+    		const entry = entryElements[i];
+    		const iconElement = entry.querySelector(".yellow-rectangle-list"); // Änderung hier
+    		if (iconElement) {
+        // Den Eintrag entfernen und die Schleife beenden
+        entry.remove();
+        break;
+    }
+}
             } else {
             }
         }
@@ -277,7 +324,7 @@
                 // Erstellen der neuen Einträge mit roter Karte und Informationen
                 const entryElement = document.createElement("div");
                 entryElement.classList.add("entry");
-                entryElement.innerHTML = `<span class="fas fa-circle" style="color: red; font-size: 16px;"></span> ${minuteInput}' ${playerName}`;
+                entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px;"></span> ${minuteInput}' ${playerName}`;
                 playerScoreElement.parentElement.appendChild(entryElement);
             } else {
                 alert("Ungültige Eingabe. Die rote Karte wird nicht hinzugefügt.");
@@ -292,16 +339,16 @@
             const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
 
             if (entryElements.length > 0) {
-                // Den letzten Eintrag finden, der ein rotes Icon enthält
-                for (let i = entryElements.length - 1; i >= 0; i--) {
-                    const entry = entryElements[i];
-                    const iconElement = entry.querySelector(".fas.fa-circle");
-                    if (iconElement && iconElement.style.color === "red") {
-                        // Den Eintrag entfernen und die Schleife beenden
-                        entry.remove();
-                        break;
-                    }
-                }
+            // Den letzten Eintrag finden, der ein rotes Icon enthält
+		for (let i = entryElements.length - 1; i >= 0; i--) {
+    		const entry = entryElements[i];
+    		const iconElement = entry.querySelector(".red-rectangle-list"); // Änderung hier
+    		if (iconElement) {
+        // Den Eintrag entfernen und die Schleife beenden
+        entry.remove();
+        break;
+    }
+}
             } else {
             }
         }
