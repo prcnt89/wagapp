@@ -9,6 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" sizes="180x180" href="graphics/apple-touch-icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,9 +52,19 @@
         }
 
         .icons {
-            font-size: 40px;
+            font-size: 30px;
             margin-top: 10px;
             margin-bottom: 20px;
+        }
+
+	.circle-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: black;
         }
 
         .entry {
@@ -87,6 +98,10 @@
             <div class="icons">
                 <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player1Score')"></span>
                 <span class="fas fa-minus-circle" onclick="decreaseScore('player1Score')"></span>
+                <span class="circle-icon" onclick="addFoul('player1Score')">
+                <span class="material-icons" style="color: white;">sports</span>
+                </span>
+                <span class="fas fa-minus-circle" onclick="decreaseFoul('player1Score')"></span>
                 <span class="fas fa-plus-circle" style="color: #f3e03b;" onclick="addYellowCard('player1Score')"></span>
                 <span class="fas fa-minus-circle" style="color: #f3e03b;" onclick="decreaseYellow('player1Score')"></span>
                 <span class="fas fa-plus-circle" style="color: red;" onclick="addRedCard('player1Score')"></span>
@@ -102,6 +117,10 @@
             <div class="icons">
                 <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player2Score')"></span>
                 <span class="fas fa-minus-circle" onclick="decreaseScore('player2Score')"></span>
+                <span class="circle-icon" onclick="addFoul('player2Score')">
+                <span class="material-icons" style="color: white;">sports</span>
+                </span>
+                <span class="fas fa-minus-circle" onclick="decreaseFoul('player2Score')"></span>
                 <span class="fas fa-plus-circle" style="color: #f3e03b;" onclick="addYellowCard('player2Score')"></span>
                 <span class="fas fa-minus-circle" style="color: #f3e03b;" onclick="decreaseYellow('player2Score')"></span>
                 <span class="fas fa-plus-circle" style="color: red;" onclick="addRedCard('player2Score')"></span>
@@ -166,6 +185,45 @@
             } else {
             }
         }
+
+	// Funktion, um ein Foul für einen Spieler hinzuzufügen
+    function addFoul(playerId) {
+        const playerScoreElement = document.getElementById(playerId);
+
+        // Eingabeaufforderung für Spielminute
+        const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+        if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+            // Erstellen der neuen Einträge mit Foul und Informationen
+            const entryElement = document.createElement("div");
+            entryElement.classList.add("entry");
+            entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 16px; position: relative; top: 2px">sports</span> ${minuteInput}' Foul`;
+            playerScoreElement.parentElement.appendChild(entryElement);
+        } else {
+            alert("Ungültige Eingabe. Das Foul wird nicht hinzugefügt.");
+        }
+    }
+
+    // Funktion, um ein Foul für einen Spieler zu entfernen
+    function decreaseFoul(playerId) {
+        const playerScoreElement = document.getElementById(playerId);
+
+        // Alle Listeneinträge des Spielers auswählen
+        const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+
+        if (entryElements.length > 0) {
+            // Den letzten Eintrag finden, der ein Foul enthält
+            for (let i = entryElements.length - 1; i >= 0; i--) {
+                const entry = entryElements[i];
+                const iconElement = entry.querySelector(".material-icons");
+                if (iconElement && iconElement.textContent.trim() === "sports") {
+                    // Den Eintrag entfernen und die Schleife beenden
+                    entry.remove();
+                    break;
+                }
+            }
+        } else {
+        }
+    }
 
         // Funktion, um eine gelbe Karte für einen Spieler hinzuzufügen
     function addYellowCard(playerId) {
