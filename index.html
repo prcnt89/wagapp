@@ -98,8 +98,8 @@
             <div class="icons">
                 <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player1Score')"></span>
                 <span class="fas fa-minus-circle" onclick="decreaseScore('player1Score')"></span>
-                <span class="circle-icon" onclick="addFoul('player1Score')">
-                <span class="material-icons" style="color: white;">sports</span>
+                <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player1Score')">
+                <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
                 </span>
                 <span class="fas fa-minus-circle" onclick="decreaseFoul('player1Score')"></span>
                 <span class="fas fa-plus-circle" style="color: #f3e03b;" onclick="addYellowCard('player1Score')"></span>
@@ -117,8 +117,8 @@
             <div class="icons">
                 <span class="fas fa-futbol" style="color: black;" onclick="increaseScore('player2Score')"></span>
                 <span class="fas fa-minus-circle" onclick="decreaseScore('player2Score')"></span>
-                <span class="circle-icon" onclick="addFoul('player2Score')">
-                <span class="material-icons" style="color: white;">sports</span>
+                <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player2Score')">
+                <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
                 </span>
                 <span class="fas fa-minus-circle" onclick="decreaseFoul('player2Score')"></span>
                 <span class="fas fa-plus-circle" style="color: #f3e03b;" onclick="addYellowCard('player2Score')"></span>
@@ -321,7 +321,7 @@
         playerNameElementPlayer2.addEventListener("blur", handlePlayerNameInput);
 
         // Gemeinsame Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert
-    function handlePlayerNameInput(event) {
+        function handlePlayerNameInput(event) {
         const playerNameElement = event.target;
         const playerName = playerNameElement.textContent.trim();
         const maxNameLength = 20;
@@ -344,9 +344,9 @@
 
         // Fokus vom "contenteditable"-Element entfernen, wenn der Benutzer außerhalb davon klickt
         playerNameElement.blur();
-    }
+        }
 
-// Funktion, um den Spielername auszuwählen, wenn darauf geklickt wird
+        // Funktion, um den Spielername auszuwählen, wenn darauf geklickt wird
         function selectPlayerName(element) {
             const range = document.createRange();
             range.selectNodeContents(element);
@@ -355,7 +355,7 @@
             selection.addRange(range);
         }
 
-// Fügen Sie die Funktion selectAllText hinzu, um den Inhalt des Eingabefelds zu markieren, wenn es den Fokus erhält.
+        // Fügen Sie die Funktion selectAllText hinzu, um den Inhalt des Eingabefelds zu markieren, wenn es den Fokus erhält.
         function selectAllText(element) {
             const range = document.createRange();
             range.selectNodeContents(element);
