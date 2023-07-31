@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover, orientation=landscape">
+    <title>What a Goal!</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" sizes="180x180" href="graphics/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+/* Ooverlay */
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998; /* Ensure the overlay is below the menu but above other content */
+}
+
+/* Stil für das Menü */
+        #menu {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 9999; /* Menü im Vordergrund */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #menu ul li {
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        #menu ul li:hover {
+            background-color: #f0f0f0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("graphics/background.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .players-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .player-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            min-width: 300px;
+            max-width: 300px;
+        }
+
+        .player-name {
+            font-size: 24px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .player-score {
+            font-size: 90px;
+            font-weight: bold;
+        }
+
+        .icons {
+            font-size: 30px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+	.circle-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: black;
+	    margin-right: -3px;
+        }
+
+	.fas.fa-minus-circle {
+        margin-right: 3px;
+    	}
+
+.fas.fa-bars {
+    color: white;
+  }
+
+	.yellow-rectangle {
+	    display: inline-block;
+	    width: 12px;
+	    height: 17px;
+	    background-color: #f3e03b;
+	    transform: rotate(5deg);
+	}
+
+	.yellow-rectangle-list {
+	    display: inline-block;
+	    width: 11px;
+	    height: 16px;
+	    background-color: #f3e03b;
+	    transform: rotate(5deg);
+	    margin-right: 5px;
+	}
+
+	.red-rectangle {
+	    display: inline-block;
+	    width: 12px;
+	    height: 17px;
+	    background-color: red;
+	    transform: rotate(5deg);
+	}
+
+	.red-rectangle-list {
+	    display: inline-block;
+	    width: 11px;
+	    height: 16px;
+	    background-color: red;
+	    transform: rotate(5deg);
+	    margin-right: 5px;
+	}
+
+        .entry {
+            text-align: left;
+            margin-top: 5px;
+        }
+
+        .player-container:nth-child(1) .player-name {
+            color: #ba3f1e;
+        }
+
+        .player-container:nth-child(2) .player-name {
+            color: #0e477c;
+        }
+    	.player-container:nth-child(1) {
+        border: 4px solid #ba3f1e;
+   	}
+
+    	.player-container:nth-child(2) {
+        border: 4px solid #0e477c;
+    	}
+
+	.modern-button {
+        display: flex;
+        align-items: center;
+    }
+
+    .button-style {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    /* Abstand zwischen dem player-container und dem Button anpassen */
+    .player-container {
+        margin-right: 20px;
+    }
+
+	/* CSS-Stil für das Modal */
+    .modal {
+        display: none; /* Verstecke das Modal standardmäßig */
+        position: fixed; /* Position: fixiert */
+        z-index: 9999; /* Stelle sicher, dass das Modal über anderen Inhalten liegt */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Halbtransparenter Hintergrund */
+    }
+
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    /* Aktuelle Schriftart und -farbe für den Namen von Spieler 1 im Modal */
+    #player1ModalName {
+        font-family: Arial, sans-serif; /* Verwende die gewünschte Schriftart */
+        color: #ba3f1e; /* Verwende die gewünschte Schriftfarbe (rot in diesem Fall) */
+    }
+
+    /* Gemeinsamer Schriftstil für den Namen in den Spielercontainern und im Modal */
+    .player-name,
+    #player1ModalName {
+        font-family: Arial, sans-serif; /* Verwende die gleiche Schriftart wie im Spielercontainer */
+        color: #ba3f1e; /* Verwende die gleiche Schriftfarbe wie im Spielercontainer (rot in diesem Fall) */
+    }
+
+/* Stil für die Quadrate */
+    .square-container {
+        text-align: center; /* Zentriere die Quadrate im Container */
+    }
+
+    .square {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-color: transparent;
+        border: 1px solid black;
+        border-radius: 2px;
+        margin: 3px; /* Füge einen Abstand zwischen den Quadraten ein */
+    }
+</style>
+</head>
+
+<body>
+<div id="overlay"></div>
+    <div class="players-container">
+        <!-- Spieler 1 -->
+        <div class="player-container">
+            <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 1</div>
+            <div class="player-score" id="player1Score">0</div>
+            <div class="icons">
+                <span class="fas fa-futbol" style="color: black; margin-right: -3px;" onclick="increaseScore('player1Score')"></span>
+                <span class="fas fa-minus-circle" onclick="decreaseScore('player1Score')"></span>
+                <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player1Score')">
+                <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
+                </span>
+                <span class="fas fa-minus-circle" onclick="decreaseFoul('player1Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addYellowCard('player1Score')">
+    		<span class="yellow-rectangle" style="position: relative; top: 0px"></span>
+		</span>
+                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseYellow('player1Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addRedCard('player1Score')">
+    		<span class="red-rectangle" style="position: relative; top: 0px"></span>
+		</span>
+                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseRed('player1Score')"></span>
+            </div>
+            <!-- Listeneinträge für Spieler 1 -->
+        </div>
+
+        <!-- Spieler 2 -->
+        <div class="player-container">
+            <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 2</div>
+            <div class="player-score" id="player2Score">0</div>
+            <div class="icons">
+                <span class="fas fa-futbol" style="color: black; margin-right: -3px;" onclick="increaseScore('player2Score')"></span>
+                <span class="fas fa-minus-circle" onclick="decreaseScore('player2Score')"></span>
+                <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player2Score')">
+                <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
+                </span>
+                <span class="fas fa-minus-circle" onclick="decreaseFoul('player2Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addYellowCard('player2Score')">
+    		<span class="yellow-rectangle" style="position: relative; top: 0px"></span>
+		</span>
+                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseYellow('player2Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addRedCard('player2Score')">
+    		<span class="red-rectangle" style="position: relative; top: 0px"></span>
+		</span>
+                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseRed('player2Score')"></span>
+            </div>
+            <!-- Listeneinträge für Spieler 2 -->
+        </div>
+    </div>
+</div>
+
+<!-- Moderner Button für Elfmeterschießen -->
+    <div class="modern-button">
+        <span class="fas fa-bars circle-icon" style="margin-right: 8px; cursor: pointer;" onclick="toggleMenu()"></span>
+    </div>
+
+    <!-- Menü -->
+<div id="menu" style="display: none;">
+    <ul>
+        <li onclick="startElfmeterschiessen(); closeMenu();">Elfmeterschießen</li>
+        <li onclick="startNewGame(); closeMenu();">Neues Spiel</li>
+    </ul>
+</div>
+
+<!-- Das Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <!-- Hier können die Inhalte des Modals platziert werden -->
+        <h2>Elfmeterschießen</h2>
+        <!-- Zeige den aktuellen Namen von Spieler 1 im Modal an -->
+        <p>
+            <span id="player1ModalName" class="player-name"></span>
+        </p>
+        <!-- Fünf Quadrate mit abgerundeten Ecken und dünnem schwarzen Rahmen für Spieler 1 -->
+<div class="square-container">
+    <!-- Füge einen onclick-Handler hinzu, um die Funktion showPenaltyResultModal(1) aufzurufen -->
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+</div>
+        <!-- Zeige den aktuellen Namen von Spieler 2 im Modal an -->
+        <p>
+            <span id="player2ModalName" class="player-name"></span>
+        </p>
+	<!-- Fünf Quadrate mit abgerundeten Ecken und dünnem schwarzen Rahmen für Spieler 2 -->
+<div class="square-container">
+    <!-- Füge einen onclick-Handler hinzu, um die Funktion showPenaltyResultModal(2) aufzurufen -->
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+</div>
+    </div>
+</div>
+
+    <script>
+let reset = 0;
+let player1UnfilledSquares = 5;
+let player1GreenSquares = 0;
+let player2UnfilledSquares = 5;
+let player2GreenSquares = 0;
+
+// Funktion, um ein neues Spiel zu starten (Seite neu laden)
+        function startNewGame() {
+            location.reload(); // Die Seite neu laden
+        }
+
+// Funktion zum Ein- und Ausblenden des Menüs
+        function toggleMenu() {
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("overlay");
+
+  if (menu.style.display === "none") {
+    menu.style.display = "block";
+    overlay.style.display = "block";
+  } else {
+    menu.style.display = "none";
+    overlay.style.display = "none";
+  }
+}
+
+// Funktion zum Schließen des Menüs nach Auswahl eines Menüpunkts
+function closeMenu() {
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("overlay");
+  
+  menu.style.display = "none";
+  overlay.style.display = "none";
+}
+
+// Funktion zum Öffnen des Menüs
+  function openMenu() {
+    const modal = document.getElementById("myModal");
+    const player1ModalNameElement = document.getElementById("player1ModalName");
+    player1ModalNameElement.textContent = player1Name; // Update the current name of Player 1 in the modal
+
+    const player2ModalNameElement = document.getElementById("player2ModalName");
+    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+    player2ModalNameElement.textContent = player2NameElement.textContent; // Update the current name of Player 2 in the modal
+    player2ModalNameElement.style.color = getComputedStyle(player2NameElement).color; // Set the text color of Player 2 in the modal
+
+    // Update the menu items
+    const menuItems = document.getElementById("menuItems");
+    menuItems.innerHTML = `
+      <p><span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> Elfmeterschießen</p>
+      <p><span class="fas fa-cog" style="color: black; font-size: 16px;"></span> Einstellungen</p>
+    `;
+
+    modal.style.display = "block";
+  }
+
+// Globale Variable, um den aktuellen Namen von Spieler 1 zu speichern
+        let player1Name = "Spieler 1"; // Standardname
+
+        // Funktion, um die Torzahl eines Spielers zu erhöhen
+        function increaseScore(playerId) {
+            const playerScoreElement = document.getElementById(playerId);
+            let score = parseInt(playerScoreElement.textContent);
+
+            // Eingabeaufforderung für Spielminute und Torschützen
+            const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+            if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+                const scorerName = prompt("Torschützen eingeben (leer = 'Standardspieler'):");
+                const playerName = scorerName || "Standardspieler";
+
+                // Erstellen der neuen Einträge mit Ball-Symbol und Informationen
+                const entryElement = document.createElement("div");
+                entryElement.classList.add("entry");
+                entryElement.innerHTML = `<span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> ${minuteInput}' ${playerName}`;
+                playerScoreElement.parentElement.appendChild(entryElement);
+
+                // Torzahl des Spielers um 1 erhöhen
+                playerScoreElement.textContent = score + 1;
+            } else {
+                alert("Ungültige Eingabe. Die Torzahl wird nicht erhöht.");
+            }
+        }
+
+        // Funktion, um die Torzahl eines Spielers zu verringern
+        function decreaseScore(playerId) {
+            const playerScoreElement = document.getElementById(playerId);
+            let score = parseInt(playerScoreElement.textContent);
+
+            if (score > 0) {
+                // Alle Listeneinträge des Spielers auswählen
+                const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+                let lastEntryWithIcon = null;
+
+                // Den letzten Eintrag finden, der das "fas fa-futbol" Symbol enthält
+                for (let i = entryElements.length - 1; i >= 0; i--) {
+                    const entry = entryElements[i];
+                    const iconElement = entry.querySelector(".fas.fa-futbol");
+                    if (iconElement) {
+                        lastEntryWithIcon = entry;
+                        break;
+                    }
+                }
+
+                if (lastEntryWithIcon) {
+                    // Torzahl des Spielers um 1 verringern und den letzten Eintrag mit dem Symbol entfernen
+                    playerScoreElement.textContent = score - 1;
+                    lastEntryWithIcon.remove();
+                } else {
+                    alert("Kein Eintrag gefunden.");
+                }
+            } else {
+            }
+        }
+
+	// Funktion, um ein Foul für einen Spieler hinzuzufügen
+    function addFoul(playerId) {
+        const playerScoreElement = document.getElementById(playerId);
+
+        // Eingabeaufforderung für Spielminute
+        const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+        if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+            // Erstellen der neuen Einträge mit Foul und Informationen
+            const entryElement = document.createElement("div");
+            entryElement.classList.add("entry");
+            entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px; margin-right: -5px; margin-top: -6px;">sports</span> ${minuteInput}' Foul`;
+            playerScoreElement.parentElement.appendChild(entryElement);
+        } else {
+            alert("Ungültige Eingabe. Das Foul wird nicht hinzugefügt.");
+        }
+    }
+
+    // Funktion, um ein Foul für einen Spieler zu entfernen
+    function decreaseFoul(playerId) {
+        const playerScoreElement = document.getElementById(playerId);
+
+        // Alle Listeneinträge des Spielers auswählen
+        const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+
+        if (entryElements.length > 0) {
+            // Den letzten Eintrag finden, der ein Foul enthält
+            for (let i = entryElements.length - 1; i >= 0; i--) {
+                const entry = entryElements[i];
+                const iconElement = entry.querySelector(".material-icons");
+                if (iconElement && iconElement.textContent.trim() === "sports") {
+                    // Den Eintrag entfernen und die Schleife beenden
+                    entry.remove();
+                    break;
+                }
+            }
+        } else {
+        }
+    }
+
+        // Funktion, um eine gelbe Karte für einen Spieler hinzuzufügen
+    function addYellowCard(playerId) {
+        const playerScoreElement = document.getElementById(playerId);
+
+        // Eingabeaufforderung für Spielminute
+        const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+        if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+            // Erstellen der neuen Einträge mit gelber Karte und Informationen
+            const entryElement = document.createElement("div");
+            entryElement.classList.add("entry");
+            entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' Gelbe Karte`;
+            playerScoreElement.parentElement.appendChild(entryElement);
+        } else {
+            alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
+        }
+    }
+
+        // Funktion, um eine gelbe Karte für einen Spieler zu entfernen
+        function decreaseYellow(playerId) {
+            const playerScoreElement = document.getElementById(playerId);
+
+            // Alle Listeneinträge des Spielers auswählen
+            const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+
+            if (entryElements.length > 0) {
+                // Den letzten Eintrag finden, der ein rotes Icon enthält
+		for (let i = entryElements.length - 1; i >= 0; i--) {
+    		const entry = entryElements[i];
+    		const iconElement = entry.querySelector(".yellow-rectangle-list"); // Änderung hier
+    		if (iconElement) {
+        // Den Eintrag entfernen und die Schleife beenden
+        entry.remove();
+        break;
+    }
+}
+            } else {
+            }
+        }
+
+        // Funktion, um eine rote Karte für einen Spieler hinzuzufügen
+        function addRedCard(playerId) {
+            const playerScoreElement = document.getElementById(playerId);
+
+            // Eingabeaufforderung für Spielminute und Spielername
+            const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+            if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+                const scorerName = prompt("Spielernamen eingeben (leer = 'Standardspieler'):");
+                const playerName = scorerName || "Standardspieler";
+
+                // Erstellen der neuen Einträge mit roter Karte und Informationen
+                const entryElement = document.createElement("div");
+                entryElement.classList.add("entry");
+                entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' ${playerName}`;
+                playerScoreElement.parentElement.appendChild(entryElement);
+            } else {
+                alert("Ungültige Eingabe. Die rote Karte wird nicht hinzugefügt.");
+            }
+        }
+
+        // Funktion, um eine rote Karte für einen Spieler zu entfernen
+        function decreaseRed(playerId) {
+            const playerScoreElement = document.getElementById(playerId);
+
+            // Alle Listeneinträge des Spielers auswählen
+            const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+
+            if (entryElements.length > 0) {
+            // Den letzten Eintrag finden, der ein rotes Icon enthält
+		for (let i = entryElements.length - 1; i >= 0; i--) {
+    		const entry = entryElements[i];
+    		const iconElement = entry.querySelector(".red-rectangle-list"); // Änderung hier
+    		if (iconElement) {
+        // Den Eintrag entfernen und die Schleife beenden
+        entry.remove();
+        break;
+    }
+}
+            } else {
+            }
+        }
+
+        // Event Listener hinzufügen, um die Zeichenanzahl bei der Eingabe zu überwachen
+        const playerNameElements = document.querySelectorAll(".player-name[contenteditable]");
+        playerNameElements.forEach((element) => {
+            element.addEventListener("blur", handlePlayerNameInput);
+        });
+
+        // Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert (Spieler 1)
+        const playerNameElementPlayer1 = document.querySelector(".player-container:nth-child(1) .player-name[contenteditable]");
+        playerNameElementPlayer1.addEventListener("blur", handlePlayerNameInput);
+
+        // Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert (Spieler 2)
+        const playerNameElementPlayer2 = document.querySelector(".player-container:nth-child(2) .player-name[contenteditable]");
+        playerNameElementPlayer2.addEventListener("blur", handlePlayerNameInput);
+
+        // Gemeinsame Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert
+    function handlePlayerNameInput(event) {
+        const playerNameElement = event.target;
+        let playerName = playerNameElement.textContent.trim();
+        const maxNameLength = 20;
+
+        // Setze den Standardnamen (Spieler 1 oder Spieler 2) falls kein Name eingegeben wurde oder leer ist
+        if (playerName === "" || playerName === "Spieler 1" || playerName === "Spieler 2") {
+            playerName = "Spieler " + (playerNameElement === playerNameElementPlayer1 ? "1" : "2");
+            playerNameElement.textContent = playerName;
+        } else if (playerName.length > maxNameLength) {
+            // Begrenze den Spielernamen auf die maximale Länge
+            playerNameElement.textContent = playerName.slice(0, maxNameLength);
+        }
+
+        // Positioniere den Cursor am Ende des Textes, um zu verhindern, dass Zeichen am Anfang hinzugefügt werden
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(playerNameElement);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Fokus vom "contenteditable"-Element entfernen, wenn der Benutzer außerhalb davon klickt
+        playerNameElement.blur();
+
+        // Speichere den aktuellen Namen von Spieler 1 in der globalen Variable
+        if (playerNameElement === playerNameElementPlayer1) {
+            player1Name = playerName;
+        }
+    }
+
+        // Funktion, um den Spielername auszuwählen, wenn darauf geklickt wird
+        function selectPlayerName(element) {
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        // Fügen Sie die Funktion selectAllText hinzu, um den Inhalt des Eingabefelds zu markieren, wenn es den Fokus erhält.
+        function selectAllText(element) {
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+    // Funktion, um das Modal zu öffnen
+function openModal() {
+    const modal = document.getElementById("myModal");
+    const player1ModalNameElement = document.getElementById("player1ModalName");
+    player1ModalNameElement.textContent = player1Name; // Aktualisiere den aktuellen Namen von Spieler 1 im Modal
+
+    const player2ModalNameElement = document.getElementById("player2ModalName");
+    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+    player2ModalNameElement.textContent = player2NameElement.textContent; // Aktualisiere den aktuellen Namen von Spieler 2 im Modal
+    player2ModalNameElement.style.color = getComputedStyle(player2NameElement).color; // Setze die Schriftfarbe von Spieler 2 im Modal
+
+    modal.style.display = "block";
+}
+
+    // Funktion, um das Modal zu schließen
+    function closeModal() {
+        const modal = document.getElementById("myModal");
+        modal.style.display = "none";
+    }
+
+    // Funktion, die aufgerufen wird, wenn der "Elfmeterschießen"-Button geklickt wird
+    function startElfmeterschiessen() {
+        openModal();
+        // Weitere Aktionen, die beim Klicken des Buttons ausgeführt werden sollen
+    }
+
+function resetSquares() {
+  const squares = document.getElementsByClassName("square");
+  for (let i = 0; i < squares.length; i++) {
+    squares[i].style.backgroundColor = "transparent";
+    squares[i].onclick = function () {
+      showPenaltyResultModal(i % 5 + 1);
+    };
+  }
+
+  // Setze die globalen Variablen zurück
+  player1UnfilledSquares = 5;
+  player1GreenSquares = 0;
+  player2UnfilledSquares = 5;
+  player2GreenSquares = 0;
+
+ // Erhöhe den Zähler "reset" um 1
+  reset += 1;
+}
+
+// Funktion, um das Elfmeterergebnis anzuzeigen und zu überprüfen, ob ein Spieler gewonnen hat
+function showPenaltyResultModal(playerNumber) {
+    const penaltyResult = window.confirm("Elfmeter verwandelt?");
+    const square = event.target; // Das geklickte Quadrat
+
+if (reset < 1) {
+    if (penaltyResult) {
+        // Der Benutzer hat "Ja" gewählt (Elfmeter verwandelt)
+        square.style.backgroundColor = "green"; // Das Quadrat wird grün gefärbt
+        const playerScoreElement = document.getElementById(`player${playerNumber}Score`);
+        let score = parseInt(playerScoreElement.textContent);
+        playerScoreElement.textContent = score + 1; // Punktestand des Spielers wird um 1 erhöht
+
+        // Zähle die grünen Quadrate und verringere die Anzahl der ungefärbten Quadrate
+        if (playerNumber === 1) {
+            player1GreenSquares++;
+            player1UnfilledSquares--;
+        } else if (playerNumber === 2) {
+            player2GreenSquares++;
+            player2UnfilledSquares--;
+        }
+    } else {
+        // Der Benutzer hat "Nein" gewählt (Elfmeter nicht verwandelt)
+        square.style.backgroundColor = "red"; // Das Quadrat wird rot gefärbt
+        if (playerNumber === 1) {
+            player1UnfilledSquares--;
+        } else if (playerNumber === 2) {
+            player2UnfilledSquares--;
+        }
+    }
+
+    square.onclick = null; // Das 'onclick' Ereignis wird entfernt, um das Quadrat deaktiviert zu machen
+
+    // Überprüfe, ob ein Spieler mehr grüne Quadrate hat als der andere Spieler erreichen kann
+    const player1ScoreElement = document.getElementById("player1Score");
+    const player2ScoreElement = document.getElementById("player2Score");
+    let player1Score = parseInt(player1ScoreElement.textContent);
+    let player2Score = parseInt(player2ScoreElement.textContent);
+    let player1MaxPossibleScore = player1GreenSquares + player1UnfilledSquares;
+    let player2MaxPossibleScore = player2GreenSquares + player2UnfilledSquares;
+
+    // Den Namen von Spieler 1 und Spieler 2 direkt aus den DOM-Elementen abrufen
+    const player1NameElement = document.querySelector(".player-container:nth-child(1) .player-name");
+    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+    const player1Name = player1NameElement.textContent.trim();
+    const player2Name = player2NameElement.textContent.trim();
+
+    // Überprüfe, ob ein Spieler gewonnen hat und zeige entsprechende Meldung an
+  if (player1GreenSquares > player2MaxPossibleScore && player2GreenSquares <= player1MaxPossibleScore) {
+    alert(player1Name + " gewinnt das Elfmeterschießen!");
+  } else if (player2GreenSquares > player1MaxPossibleScore && player1GreenSquares <= player2MaxPossibleScore) {
+    alert(player2Name + " gewinnt das Elfmeterschießen!");
+  } else if (player1GreenSquares === player1MaxPossibleScore && player2GreenSquares === player2MaxPossibleScore) {
+    alert("Unentschieden! Es geht weiter ...");
+    document.getElementById("myModal").getElementsByTagName("h2")[0].textContent = "Elfmeterschießen - Entscheidung"; // Ändere die Überschrift des Modals
+resetSquares();
+  }
+}
+}
+
+function finalPenaltyScore() {
+    // Your code here for the action to be taken once the reset counter reaches 1 or more.
+  }
+
+  // Add an event listener to call "finalPenaltyScore" when the reset counter is updated
+  function updateResetCounter() {
+    if (reset >= 1) {
+      finalPenaltyScore();
+    }
+  }
+    </script>
+</body>
+
+</html>
