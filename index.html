@@ -352,6 +352,7 @@
 </div>
 
     <script>
+let reset = 0;
 let player1UnfilledSquares = 5;
 let player1GreenSquares = 0;
 let player2UnfilledSquares = 5;
@@ -688,6 +689,9 @@ function resetSquares() {
   player1GreenSquares = 0;
   player2UnfilledSquares = 5;
   player2GreenSquares = 0;
+
+ // Erhöhe den Zähler "reset" um 1
+  reset += 1;
 }
 
 // Funktion, um das Elfmeterergebnis anzuzeigen und zu überprüfen, ob ein Spieler gewonnen hat
@@ -695,6 +699,7 @@ function showPenaltyResultModal(playerNumber) {
     const penaltyResult = window.confirm("Elfmeter verwandelt?");
     const square = event.target; // Das geklickte Quadrat
 
+if (reset < 1) {
     if (penaltyResult) {
         // Der Benutzer hat "Ja" gewählt (Elfmeter verwandelt)
         square.style.backgroundColor = "green"; // Das Quadrat wird grün gefärbt
@@ -747,6 +752,18 @@ function showPenaltyResultModal(playerNumber) {
 resetSquares();
   }
 }
+}
+
+function finalPenaltyScore() {
+    // Your code here for the action to be taken once the reset counter reaches 1 or more.
+  }
+
+  // Add an event listener to call "finalPenaltyScore" when the reset counter is updated
+  function updateResetCounter() {
+    if (reset >= 1) {
+      finalPenaltyScore();
+    }
+  }
     </script>
 </body>
 
