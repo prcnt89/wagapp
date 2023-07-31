@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
+/* Ooverlay */
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998; /* Ensure the overlay is below the menu but above other content */
+}
+
 /* Stil für das Menü */
         #menu {
             position: absolute;
@@ -20,6 +32,9 @@
             border: 1px solid #ccc;
             padding: 10px;
             z-index: 9999; /* Menü im Vordergrund */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
 
         #menu ul {
@@ -238,6 +253,7 @@
 </head>
 
 <body>
+<div id="overlay"></div>
     <div class="players-container">
         <!-- Spieler 1 -->
         <div class="player-container">
@@ -285,6 +301,7 @@
             <!-- Listeneinträge für Spieler 2 -->
         </div>
     </div>
+</div>
 
 <!-- Moderner Button für Elfmeterschießen -->
     <div class="modern-button">
@@ -292,12 +309,12 @@
     </div>
 
     <!-- Menü -->
-    <div id="menu" style="display: none;">
-        <ul>
-            <li onclick="startElfmeterschiessen()">Elfmeterschießen</li>
-            <li onclick="menuOption2()">Menüpunkt</li>
-        </ul>
-    </div>
+<div id="menu" style="display: none;">
+    <ul>
+        <li onclick="startElfmeterschiessen(); closeMenu();">Elfmeterschießen</li>
+        <li onclick="menuOption2(); closeMenu();">Menüpunkt</li>
+    </ul>
+</div>
 
 <!-- Das Modal -->
 <div id="myModal" class="modal">
@@ -340,39 +357,28 @@ let player1GreenSquares = 0;
 let player2UnfilledSquares = 5;
 let player2GreenSquares = 0;
 
-// Funktion, um die Ausrichtung zu erzwingen
-  function forceLandscapeOrientation() {
-    if (typeof window.orientation !== 'undefined') {
-      // Wenn die window.orientation-Eigenschaft unterstützt wird
-      if (window.orientation !== 90 && window.orientation !== -90) {
-        // Wenn die aktuelle Ausrichtung nicht im Querformat ist, drehen
-        screen.orientation.lock('landscape').then(null).catch(function (error) {
-          // Behandeln Sie Fehler, falls die Ausrichtung nicht gesperrt werden kann
-          console.error('Unable to lock the screen orientation:', error);
-        });
-      }
-    } else {
-      // Wenn window.orientation nicht unterstützt wird, versuchen Sie, die Ausrichtung über CSS zu erzwingen
-      const style = document.createElement('style');
-      style.innerHTML = '@media (orientation: portrait) { body { transform: rotate(90deg); transform-origin: left top; } }';
-      document.head.appendChild(style);
-    }
-  }
-
-  // Funktion, die beim Laden der Seite aufgerufen wird
-  window.addEventListener('load', function () {
-    forceLandscapeOrientation();
-  });
-
 // Funktion zum Ein- und Ausblenden des Menüs
         function toggleMenu() {
-            const menu = document.getElementById("menu");
-            if (menu.style.display === "none") {
-                menu.style.display = "block";
-            } else {
-                menu.style.display = "none";
-            }
-        }
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("overlay");
+
+  if (menu.style.display === "none") {
+    menu.style.display = "block";
+    overlay.style.display = "block";
+  } else {
+    menu.style.display = "none";
+    overlay.style.display = "none";
+  }
+}
+
+// Funktion zum Schließen des Menüs nach Auswahl eines Menüpunkts
+function closeMenu() {
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("overlay");
+  
+  menu.style.display = "none";
+  overlay.style.display = "none";
+}
 
 // Function to open the menu
   function openMenu() {
