@@ -312,7 +312,7 @@
 <div id="menu" style="display: none;">
     <ul>
         <li onclick="startElfmeterschiessen(); closeMenu();">Elfmeterschießen</li>
-        <li onclick="menuOption2(); closeMenu();">Menüpunkt</li>
+        <li onclick="startNewGame(); closeMenu();">Neues Spiel</li>
     </ul>
 </div>
 
@@ -357,6 +357,11 @@ let player1GreenSquares = 0;
 let player2UnfilledSquares = 5;
 let player2GreenSquares = 0;
 
+// Funktion, um ein neues Spiel zu starten (Seite neu laden)
+        function startNewGame() {
+            location.reload(); // Die Seite neu laden
+        }
+
 // Funktion zum Ein- und Ausblenden des Menüs
         function toggleMenu() {
   const menu = document.getElementById("menu");
@@ -380,7 +385,7 @@ function closeMenu() {
   overlay.style.display = "none";
 }
 
-// Function to open the menu
+// Funktion zum Öffnen des Menüs
   function openMenu() {
     const modal = document.getElementById("myModal");
     const player1ModalNameElement = document.getElementById("player1ModalName");
