@@ -125,6 +125,39 @@
     	.player-container:nth-child(2) {
         border: 4px solid #0e477c;
     	}
+
+/* Hinzufügen von CSS-Styling für das Menü */
+.menu-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.menu-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.menu-item {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 10px;
+}
+
+/* Anpassen des Icon-Stylings */
+.icons .fas.fa-bars {
+    font-size: 40px;
+    margin-left: 20px;
+    cursor: pointer;
+}
 </style>
 </head>
 
@@ -176,6 +209,16 @@
             <!-- Listeneinträge für Spieler 2 -->
         </div>
     </div>
+<span class="fas fa-bars" style="color: black; margin-left: 20px; font-size: 30px; cursor: pointer;" onclick="showMenu()"></span>
+
+<!-- Hinzufügen einer Container-Div für das Menü -->
+<div class="menu-container" id="menuContainer">
+    <div class="menu-content">
+        <div class="menu-item" onclick="showPenaltyShootout()">Elfmeterschießen</div>
+        <!-- Hinzufügen des "startNewGame()" Aufrufs beim Klicken auf "Neues Spiel" -->
+        <div class="menu-item" onclick="startNewGame()">Neues Spiel</div>
+    </div>
+</div>
 
     <script>
         // Funktion, um die Torzahl eines Spielers zu erhöhen
@@ -410,6 +453,37 @@
             selection.removeAllRanges();
             selection.addRange(range);
         }
+
+// Hinzufügen einer Funktion zum Anzeigen des Menüs
+function showMenu() {
+    const menuContainer = document.getElementById('menuContainer');
+    menuContainer.style.display = 'flex';
+}
+
+// Hinzufügen einer Funktion zum Ausblenden des Menüs
+function hideMenu() {
+    const menuContainer = document.getElementById('menuContainer');
+    menuContainer.style.display = 'none';
+}
+
+// Funktion, um das Elfmeterschießen zu starten (kann entsprechend angepasst werden)
+function showPenaltyShootout() {
+    // Hier können Sie die entsprechende Funktionalität für das Elfmeterschießen einfügen
+    alert('Elfmeterschießen starten!');
+    hideMenu();
+}
+
+// Funktion, um ein neues Spiel zu starten (kann entsprechend angepasst werden)
+function startNewGame() {
+    // Hier können Sie die entsprechende Funktionalität für ein neues Spiel einfügen
+    alert('Neues Spiel starten!');
+    hideMenu();
+}
+
+// Funktion zum Neustarten des Spiels (Seite neu laden)
+function startNewGame() {
+    window.location.reload();
+}
     </script>
 </body>
 
