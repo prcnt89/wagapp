@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover, orientation=landscape">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>What a Goal!</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -11,47 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
-/* Ooverlay */
-#overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9998; /* Ensure the overlay is below the menu but above other content */
-}
-
-/* Stil für das Menü */
-        #menu {
-            position: absolute;
-            top: 40px;
-            right: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 10px;
-            z-index: 9999; /* Menü im Vordergrund */
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        #menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        #menu ul li {
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        #menu ul li:hover {
-            background-color: #f0f0f0;
-        }
-
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -113,10 +72,6 @@
         margin-right: 3px;
     	}
 
-.fas.fa-bars {
-    color: white;
-  }
-
 	.yellow-rectangle {
 	    display: inline-block;
 	    width: 12px;
@@ -171,89 +126,42 @@
         border: 4px solid #0e477c;
     	}
 
-	.modern-button {
-        display: flex;
-        align-items: center;
-    }
+/* Hinzufügen von CSS-Styling für das Menü */
+.menu-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
 
-    .button-style {
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 12px 24px;
-        font-size: 16px;
-        cursor: pointer;
-    }
+.menu-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+}
 
-    /* Abstand zwischen dem player-container und dem Button anpassen */
-    .player-container {
-        margin-right: 20px;
-    }
+.menu-item {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 10px;
+}
 
-	/* CSS-Stil für das Modal */
-    .modal {
-        display: none; /* Verstecke das Modal standardmäßig */
-        position: fixed; /* Position: fixiert */
-        z-index: 9999; /* Stelle sicher, dass das Modal über anderen Inhalten liegt */
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Halbtransparenter Hintergrund */
-    }
-
-    .modal-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .close {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 20px;
-        cursor: pointer;
-    }
-
-    /* Aktuelle Schriftart und -farbe für den Namen von Spieler 1 im Modal */
-    #player1ModalName {
-        font-family: Arial, sans-serif; /* Verwende die gewünschte Schriftart */
-        color: #ba3f1e; /* Verwende die gewünschte Schriftfarbe (rot in diesem Fall) */
-    }
-
-    /* Gemeinsamer Schriftstil für den Namen in den Spielercontainern und im Modal */
-    .player-name,
-    #player1ModalName {
-        font-family: Arial, sans-serif; /* Verwende die gleiche Schriftart wie im Spielercontainer */
-        color: #ba3f1e; /* Verwende die gleiche Schriftfarbe wie im Spielercontainer (rot in diesem Fall) */
-    }
-
-/* Stil für die Quadrate */
-    .square-container {
-        text-align: center; /* Zentriere die Quadrate im Container */
-    }
-
-    .square {
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        background-color: transparent;
-        border: 1px solid black;
-        border-radius: 2px;
-        margin: 3px; /* Füge einen Abstand zwischen den Quadraten ein */
-    }
+/* Anpassen des Icon-Stylings */
+.icons .fas.fa-bars {
+    font-size: 40px;
+    margin-left: 20px;
+    cursor: pointer;
+}
 </style>
 </head>
 
 <body>
-<div id="overlay"></div>
     <div class="players-container">
         <!-- Spieler 1 -->
         <div class="player-container">
@@ -301,115 +209,18 @@
             <!-- Listeneinträge für Spieler 2 -->
         </div>
     </div>
-</div>
+<span class="fas fa-bars" style="color: black; margin-left: 20px; font-size: 30px; cursor: pointer;" onclick="showMenu()"></span>
 
-<!-- Moderner Button für Elfmeterschießen -->
-    <div class="modern-button">
-        <span class="fas fa-bars circle-icon" style="margin-right: 8px; cursor: pointer;" onclick="toggleMenu()"></span>
-    </div>
-
-    <!-- Menü -->
-<div id="menu" style="display: none;">
-    <ul>
-        <li onclick="startElfmeterschiessen(); closeMenu();">Elfmeterschießen</li>
-        <li onclick="startNewGame(); closeMenu();">Neues Spiel</li>
-    </ul>
-</div>
-
-<!-- Das Modal -->
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <!-- Hier können die Inhalte des Modals platziert werden -->
-        <h2>Elfmeterschießen</h2>
-        <!-- Zeige den aktuellen Namen von Spieler 1 im Modal an -->
-        <p>
-            <span id="player1ModalName" class="player-name"></span>
-        </p>
-        <!-- Fünf Quadrate mit abgerundeten Ecken und dünnem schwarzen Rahmen für Spieler 1 -->
-<div class="square-container">
-    <!-- Füge einen onclick-Handler hinzu, um die Funktion showPenaltyResultModal(1) aufzurufen -->
-    <span class="square" onclick="showPenaltyResultModal(1)"></span>
-    <span class="square" onclick="showPenaltyResultModal(1)"></span>
-    <span class="square" onclick="showPenaltyResultModal(1)"></span>
-    <span class="square" onclick="showPenaltyResultModal(1)"></span>
-    <span class="square" onclick="showPenaltyResultModal(1)"></span>
-</div>
-        <!-- Zeige den aktuellen Namen von Spieler 2 im Modal an -->
-        <p>
-            <span id="player2ModalName" class="player-name"></span>
-        </p>
-	<!-- Fünf Quadrate mit abgerundeten Ecken und dünnem schwarzen Rahmen für Spieler 2 -->
-<div class="square-container">
-    <!-- Füge einen onclick-Handler hinzu, um die Funktion showPenaltyResultModal(2) aufzurufen -->
-    <span class="square" onclick="showPenaltyResultModal(2)"></span>
-    <span class="square" onclick="showPenaltyResultModal(2)"></span>
-    <span class="square" onclick="showPenaltyResultModal(2)"></span>
-    <span class="square" onclick="showPenaltyResultModal(2)"></span>
-    <span class="square" onclick="showPenaltyResultModal(2)"></span>
-</div>
+<!-- Hinzufügen einer Container-Div für das Menü -->
+<div class="menu-container" id="menuContainer">
+    <div class="menu-content">
+        <div class="menu-item" onclick="showPenaltyShootout()">Elfmeterschießen</div>
+        <!-- Hinzufügen des "startNewGame()" Aufrufs beim Klicken auf "Neues Spiel" -->
+        <div class="menu-item" onclick="startNewGame()">Neues Spiel</div>
     </div>
 </div>
 
     <script>
-let reset = 0;
-let player1UnfilledSquares = 5;
-let player1GreenSquares = 0;
-let player2UnfilledSquares = 5;
-let player2GreenSquares = 0;
-
-// Funktion, um ein neues Spiel zu starten (Seite neu laden)
-        function startNewGame() {
-            location.reload(); // Die Seite neu laden
-        }
-
-// Funktion zum Ein- und Ausblenden des Menüs
-        function toggleMenu() {
-  const menu = document.getElementById("menu");
-  const overlay = document.getElementById("overlay");
-
-  if (menu.style.display === "none") {
-    menu.style.display = "block";
-    overlay.style.display = "block";
-  } else {
-    menu.style.display = "none";
-    overlay.style.display = "none";
-  }
-}
-
-// Funktion zum Schließen des Menüs nach Auswahl eines Menüpunkts
-function closeMenu() {
-  const menu = document.getElementById("menu");
-  const overlay = document.getElementById("overlay");
-  
-  menu.style.display = "none";
-  overlay.style.display = "none";
-}
-
-// Funktion zum Öffnen des Menüs
-  function openMenu() {
-    const modal = document.getElementById("myModal");
-    const player1ModalNameElement = document.getElementById("player1ModalName");
-    player1ModalNameElement.textContent = player1Name; // Update the current name of Player 1 in the modal
-
-    const player2ModalNameElement = document.getElementById("player2ModalName");
-    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
-    player2ModalNameElement.textContent = player2NameElement.textContent; // Update the current name of Player 2 in the modal
-    player2ModalNameElement.style.color = getComputedStyle(player2NameElement).color; // Set the text color of Player 2 in the modal
-
-    // Update the menu items
-    const menuItems = document.getElementById("menuItems");
-    menuItems.innerHTML = `
-      <p><span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> Elfmeterschießen</p>
-      <p><span class="fas fa-cog" style="color: black; font-size: 16px;"></span> Einstellungen</p>
-    `;
-
-    modal.style.display = "block";
-  }
-
-// Globale Variable, um den aktuellen Namen von Spieler 1 zu speichern
-        let player1Name = "Spieler 1"; // Standardname
-
         // Funktion, um die Torzahl eines Spielers zu erhöhen
         function increaseScore(playerId) {
             const playerScoreElement = document.getElementById(playerId);
@@ -600,15 +411,14 @@ function closeMenu() {
         playerNameElementPlayer2.addEventListener("blur", handlePlayerNameInput);
 
         // Gemeinsame Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert
-    function handlePlayerNameInput(event) {
+        function handlePlayerNameInput(event) {
         const playerNameElement = event.target;
-        let playerName = playerNameElement.textContent.trim();
+        const playerName = playerNameElement.textContent.trim();
         const maxNameLength = 20;
 
         // Setze den Standardnamen (Spieler 1 oder Spieler 2) falls kein Name eingegeben wurde oder leer ist
         if (playerName === "" || playerName === "Spieler 1" || playerName === "Spieler 2") {
-            playerName = "Spieler " + (playerNameElement === playerNameElementPlayer1 ? "1" : "2");
-            playerNameElement.textContent = playerName;
+            playerNameElement.textContent = "Spieler " + (playerNameElement === playerNameElementPlayer1 ? "1" : "2");
         } else if (playerName.length > maxNameLength) {
             // Begrenze den Spielernamen auf die maximale Länge
             playerNameElement.textContent = playerName.slice(0, maxNameLength);
@@ -624,12 +434,7 @@ function closeMenu() {
 
         // Fokus vom "contenteditable"-Element entfernen, wenn der Benutzer außerhalb davon klickt
         playerNameElement.blur();
-
-        // Speichere den aktuellen Namen von Spieler 1 in der globalen Variable
-        if (playerNameElement === playerNameElementPlayer1) {
-            player1Name = playerName;
         }
-    }
 
         // Funktion, um den Spielername auszuwählen, wenn darauf geklickt wird
         function selectPlayerName(element) {
@@ -649,121 +454,36 @@ function closeMenu() {
             selection.addRange(range);
         }
 
-    // Funktion, um das Modal zu öffnen
-function openModal() {
-    const modal = document.getElementById("myModal");
-    const player1ModalNameElement = document.getElementById("player1ModalName");
-    player1ModalNameElement.textContent = player1Name; // Aktualisiere den aktuellen Namen von Spieler 1 im Modal
-
-    const player2ModalNameElement = document.getElementById("player2ModalName");
-    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
-    player2ModalNameElement.textContent = player2NameElement.textContent; // Aktualisiere den aktuellen Namen von Spieler 2 im Modal
-    player2ModalNameElement.style.color = getComputedStyle(player2NameElement).color; // Setze die Schriftfarbe von Spieler 2 im Modal
-
-    modal.style.display = "block";
+// Hinzufügen einer Funktion zum Anzeigen des Menüs
+function showMenu() {
+    const menuContainer = document.getElementById('menuContainer');
+    menuContainer.style.display = 'flex';
 }
 
-    // Funktion, um das Modal zu schließen
-    function closeModal() {
-        const modal = document.getElementById("myModal");
-        modal.style.display = "none";
-    }
-
-    // Funktion, die aufgerufen wird, wenn der "Elfmeterschießen"-Button geklickt wird
-    function startElfmeterschiessen() {
-        openModal();
-        // Weitere Aktionen, die beim Klicken des Buttons ausgeführt werden sollen
-    }
-
-function resetSquares() {
-  const squares = document.getElementsByClassName("square");
-  for (let i = 0; i < squares.length; i++) {
-    squares[i].style.backgroundColor = "transparent";
-    squares[i].onclick = function () {
-      showPenaltyResultModal(i % 5 + 1);
-    };
-  }
-
-  // Setze die globalen Variablen zurück
-  player1UnfilledSquares = 5;
-  player1GreenSquares = 0;
-  player2UnfilledSquares = 5;
-  player2GreenSquares = 0;
-
- // Erhöhe den Zähler "reset" um 1
-  reset += 1;
+// Hinzufügen einer Funktion zum Ausblenden des Menüs
+function hideMenu() {
+    const menuContainer = document.getElementById('menuContainer');
+    menuContainer.style.display = 'none';
 }
 
-// Funktion, um das Elfmeterergebnis anzuzeigen und zu überprüfen, ob ein Spieler gewonnen hat
-function showPenaltyResultModal(playerNumber) {
-    const penaltyResult = window.confirm("Elfmeter verwandelt?");
-    const square = event.target; // Das geklickte Quadrat
-
-if (reset < 1) {
-    if (penaltyResult) {
-        // Der Benutzer hat "Ja" gewählt (Elfmeter verwandelt)
-        square.style.backgroundColor = "green"; // Das Quadrat wird grün gefärbt
-        const playerScoreElement = document.getElementById(`player${playerNumber}Score`);
-        let score = parseInt(playerScoreElement.textContent);
-        playerScoreElement.textContent = score + 1; // Punktestand des Spielers wird um 1 erhöht
-
-        // Zähle die grünen Quadrate und verringere die Anzahl der ungefärbten Quadrate
-        if (playerNumber === 1) {
-            player1GreenSquares++;
-            player1UnfilledSquares--;
-        } else if (playerNumber === 2) {
-            player2GreenSquares++;
-            player2UnfilledSquares--;
-        }
-    } else {
-        // Der Benutzer hat "Nein" gewählt (Elfmeter nicht verwandelt)
-        square.style.backgroundColor = "red"; // Das Quadrat wird rot gefärbt
-        if (playerNumber === 1) {
-            player1UnfilledSquares--;
-        } else if (playerNumber === 2) {
-            player2UnfilledSquares--;
-        }
-    }
-
-    square.onclick = null; // Das 'onclick' Ereignis wird entfernt, um das Quadrat deaktiviert zu machen
-
-    // Überprüfe, ob ein Spieler mehr grüne Quadrate hat als der andere Spieler erreichen kann
-    const player1ScoreElement = document.getElementById("player1Score");
-    const player2ScoreElement = document.getElementById("player2Score");
-    let player1Score = parseInt(player1ScoreElement.textContent);
-    let player2Score = parseInt(player2ScoreElement.textContent);
-    let player1MaxPossibleScore = player1GreenSquares + player1UnfilledSquares;
-    let player2MaxPossibleScore = player2GreenSquares + player2UnfilledSquares;
-
-    // Den Namen von Spieler 1 und Spieler 2 direkt aus den DOM-Elementen abrufen
-    const player1NameElement = document.querySelector(".player-container:nth-child(1) .player-name");
-    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
-    const player1Name = player1NameElement.textContent.trim();
-    const player2Name = player2NameElement.textContent.trim();
-
-    // Überprüfe, ob ein Spieler gewonnen hat und zeige entsprechende Meldung an
-  if (player1GreenSquares > player2MaxPossibleScore && player2GreenSquares <= player1MaxPossibleScore) {
-    alert(player1Name + " gewinnt das Elfmeterschießen!");
-  } else if (player2GreenSquares > player1MaxPossibleScore && player1GreenSquares <= player2MaxPossibleScore) {
-    alert(player2Name + " gewinnt das Elfmeterschießen!");
-  } else if (player1GreenSquares === player1MaxPossibleScore && player2GreenSquares === player2MaxPossibleScore) {
-    alert("Unentschieden! Es geht weiter ...");
-    document.getElementById("myModal").getElementsByTagName("h2")[0].textContent = "Elfmeterschießen - Entscheidung"; // Ändere die Überschrift des Modals
-resetSquares();
-  }
-}
+// Funktion, um das Elfmeterschießen zu starten (kann entsprechend angepasst werden)
+function showPenaltyShootout() {
+    // Hier können Sie die entsprechende Funktionalität für das Elfmeterschießen einfügen
+    alert('Elfmeterschießen starten!');
+    hideMenu();
 }
 
-function finalPenaltyScore() {
-    // Your code here for the action to be taken once the reset counter reaches 1 or more.
-  }
+// Funktion, um ein neues Spiel zu starten (kann entsprechend angepasst werden)
+function startNewGame() {
+    // Hier können Sie die entsprechende Funktionalität für ein neues Spiel einfügen
+    alert('Neues Spiel starten!');
+    hideMenu();
+}
 
-  // Add an event listener to call "finalPenaltyScore" when the reset counter is updated
-  function updateResetCounter() {
-    if (reset >= 1) {
-      finalPenaltyScore();
-    }
-  }
+// Funktion zum Neustarten des Spiels (Seite neu laden)
+function startNewGame() {
+    window.location.reload();
+}
     </script>
 </body>
 
