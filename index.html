@@ -11,6 +11,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
+/* Stil für das Menü */
+        #menu {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 9999; /* Menü im Vordergrund */
+        }
+
+        #menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #menu ul li {
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        #menu ul li:hover {
+            background-color: #f0f0f0;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -71,6 +97,10 @@
 	.fas.fa-minus-circle {
         margin-right: 3px;
     	}
+
+.fas.fa-bars {
+    color: white;
+  }
 
 	.yellow-rectangle {
 	    display: inline-block;
@@ -256,10 +286,18 @@
         </div>
     </div>
 
-	<!-- Moderner Button für Elfmeterschießen -->
-        <div class="modern-button">
-        <button class="button-style" onclick="startElfmeterschiessen()">Elfmeterschießen</button>
-        </div>
+<!-- Moderner Button für Elfmeterschießen -->
+    <div class="modern-button">
+        <span class="fas fa-bars circle-icon" style="margin-right: 8px; cursor: pointer;" onclick="toggleMenu()"></span>
+    </div>
+
+    <!-- Menü -->
+    <div id="menu" style="display: none;">
+        <ul>
+            <li onclick="startElfmeterschiessen()">Elfmeterschießen</li>
+            <li onclick="menuOption2()">Menüpunkt</li>
+        </ul>
+    </div>
 
 <!-- Das Modal -->
 <div id="myModal" class="modal">
@@ -297,10 +335,41 @@
 </div>
 
     <script>
-        let player1UnfilledSquares = 5;
+let player1UnfilledSquares = 5;
 let player1GreenSquares = 0;
 let player2UnfilledSquares = 5;
 let player2GreenSquares = 0;
+
+// Funktion zum Ein- und Ausblenden des Menüs
+        function toggleMenu() {
+            const menu = document.getElementById("menu");
+            if (menu.style.display === "none") {
+                menu.style.display = "block";
+            } else {
+                menu.style.display = "none";
+            }
+        }
+
+// Function to open the menu
+  function openMenu() {
+    const modal = document.getElementById("myModal");
+    const player1ModalNameElement = document.getElementById("player1ModalName");
+    player1ModalNameElement.textContent = player1Name; // Update the current name of Player 1 in the modal
+
+    const player2ModalNameElement = document.getElementById("player2ModalName");
+    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+    player2ModalNameElement.textContent = player2NameElement.textContent; // Update the current name of Player 2 in the modal
+    player2ModalNameElement.style.color = getComputedStyle(player2NameElement).color; // Set the text color of Player 2 in the modal
+
+    // Update the menu items
+    const menuItems = document.getElementById("menuItems");
+    menuItems.innerHTML = `
+      <p><span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> Elfmeterschießen</p>
+      <p><span class="fas fa-cog" style="color: black; font-size: 16px;"></span> Einstellungen</p>
+    `;
+
+    modal.style.display = "block";
+  }
 
 // Globale Variable, um den aktuellen Namen von Spieler 1 zu speichern
         let player1Name = "Spieler 1"; // Standardname
