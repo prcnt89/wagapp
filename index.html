@@ -3,14 +3,54 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover, orientation=landscape">
     <title>What a Goal!</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" sizes="180x180" href="graphics/apple-touch-icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
     <style>
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+        }
+
+        #menu {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 9999;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #menu ul li {
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        #menu ul li:hover {
+            background-color: #f0f0f0;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -72,6 +112,10 @@
         margin-right: 3px;
     	}
 
+	.fas.fa-bars {
+        color: white;
+    	}
+
 	.yellow-rectangle {
 	    display: inline-block;
 	    width: 12px;
@@ -126,42 +170,84 @@
         border: 4px solid #0e477c;
     	}
 
-/* Hinzufügen von CSS-Styling für das Menü */
-.menu-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    display: none;
-}
+	.modern-button {
+        display: flex;
+        align-items: center;
+    	}
 
-.menu-content {
-    background-color: white;
-    border-radius: 10px;
-    padding: 20px;
-}
+	.button-style {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 16px;
+        cursor: pointer;
+	}
 
-.menu-item {
-    cursor: pointer;
-    font-size: 20px;
-    padding: 10px;
-}
+	.player-container {
+	margin-right: 20px;
+	}
 
-/* Anpassen des Icon-Stylings */
-.icons .fas.fa-bars {
-    font-size: 40px;
-    margin-left: 20px;
-    cursor: pointer;
-}
+	.modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	.modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	}
+
+	.close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+	}
+
+	#player1ModalName {
+        font-family: Arial, sans-serif;
+        color: #ba3f1e;
+	}
+
+	.player-name,
+	#player1ModalName {
+        font-family: Arial, sans-serif;
+        color: #ba3f1e;
+	}
+
+	.square-container {
+        text-align: center;
+	}
+
+	.square {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-color: transparent;
+        border: 1px solid black;
+        border-radius: 2px;
+        margin: 3px;
+	}
 </style>
-</head>
 
+</head>
 <body>
+<div id="overlay"></div>
     <div class="players-container">
         <!-- Spieler 1 -->
         <div class="player-container">
@@ -209,283 +295,549 @@
             <!-- Listeneinträge für Spieler 2 -->
         </div>
     </div>
-<span class="circle-icon" style="position: relative; top: -2px; width: 35px; height: 35px; background-color: black; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-left: 20px;"  onclick="showMenu()">
-            <span class="fas fa-bars" style="color: white; font-size: 20px;"></span>
-        </span>
-
-<!-- Hinzufügen einer Container-Div für das Menü -->
-<div class="menu-container" id="menuContainer">
-    <div class="menu-content">
-        <div class="menu-item" onclick="showPenaltyShootout()">Elfmeterschießen</div>
-        <!-- Hinzufügen des "startNewGame()" Aufrufs beim Klicken auf "Neues Spiel" -->
-        <div class="menu-item" onclick="startNewGame()">Neues Spiel</div>
-    </div>
 </div>
 
-    <script>
-        // Funktion, um die Torzahl eines Spielers zu erhöhen
-        function increaseScore(playerId) {
-            const playerScoreElement = document.getElementById(playerId);
-            let score = parseInt(playerScoreElement.textContent);
+<!-- Moderner Button für Elfmeterschießen -->
+    <div class="modern-button">
+    <span class="fas fa-bars circle-icon" style="margin-right: 8px; cursor: pointer;" onclick="toggleMenu()"></span>
+    </div>
 
-            // Eingabeaufforderung für Spielminute und Torschützen
-            const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-            if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-                const scorerName = prompt("Torschützen eingeben (leer = 'Standardspieler'):");
-                const playerName = scorerName || "Standardspieler";
+<!-- Menü -->
+    <div id="menu" style="display: none;">
+    <ul>
+    <li onclick="startElfmeterschiessen(); closeMenu();">Elfmeterschießen</li>
+    <li onclick="startNewGame(); closeMenu();">Neues Spiel</li>
+    </ul>
+    </div>
 
-                // Erstellen der neuen Einträge mit Ball-Symbol und Informationen
-                const entryElement = document.createElement("div");
-                entryElement.classList.add("entry");
-                entryElement.innerHTML = `<span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> ${minuteInput}' ${playerName}`;
-                playerScoreElement.parentElement.appendChild(entryElement);
+<!-- Das Modal -->
+    <div id="myModal" class="modal">
+    <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <!-- Hier können die Inhalte des Modals platziert werden -->
+    <h2>Elfmeterschießen</h2>
+    <!-- Zeige den aktuellen Namen von Spieler 1 im Modal an -->
+    <p>
+    <span id="player1ModalName" class="player-name"></span>
+    </p>
+    <!-- Fünf Quadrate mit abgerundeten Ecken und dünnem schwarzen Rahmen für Spieler 1 -->
+    <div class="square-container">
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+    <span class="square" onclick="showPenaltyResultModal(1)"></span>
+    </div>
+    <!-- Zeige den aktuellen Namen von Spieler 2 im Modal an -->
+    <p>
+    <span id="player2ModalName" class="player-name"></span>
+    </p>
+    <!-- Fünf Quadrate mit abgerundeten Ecken und dünnem schwarzen Rahmen für Spieler 2 -->
+    <div class="square-container">
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    </div>
+    </div>
+    </div>
 
-                // Torzahl des Spielers um 1 erhöhen
-                playerScoreElement.textContent = score + 1;
-            } else {
-                alert("Ungültige Eingabe. Die Torzahl wird nicht erhöht.");
-            }
+<script>
+let player1UnfilledSquares = 5;
+let player1GreenSquares = 0;
+let player2UnfilledSquares = 5;
+let player2GreenSquares = 0;
+
+// Funktion, um ein neues Spiel zu starten
+    function startNewGame() {
+    var confirmed = confirm("Neues Spiel starten?");
+    if (confirmed) {
+    location.reload();
+    }
+    }
+
+// Funktion zum Ein- und Ausblenden des Menüs
+    function toggleMenu() {
+    const menu = document.getElementById("menu");
+    const overlay = document.getElementById("overlay");
+
+    if (menu.style.display === "none") {
+    menu.style.display = "block";
+    overlay.style.display = "block";
+    } else {
+    menu.style.display = "none";
+    overlay.style.display = "none";
+    }
+    }
+
+// Funktion zum Schließen des Menüs nach Auswahl eines Menüpunkts
+  function closeMenu() {
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("overlay");
+  
+  menu.style.display = "none";
+  overlay.style.display = "none";
+  }
+
+// Funktion zum Öffnen des Menüs
+  function openMenu() {
+  const modal = document.getElementById("myModal");
+  const player1ModalNameElement = document.getElementById("player1ModalName");
+  player1ModalNameElement.textContent = player1Name;
+
+  const player2ModalNameElement = document.getElementById("player2ModalName");
+  const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+  player2ModalNameElement.textContent = player2NameElement.textContent;
+  player2ModalNameElement.style.color = getComputedStyle(player2NameElement).color;
+
+  // Update the menu items
+  const menuItems = document.getElementById("menuItems");
+  menuItems.innerHTML = `
+  <p><span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> Elfmeterschießen</p>
+  <p><span class="fas fa-cog" style="color: black; font-size: 16px;"></span> Einstellungen</p>
+  `;
+
+  modal.style.display = "block";
+  }
+
+  // Globale Variable, um den aktuellen Namen von Spieler 1 zu speichern
+  let player1Name = "Spieler 1"; // Standardname
+
+// Funktion, um die Torzahl eines Spielers zu erhöhen
+  function increaseScore(playerId) {
+  const playerScoreElement = document.getElementById(playerId);
+  let score = parseInt(playerScoreElement.textContent);
+
+  // Eingabeaufforderung für Spielminute und Torschützen
+  const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+  if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+  const scorerName = prompt("Torschützen eingeben (leer = 'Standardspieler'):");
+  const playerName = scorerName || "Standardspieler";
+
+  // Erstellen der neuen Einträge mit Ball-Symbol und Informationen
+  const entryElement = document.createElement("div");
+  entryElement.classList.add("entry");
+  entryElement.innerHTML = `<span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> ${minuteInput}' ${playerName}`;
+  playerScoreElement.parentElement.appendChild(entryElement);
+
+  // Torzahl des Spielers um 1 erhöhen
+  playerScoreElement.textContent = score + 1;
+  } else {
+  alert("Ungültige Eingabe. Tor wird nicht gezählt.");
+  }
+  }
+
+// Funktion, um die Torzahl eines Spielers zu verringern
+  function decreaseScore(playerId) {
+  const playerScoreElement = document.getElementById(playerId);
+  let score = parseInt(playerScoreElement.textContent);
+
+  if (score > 0) {
+  // Alle Listeneinträge des Spielers auswählen
+  const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+  let lastEntryWithIcon = null;
+
+  // Den letzten Eintrag finden, der das "fas fa-futbol" Symbol enthält
+  for (let i = entryElements.length - 1; i >= 0; i--) {
+  const entry = entryElements[i];
+  const iconElement = entry.querySelector(".fas.fa-futbol");
+  if (iconElement) {
+  lastEntryWithIcon = entry;
+  break;
+  }
+  }
+
+  if (lastEntryWithIcon) {
+  // Torzahl des Spielers um 1 verringern und den letzten Eintrag mit dem Symbol entfernen
+  playerScoreElement.textContent = score - 1;
+  lastEntryWithIcon.remove();
+  } else {
+  alert("Kein Eintrag vorhanden.");
+  }
+  } else {
+  }
+  }
+
+// Funktion, um ein Foul für einen Spieler hinzuzufügen
+  function addFoul(playerId) {
+  const playerScoreElement = document.getElementById(playerId);
+
+  // Eingabeaufforderung für Spielminute
+  const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+  if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+  // Erstellen der neuen Einträge mit Foul und Informationen
+  const entryElement = document.createElement("div");
+  entryElement.classList.add("entry");
+  entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px; margin-right: -5px; margin-top: -6px;">sports</span> ${minuteInput}' Foul`;
+  playerScoreElement.parentElement.appendChild(entryElement);
+  } else {
+  alert("Ungültige Eingabe. Das Foul wird nicht hinzugefügt.");
+  }
+  }
+
+// Funktion, um ein Foul für einen Spieler zu entfernen
+  function decreaseFoul(playerId) {
+  const playerScoreElement = document.getElementById(playerId);
+
+  // Alle Listeneinträge des Spielers auswählen
+  const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+
+  if (entryElements.length > 0) {
+  // Den letzten Eintrag finden, der ein Foul enthält
+  for (let i = entryElements.length - 1; i >= 0; i--) {
+  const entry = entryElements[i];
+  const iconElement = entry.querySelector(".material-icons");
+  if (iconElement && iconElement.textContent.trim() === "sports") {
+  // Den Eintrag entfernen und die Schleife beenden
+  entry.remove();
+  break;
+  }
+  }
+  } else {
+  }
+  }
+
+// Funktion, um eine gelbe Karte für einen Spieler hinzuzufügen
+  function addYellowCard(playerId) {
+  const playerScoreElement = document.getElementById(playerId);
+
+  // Eingabeaufforderung für Spielminute
+  const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+  if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+  // Erstellen der neuen Einträge mit gelber Karte und Informationen
+  const entryElement = document.createElement("div");
+  entryElement.classList.add("entry");
+  entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' Gelbe Karte`;
+  playerScoreElement.parentElement.appendChild(entryElement);
+  } else {
+  alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
+  }
+  }
+
+// Funktion, um eine gelbe Karte für einen Spieler zu entfernen
+  function decreaseYellow(playerId) {
+  const playerScoreElement = document.getElementById(playerId);
+
+  // Alle Listeneinträge des Spielers auswählen
+  const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+
+  if (entryElements.length > 0) {
+  // Den letzten Eintrag finden, der ein rotes Icon enthält
+  for (let i = entryElements.length - 1; i >= 0; i--) {
+  const entry = entryElements[i];
+  const iconElement = entry.querySelector(".yellow-rectangle-list");
+  if (iconElement) {
+  // Den Eintrag entfernen und die Schleife beenden
+  entry.remove();
+  break;
+  }
+  }
+  } else {
+  }
+  }
+
+// Funktion, um eine rote Karte für einen Spieler hinzuzufügen
+  function addRedCard(playerId) {
+  const playerScoreElement = document.getElementById(playerId);
+
+  // Eingabeaufforderung für Spielminute und Spielername
+  const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+  if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+  const scorerName = prompt("Spielernamen eingeben (leer = 'Standardspieler'):");
+  const playerName = scorerName || "Standardspieler";
+
+  // Erstellen der neuen Einträge mit roter Karte und Informationen
+  const entryElement = document.createElement("div");
+  entryElement.classList.add("entry");
+  entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' ${playerName}`;
+  playerScoreElement.parentElement.appendChild(entryElement);
+  } else {
+  alert("Ungültige Eingabe. Die rote Karte wird nicht hinzugefügt.");
+  }
+  }
+
+// Funktion, um eine rote Karte für einen Spieler zu entfernen
+  function decreaseRed(playerId) {
+  const playerScoreElement = document.getElementById(playerId);
+
+  // Alle Listeneinträge des Spielers auswählen
+  const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+
+  if (entryElements.length > 0) {
+  // Den letzten Eintrag finden, der ein rotes Icon enthält
+  for (let i = entryElements.length - 1; i >= 0; i--) {
+  const entry = entryElements[i];
+  const iconElement = entry.querySelector(".red-rectangle-list");
+  if (iconElement) {
+  // Den Eintrag entfernen und die Schleife beenden
+  entry.remove();
+  break;
+  }
+  }
+  } else {
+  }
+  }
+
+// Event Listener hinzufügen, um die Zeichenanzahl bei der Eingabe zu überwachen
+  const playerNameElements = document.querySelectorAll(".player-name[contenteditable]");
+  playerNameElements.forEach((element) => {
+  element.addEventListener("blur", handlePlayerNameInput);
+  });
+
+// Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert (Spieler 1)
+  const playerNameElementPlayer1 = document.querySelector(".player-container:nth-child(1) .player-name[contenteditable]");
+  playerNameElementPlayer1.addEventListener("blur", handlePlayerNameInput);
+
+// Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert (Spieler 2)
+  const playerNameElementPlayer2 = document.querySelector(".player-container:nth-child(2) .player-name[contenteditable]");
+  playerNameElementPlayer2.addEventListener("blur", handlePlayerNameInput);
+
+// Gemeinsame Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert
+  function handlePlayerNameInput(event) {
+  const playerNameElement = event.target;
+  let playerName = playerNameElement.textContent.trim();
+  const maxNameLength = 20;
+
+  // Setze den Standardnamen (Spieler 1 oder Spieler 2) falls kein Name eingegeben wurde oder leer ist
+  if (playerName === "" || playerName === "Spieler 1" || playerName === "Spieler 2") {
+  playerName = "Spieler " + (playerNameElement === playerNameElementPlayer1 ? "1" : "2");
+  playerNameElement.textContent = playerName;
+  } else if (playerName.length > maxNameLength) {
+  // Begrenze den Spielernamen auf die maximale Länge
+  playerNameElement.textContent = playerName.slice(0, maxNameLength);
+  }
+
+  // Positioniere den Cursor am Ende des Textes, um zu verhindern, dass Zeichen am Anfang hinzugefügt werden
+  const range = document.createRange();
+  const selection = window.getSelection();
+  range.selectNodeContents(playerNameElement);
+  range.collapse(false);
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  // Fokus vom "contenteditable"-Element entfernen, wenn der Benutzer außerhalb davon klickt
+  playerNameElement.blur();
+
+  // Speichere den aktuellen Namen von Spieler 1 in der globalen Variable
+  if (playerNameElement === playerNameElementPlayer1) {
+  player1Name = playerName;
+  }
+  }
+
+// Funktion, um den Spielername auszuwählen, wenn darauf geklickt wird
+  function selectPlayerName(element) {
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  }
+
+// Inhalt des Eingabefelds markieren, wenn es den Fokus erhält.
+  function selectAllText(element) {
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
         }
 
-        // Funktion, um die Torzahl eines Spielers zu verringern
-        function decreaseScore(playerId) {
-            const playerScoreElement = document.getElementById(playerId);
-            let score = parseInt(playerScoreElement.textContent);
+// Funktion, um das Modal zu öffnen
+  function openModal() {
+  const modal = document.getElementById("myModal");
+  const player1ModalNameElement = document.getElementById("player1ModalName");
+  player1ModalNameElement.textContent = player1Name;
 
-            if (score > 0) {
-                // Alle Listeneinträge des Spielers auswählen
-                const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
-                let lastEntryWithIcon = null;
+  const player2ModalNameElement = document.getElementById("player2ModalName");
+  const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+  player2ModalNameElement.textContent = player2NameElement.textContent;
+  player2ModalNameElement.style.color = getComputedStyle(player2NameElement).color;
 
-                // Den letzten Eintrag finden, der das "fas fa-futbol" Symbol enthält
-                for (let i = entryElements.length - 1; i >= 0; i--) {
-                    const entry = entryElements[i];
-                    const iconElement = entry.querySelector(".fas.fa-futbol");
-                    if (iconElement) {
-                        lastEntryWithIcon = entry;
-                        break;
-                    }
-                }
+  modal.style.display = "block";
+  }
 
-                if (lastEntryWithIcon) {
-                    // Torzahl des Spielers um 1 verringern und den letzten Eintrag mit dem Symbol entfernen
-                    playerScoreElement.textContent = score - 1;
-                    lastEntryWithIcon.remove();
-                } else {
-                    alert("Kein Eintrag gefunden.");
-                }
-            } else {
-            }
-        }
+// Funktion, um das Modal zu schließen
+  function closeModal() {
+  const modal = document.getElementById("myModal");
+  modal.style.display = "none";
+  }
 
-	// Funktion, um ein Foul für einen Spieler hinzuzufügen
-    function addFoul(playerId) {
-        const playerScoreElement = document.getElementById(playerId);
+// Funktion, die aufgerufen wird, wenn der "Elfmeterschießen"-Button geklickt wird
+  function startElfmeterschiessen() {
+  openModal();
+  }
 
-        // Eingabeaufforderung für Spielminute
-        const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-        if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-            // Erstellen der neuen Einträge mit Foul und Informationen
-            const entryElement = document.createElement("div");
-            entryElement.classList.add("entry");
-            entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px; margin-right: -5px; margin-top: -6px;">sports</span> ${minuteInput}' Foul`;
-            playerScoreElement.parentElement.appendChild(entryElement);
+// Funktion, um das suddenDeath-Elfmeterschießen zu verarbeiten
+function suddenDeath() {
+  // Hole die Namen der Spieler
+  const player1NameElement = document.querySelector(".player-container:nth-child(1) .player-name");
+  const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+  const player1Name = player1NameElement.textContent.trim();
+  const player2Name = player2NameElement.textContent.trim();
+
+  while (true) {
+    // Fordere den Benutzer auf, zu wählen, welcher Spieler das suddenDeath-Elfmeterschießen beginnt
+    const startingPlayer = prompt(`Welcher Spieler soll beginnen?\n'1' = ${player1Name}\n'2' = ${player2Name}`);
+    if (startingPlayer === "1" || startingPlayer === "2") {
+      // Konvertiere die Eingabe in eine Zahl
+      const startingPlayerNumber = parseInt(startingPlayer);
+
+      // Setze die Punktzahlen und verfügbaren Elfmeter für das suddenDeath zurück
+      player1GreenSquares = 0;
+      player2GreenSquares = 0;
+      player1UnfilledSquares = 5;
+      player2UnfilledSquares = 5;
+
+      // Bestimmen, welcher Spieler beginnt
+      let firstPenaltyPlayerNumber, secondPenaltyPlayerNumber;
+      if (startingPlayerNumber === 1) {
+        firstPenaltyPlayerNumber = 1;
+        secondPenaltyPlayerNumber = 2;
+      } else {
+        firstPenaltyPlayerNumber = 2;
+        secondPenaltyPlayerNumber = 1;
+      }
+
+      // SuddenDeath-Elfmeterschießen
+      while (true) {
+        const firstPenaltyResult = window.confirm(`${firstPenaltyPlayerNumber === 1 ? player1Name : player2Name}, Elfmeter verwandelt?`);
+        const secondPenaltyResult = window.confirm(`${secondPenaltyPlayerNumber === 1 ? player1Name : player2Name}, Elfmeter verwandelt?`);
+
+        if (firstPenaltyResult) {
+          if (firstPenaltyPlayerNumber === 1) {
+            player1GreenSquares++;
+            const player1ScoreElement = document.getElementById("player1Score");
+            let player1Score = parseInt(player1ScoreElement.textContent);
+            player1ScoreElement.textContent = player1Score + 1; // Punkt für Spieler 1 hinzufügen
+          } else {
+            player2GreenSquares++;
+            const player2ScoreElement = document.getElementById("player2Score");
+            let player2Score = parseInt(player2ScoreElement.textContent);
+            player2ScoreElement.textContent = player2Score + 1; // Punkt für Spieler 2 hinzufügen
+          }
         } else {
-            alert("Ungültige Eingabe. Das Foul wird nicht hinzugefügt.");
+          if (firstPenaltyPlayerNumber === 1) {
+            player1UnfilledSquares--;
+          } else {
+            player2UnfilledSquares--;
+          }
         }
-    }
 
-    // Funktion, um ein Foul für einen Spieler zu entfernen
-    function decreaseFoul(playerId) {
-        const playerScoreElement = document.getElementById(playerId);
-
-        // Alle Listeneinträge des Spielers auswählen
-        const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
-
-        if (entryElements.length > 0) {
-            // Den letzten Eintrag finden, der ein Foul enthält
-            for (let i = entryElements.length - 1; i >= 0; i--) {
-                const entry = entryElements[i];
-                const iconElement = entry.querySelector(".material-icons");
-                if (iconElement && iconElement.textContent.trim() === "sports") {
-                    // Den Eintrag entfernen und die Schleife beenden
-                    entry.remove();
-                    break;
-                }
-            }
+        if (secondPenaltyResult) {
+          if (secondPenaltyPlayerNumber === 1) {
+            player1GreenSquares++;
+            const player1ScoreElement = document.getElementById("player1Score");
+            let player1Score = parseInt(player1ScoreElement.textContent);
+            player1ScoreElement.textContent = player1Score + 1; // Punkt für Spieler 1 hinzufügen
+          } else {
+            player2GreenSquares++;
+            const player2ScoreElement = document.getElementById("player2Score");
+            let player2Score = parseInt(player2ScoreElement.textContent);
+            player2ScoreElement.textContent = player2Score + 1; // Punkt für Spieler 2 hinzufügen
+          }
         } else {
+          if (secondPenaltyPlayerNumber === 1) {
+            player1UnfilledSquares--;
+          } else {
+            player2UnfilledSquares--;
+          }
         }
-    }
 
-        // Funktion, um eine gelbe Karte für einen Spieler hinzuzufügen
-    function addYellowCard(playerId) {
-        const playerScoreElement = document.getElementById(playerId);
-
-        // Eingabeaufforderung für Spielminute
-        const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-        if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-            // Erstellen der neuen Einträge mit gelber Karte und Informationen
-            const entryElement = document.createElement("div");
-            entryElement.classList.add("entry");
-            entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' Gelbe Karte`;
-            playerScoreElement.parentElement.appendChild(entryElement);
-        } else {
-            alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
+        if (player1GreenSquares !== player2GreenSquares || player1UnfilledSquares === 0 || player2UnfilledSquares === 0) {
+          break; // Wenn ein Spieler mehr Tore erzielt hat oder keine Elfmeter mehr übrig sind, endet das suddenDeath.
         }
-    }
+      }
 
-        // Funktion, um eine gelbe Karte für einen Spieler zu entfernen
-        function decreaseYellow(playerId) {
-            const playerScoreElement = document.getElementById(playerId);
+      // Überprüfe, wer das suddenDeath gewonnen hat oder ob es unentschieden ist
+      if (player1GreenSquares > player2GreenSquares) {
+        alert(`${player1Name} gewinnt!`);
+      } else if (player2GreenSquares > player1GreenSquares) {
+        alert(`${player2Name} gewinnt!`);
+      } else {
+        // Bei Gleichstand müssen wir eine zusätzliche Entscheidungsrunde hinzufügen
+        while (true) {
+          const firstPenaltyResult = window.confirm(`${player1Name}, Elfmeter verwandelt?`);
+          const secondPenaltyResult = window.confirm(`${player2Name}, Elfmeter verwandelt?`);
 
-            // Alle Listeneinträge des Spielers auswählen
-            const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
-
-            if (entryElements.length > 0) {
-                // Den letzten Eintrag finden, der ein rotes Icon enthält
-		for (let i = entryElements.length - 1; i >= 0; i--) {
-    		const entry = entryElements[i];
-    		const iconElement = entry.querySelector(".yellow-rectangle-list"); // Änderung hier
-    		if (iconElement) {
-        // Den Eintrag entfernen und die Schleife beenden
-        entry.remove();
-        break;
-    }
-}
+          if (firstPenaltyResult !== secondPenaltyResult) {
+            // Der Spieler, der seinen Elfmeter verwandelt hat, gewinnt das suddenDeath
+            if (firstPenaltyResult) {
+              alert(`${player1Name} gewinnt!`);
             } else {
+              alert(`${player2Name} gewinnt!`);
             }
+            break;
+          }
+          // Ansonsten geht das suddenDeath mit einer neuen Entscheidungsrunde weiter
         }
+      }
 
-        // Funktion, um eine rote Karte für einen Spieler hinzuzufügen
-        function addRedCard(playerId) {
-            const playerScoreElement = document.getElementById(playerId);
-
-            // Eingabeaufforderung für Spielminute und Spielername
-            const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-            if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-                const scorerName = prompt("Spielernamen eingeben (leer = 'Standardspieler'):");
-                const playerName = scorerName || "Standardspieler";
-
-                // Erstellen der neuen Einträge mit roter Karte und Informationen
-                const entryElement = document.createElement("div");
-                entryElement.classList.add("entry");
-                entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' ${playerName}`;
-                playerScoreElement.parentElement.appendChild(entryElement);
-            } else {
-                alert("Ungültige Eingabe. Die rote Karte wird nicht hinzugefügt.");
-            }
-        }
-
-        // Funktion, um eine rote Karte für einen Spieler zu entfernen
-        function decreaseRed(playerId) {
-            const playerScoreElement = document.getElementById(playerId);
-
-            // Alle Listeneinträge des Spielers auswählen
-            const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
-
-            if (entryElements.length > 0) {
-            // Den letzten Eintrag finden, der ein rotes Icon enthält
-		for (let i = entryElements.length - 1; i >= 0; i--) {
-    		const entry = entryElements[i];
-    		const iconElement = entry.querySelector(".red-rectangle-list"); // Änderung hier
-    		if (iconElement) {
-        // Den Eintrag entfernen und die Schleife beenden
-        entry.remove();
-        break;
+      break; // Beende die äußere Schleife, da das Elfmeterschießen abgeschlossen ist
+    } else {
+      alert("Ungültige Eingabe. Bitte '1' oder '2' eingeben.");
     }
+  }
 }
-            } else {
-            }
+
+
+// Funktion, um das Elfmeterergebnis anzuzeigen und zu überprüfen, ob ein Spieler gewonnen hat
+function showPenaltyResultModal(playerNumber) {
+    const penaltyResult = window.confirm("Elfmeter verwandelt?");
+    const square = event.target; // Das geklickte Quadrat
+
+    if (penaltyResult) {
+        // Der Benutzer hat "Ja" gewählt (Elfmeter verwandelt)
+        square.style.backgroundColor = "green"; // Das Quadrat wird grün gefärbt
+        const playerScoreElement = document.getElementById(`player${playerNumber}Score`);
+        let score = parseInt(playerScoreElement.textContent);
+        playerScoreElement.textContent = score + 1; // Punktestand des Spielers wird um 1 erhöht
+
+        // Zähle die grünen Quadrate und verringere die Anzahl der ungefärbten Quadrate
+        if (playerNumber === 1) {
+            player1GreenSquares++;
+            player1UnfilledSquares--;
+        } else if (playerNumber === 2) {
+            player2GreenSquares++;
+            player2UnfilledSquares--;
         }
-
-        // Event Listener hinzufügen, um die Zeichenanzahl bei der Eingabe zu überwachen
-        const playerNameElements = document.querySelectorAll(".player-name[contenteditable]");
-        playerNameElements.forEach((element) => {
-            element.addEventListener("blur", handlePlayerNameInput);
-        });
-
-        // Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert (Spieler 1)
-        const playerNameElementPlayer1 = document.querySelector(".player-container:nth-child(1) .player-name[contenteditable]");
-        playerNameElementPlayer1.addEventListener("blur", handlePlayerNameInput);
-
-        // Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert (Spieler 2)
-        const playerNameElementPlayer2 = document.querySelector(".player-container:nth-child(2) .player-name[contenteditable]");
-        playerNameElementPlayer2.addEventListener("blur", handlePlayerNameInput);
-
-        // Gemeinsame Funktion, die aufgerufen wird, wenn sich die Eingabe eines Spielernamens ändert
-        function handlePlayerNameInput(event) {
-        const playerNameElement = event.target;
-        const playerName = playerNameElement.textContent.trim();
-        const maxNameLength = 20;
-
-        // Setze den Standardnamen (Spieler 1 oder Spieler 2) falls kein Name eingegeben wurde oder leer ist
-        if (playerName === "" || playerName === "Spieler 1" || playerName === "Spieler 2") {
-            playerNameElement.textContent = "Spieler " + (playerNameElement === playerNameElementPlayer1 ? "1" : "2");
-        } else if (playerName.length > maxNameLength) {
-            // Begrenze den Spielernamen auf die maximale Länge
-            playerNameElement.textContent = playerName.slice(0, maxNameLength);
+    } else {
+        // Der Benutzer hat "Nein" gewählt (Elfmeter nicht verwandelt)
+        square.style.backgroundColor = "red"; // Das Quadrat wird rot gefärbt
+        if (playerNumber === 1) {
+            player1UnfilledSquares--;
+        } else if (playerNumber === 2) {
+            player2UnfilledSquares--;
         }
+    }
 
-        // Positioniere den Cursor am Ende des Textes, um zu verhindern, dass Zeichen am Anfang hinzugefügt werden
-        const range = document.createRange();
-        const selection = window.getSelection();
-        range.selectNodeContents(playerNameElement);
-        range.collapse(false);
-        selection.removeAllRanges();
-        selection.addRange(range);
+    square.onclick = null; // Das 'onclick' Ereignis wird entfernt, um das Quadrat zu deaktivieren
 
-        // Fokus vom "contenteditable"-Element entfernen, wenn der Benutzer außerhalb davon klickt
-        playerNameElement.blur();
-        }
+    // Überprüfe, ob ein Spieler mehr grüne Quadrate hat als der andere Spieler erreichen kann
+    const player1ScoreElement = document.getElementById("player1Score");
+    const player2ScoreElement = document.getElementById("player2Score");
+    let player1Score = parseInt(player1ScoreElement.textContent);
+    let player2Score = parseInt(player2ScoreElement.textContent);
+    let player1MaxPossibleScore = player1GreenSquares + player1UnfilledSquares;
+    let player2MaxPossibleScore = player2GreenSquares + player2UnfilledSquares;
 
-        // Funktion, um den Spielername auszuwählen, wenn darauf geklickt wird
-        function selectPlayerName(element) {
-            const range = document.createRange();
-            range.selectNodeContents(element);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
+    // Den Namen von Spieler 1 und Spieler 2 direkt aus den DOM-Elementen abrufen
+    const player1NameElement = document.querySelector(".player-container:nth-child(1) .player-name");
+    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+    const player1Name = player1NameElement.textContent.trim();
+    const player2Name = player2NameElement.textContent.trim();
 
-        // Fügen Sie die Funktion selectAllText hinzu, um den Inhalt des Eingabefelds zu markieren, wenn es den Fokus erhält.
-        function selectAllText(element) {
-            const range = document.createRange();
-            range.selectNodeContents(element);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-
-// Hinzufügen einer Funktion zum Anzeigen des Menüs
-function showMenu() {
-    const menuContainer = document.getElementById('menuContainer');
-    menuContainer.style.display = 'flex';
-}
-
-// Hinzufügen einer Funktion zum Ausblenden des Menüs
-function hideMenu() {
-    const menuContainer = document.getElementById('menuContainer');
-    menuContainer.style.display = 'none';
-}
-
-// Funktion, um das Elfmeterschießen zu starten (kann entsprechend angepasst werden)
-function showPenaltyShootout() {
-    // Hier können Sie die entsprechende Funktionalität für das Elfmeterschießen einfügen
-    alert('Elfmeterschießen starten!');
-    hideMenu();
-}
-
-// Funktion, um ein neues Spiel zu starten (kann entsprechend angepasst werden)
-function startNewGame() {
-    // Hier können Sie die entsprechende Funktionalität für ein neues Spiel einfügen
-    alert('Neues Spiel starten!');
-    hideMenu();
-}
-
-// Funktion zum Neustarten des Spiels (Seite neu laden)
-function startNewGame() {
-    window.location.reload();
-}
+    // Überprüfe, ob ein Spieler gewonnen hat und zeige entsprechende Meldung an
+    if (player1GreenSquares > player2MaxPossibleScore && player2GreenSquares <= player1MaxPossibleScore) {
+      alert(player1Name + " gewinnt!");
+    } else if (player2GreenSquares > player1MaxPossibleScore && player1GreenSquares <= player2MaxPossibleScore) {
+      alert(player2Name + " gewinnt!");
+    } else if (player1GreenSquares === player2GreenSquares && player1UnfilledSquares === 0 && player2UnfilledSquares === 0) {
+      // Wenn beide Spieler nach den ersten fünf Elfmetern immer noch unentschieden sind und keine ungenutzten Elfmeter mehr haben, starte den suddenDeath.
+      alert("Unentschieden! Es geht weiter ...");
+      suddenDeath();
+    }
+  }
     </script>
 </body>
 
