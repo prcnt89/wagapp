@@ -607,8 +607,12 @@ function addPenalty(playerId) {
             // Erstellen der neuen Einträge mit Elfmeter-Icon und Informationen
             const entryElement = document.createElement("div");
             entryElement.classList.add("entry");
-            entryElement.innerHTML = `<img src="graphics/elfmeter_missed.svg" alt="Elfmeter Icon" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
+            entryElement.innerHTML = `<img src="graphics/elfmeter_missed.svg" alt="" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
             playerScoreElement.parentElement.appendChild(entryElement);
+
+  // Einen leeren Eintrag für den anderen Spieler hinzufügen
+  const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+  addEmptyEntry(otherPlayerId);
         } else {
             alert("Ungültige Eingabe. Tor wird nicht gezählt.");
         }
