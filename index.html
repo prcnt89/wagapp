@@ -243,6 +243,32 @@
         border-radius: 2px;
         margin: 3px;
 	}
+
+.extra-time-entry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  padding: 5px;
+}
+
+.extra-time-content {
+  text-align: center;
+  font-size: 14px;
+  color: black;
+}
+
+.halftime-entry {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.finalscore-entry {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 </style>
 
 </head>
@@ -265,7 +291,7 @@
     		<span class="red-rectangle" style="position: relative; top: 0px"></span>
 		</span>
                 <span class="circle-icon" style="position: relative; top: -2px;" onclick="addPenalty('player1Score')">
-                <img src="graphics/elfmeter_white.svg" alt="Elfmeter Icon" style="position: relative; top: 1px; width: 18px; height: 18px;">
+                <img src="graphics/elfmeter_white.svg" alt="" style="position: relative; top: 1px; width: 18px; height: 18px;">
                 </span>
                 <span class="fas fa-minus-circle" style="margin-left: 15px;" onclick="removeLastEntryAndDeductPoint('player1Score')"></span>
             </div>
@@ -288,7 +314,7 @@
     		<span class="red-rectangle" style="position: relative; top: 0px"></span>
 		</span>
                 <span class="circle-icon" style="position: relative; top: -2px;" onclick="addPenalty('player2Score')">
-                <img src="graphics/elfmeter_white.svg" alt="Elfmeter Icon" style="position: relative; top: 1px; width: 18px; height: 18px;">
+                <img src="graphics/elfmeter_white.svg" alt="" style="position: relative; top: 1px; width: 18px; height: 18px;">
                 </span>
                 <span class="fas fa-minus-circle" style="margin-left: 15px;" onclick="removeLastEntryAndDeductPoint('player2Score')"></span>
             </div>
@@ -306,7 +332,10 @@
     <div id="menu" style="display: none;">
     <ul>
     <span class="close" onclick="closeMenu()">&times;</span>
+    <li onclick="addExtraTime(); closeMenu();">Nachspielzeit</li>
+    <li onclick="addHalftime(); closeMenu();">Halbzeit</li>
     <li onclick="startElfmeterschiessen(); closeMenu();">Elfmeterschießen</li>
+    <li onclick="addFinalScore(); closeMenu();">Spielende</li>
     <li onclick="startNewGame(); closeMenu();">Neues Spiel</li>
     </ul>
     </div>
@@ -813,7 +842,133 @@ function showPenaltyResultModal(playerNumber) {
       suddenDeath();
     }
   }
-    </script>
+
+// Funktion, um die Nachspielzeit hinzuzufügen
+function addExtraTime() {
+  const extraTimeInput = prompt("Wieviel Nachspielzeit gibt es? (2-stellige Zahl):");
+
+  if (extraTimeInput && /^\d{2}$/.test(extraTimeInput)) {
+    const extraTimeElement = document.createElement("div");
+    extraTimeElement.classList.add("entry");
+    extraTimeElement.classList.add("extra-time-entry");
+
+    const extraTimeContent = document.createElement("span");
+    extraTimeContent.classList.add("extra-time-content");
+    extraTimeContent.textContent = `Nachspielzeit ${extraTimeInput}'`;
+
+    extraTimeElement.appendChild(extraTimeContent);
+
+    const player1ScoreElement = document.getElementById("player1Score");
+    const player2ScoreElement = document.getElementById("player2Score");
+
+    const player1EventsContainer = player1ScoreElement.parentElement;
+    const player2EventsContainer = player2ScoreElement.parentElement;
+
+    player1EventsContainer.appendChild(extraTimeElement.cloneNode(true));
+    player2EventsContainer.appendChild(extraTimeElement);
+
+  } else {
+    alert("Ungültige Eingabe. Die Nachspielzeit wird nicht hinzugefügt.");
+  }
+}
+
+// Funktion, um die Halbzeit anzuzeigen
+function addHalftime() {
+    const halftimeElement = document.createElement("div");
+    halftimeElement.classList.add("entry");
+    halftimeElement.classList.add("halftime-entry");
+
+    // Stil für die graue Hintergrundfläche mit abgerundeten Ecken und Anpassungen
+    halftimeElement.style.backgroundColor = "rgba(0, 0, 0, 0.08)";
+    halftimeElement.style.borderRadius = "10px";
+    halftimeElement.style.padding = "3px 0";
+    halftimeElement.style.margin = "10px 0";
+
+    const halftimeContent = document.createElement("span");
+    halftimeContent.classList.add("halftime-content");
+    halftimeContent.textContent = "Halbzeit";
+
+    const player1ScoreElement = document.getElementById("player1Score");
+    const player2ScoreElement = document.getElementById("player2Score");
+
+    const player1EventsContainer = player1ScoreElement.parentElement;
+    const player2EventsContainer = player2ScoreElement.parentElement;
+
+    const scoreSpacer = document.createElement("span");
+    scoreSpacer.classList.add("score-spacer");
+    scoreSpacer.textContent = "\u00A0"; // Unicode-Zeichen für ein schmales Leerzeichen
+
+    halftimeElement.appendChild(halftimeContent);
+    halftimeElement.appendChild(scoreSpacer.cloneNode(true));
+    halftimeElement.appendChild(document.createTextNode(player1ScoreElement.textContent));
+    halftimeElement.appendChild(document.createTextNode("-"));
+    halftimeElement.appendChild(document.createTextNode(player2ScoreElement.textContent));
+
+    player1EventsContainer.appendChild(halftimeElement.cloneNode(true));
+    player2EventsContainer.appendChild(halftimeElement);
+}
+
+// Funktion, um die Halbzeit anzuzeigen
+function addFinalScore() {
+    const finalscoreElement = document.createElement("div");
+    finalscoreElement.classList.add("entry");
+    finalscoreElement.classList.add("finalscore-entry");
+
+    // Stil für die graue Hintergrundfläche mit abgerundeten Ecken und Anpassungen
+    finalscoreElement.style.backgroundColor = "rgba(0, 0, 0, 0.08)";
+    finalscoreElement.style.borderRadius = "10px";
+    finalscoreElement.style.padding = "3px 0";
+    finalscoreElement.style.margin = "10px 0";
+
+    const finalscoreContent = document.createElement("span");
+    finalscoreContent.classList.add("finalscore-content");
+    finalscoreContent.textContent = "Endstand";
+
+    const player1ScoreElement = document.getElementById("player1Score");
+    const player2ScoreElement = document.getElementById("player2Score");
+
+    const player1EventsContainer = player1ScoreElement.parentElement;
+    const player2EventsContainer = player2ScoreElement.parentElement;
+
+    const scoreSpacer = document.createElement("span");
+    scoreSpacer.classList.add("score-spacer");
+    scoreSpacer.textContent = "\u00A0"; // Unicode-Zeichen für ein schmales Leerzeichen
+
+    finalscoreElement.appendChild(finalscoreContent);
+    finalscoreElement.appendChild(scoreSpacer.cloneNode(true));
+    finalscoreElement.appendChild(document.createTextNode(player1ScoreElement.textContent));
+    finalscoreElement.appendChild(document.createTextNode("-"));
+    finalscoreElement.appendChild(document.createTextNode(player2ScoreElement.textContent));
+
+    player1EventsContainer.appendChild(finalscoreElement.cloneNode(true));
+    player2EventsContainer.appendChild(finalscoreElement);
+    checkGameEndAndPoints();
+}
+
+// Funktion, um das Ergebnis nach dem Spiel zu kontrollieren
+function checkGameEndAndPoints() {
+    const player1ScoreElement = document.getElementById("player1Score");
+    const player2ScoreElement = document.getElementById("player2Score");
+    const player1Events = document.querySelectorAll(".player-container:nth-child(1) .entry");
+    const player2Events = document.querySelectorAll(".player-container:nth-child(2) .entry");
+
+    const player1HasGameEnd = Array.from(player1Events).some(event => event.textContent.includes("Endstand"));
+    const player2HasGameEnd = Array.from(player2Events).some(event => event.textContent.includes("Endstand"));
+
+    const player1Score = parseInt(player1ScoreElement.textContent);
+    const player2Score = parseInt(player2ScoreElement.textContent);
+
+    if (player1HasGameEnd && player2HasGameEnd && player1Score === player2Score) {
+        const shootoutConfirmed = confirm("Unentschieden. Soll es ein Elfmeterschießen geben?");
+        if (shootoutConfirmed) {
+            startElfmeterschiessen();
+        } else {
+            // POPUP FÜR DEN SIEGER ERSTELLEN?
+        }
+    }
+}
+
+</script>
 </body>
 
 </html>
