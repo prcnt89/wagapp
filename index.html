@@ -702,8 +702,8 @@ function suddenDeath() {
 
       // SuddenDeath-Elfmeterschießen
       while (true) {
-        const firstPenaltyResult = window.confirm(`${firstPenaltyPlayerNumber === 1 ? player1Name : player2Name}, Elfmeter verwandelt?`);
-        const secondPenaltyResult = window.confirm(`${secondPenaltyPlayerNumber === 1 ? player1Name : player2Name}, Elfmeter verwandelt?`);
+        const firstPenaltyResult = window.confirm(`Hat ${firstPenaltyPlayerNumber === 1 ? player1Name : player2Name} den Elfmeter verwandelt?`);
+        const secondPenaltyResult = window.confirm(`Hat ${secondPenaltyPlayerNumber === 1 ? player1Name : player2Name} den Elfmeter verwandelt?`);
 
         if (firstPenaltyResult) {
           if (firstPenaltyPlayerNumber === 1) {
