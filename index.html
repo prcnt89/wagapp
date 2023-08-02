@@ -255,19 +255,19 @@
             <div class="player-score" id="player1Score">0</div>
             <div class="icons">
                 <span class="fas fa-futbol" style="color: black; margin-right: -3px;" onclick="increaseScore('player1Score')"></span>
-                <span class="fas fa-minus-circle" onclick="decreaseScore('player1Score')"></span>
                 <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player1Score')">
                 <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
                 </span>
-                <span class="fas fa-minus-circle" onclick="decreaseFoul('player1Score')"></span>
-                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addYellowCard('player1Score')">
+                <span class="circle-icon" style="position: relative; top: -3px;" onclick="addYellowCard('player1Score')">
     		<span class="yellow-rectangle" style="position: relative; top: 0px"></span>
 		</span>
-                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseYellow('player1Score')"></span>
-                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addRedCard('player1Score')">
+                <span class="circle-icon" style="position: relative; top: -3px;" onclick="addRedCard('player1Score')">
     		<span class="red-rectangle" style="position: relative; top: 0px"></span>
 		</span>
-                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseRed('player1Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addPenalty('player1Score')">
+                <img src="graphics/elfmeter_white.svg" alt="Elfmeter Icon" style="position: relative; top: 1px; width: 18px; height: 18px;">
+                </span>
+                <span class="fas fa-minus-circle" style="margin-left: 15px;" onclick="removeLastEntryAndDeductPoint('player1Score')"></span>
             </div>
             <!-- Listeneinträge für Spieler 1 -->
         </div>
@@ -278,19 +278,19 @@
             <div class="player-score" id="player2Score">0</div>
             <div class="icons">
                 <span class="fas fa-futbol" style="color: black; margin-right: -3px;" onclick="increaseScore('player2Score')"></span>
-                <span class="fas fa-minus-circle" onclick="decreaseScore('player2Score')"></span>
                 <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player2Score')">
                 <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
                 </span>
-                <span class="fas fa-minus-circle" onclick="decreaseFoul('player2Score')"></span>
-                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addYellowCard('player2Score')">
+                <span class="circle-icon" style="position: relative; top: -3px;" onclick="addYellowCard('player2Score')">
     		<span class="yellow-rectangle" style="position: relative; top: 0px"></span>
 		</span>
-                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseYellow('player2Score')"></span>
-                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addRedCard('player2Score')">
+                <span class="circle-icon" style="position: relative; top: -3px;" onclick="addRedCard('player2Score')">
     		<span class="red-rectangle" style="position: relative; top: 0px"></span>
 		</span>
-                <span class="fas fa-minus-circle" style="color: black;" onclick="decreaseRed('player2Score')"></span>
+                <span class="circle-icon" style="position: relative; top: -2px;" onclick="addPenalty('player2Score')">
+                <img src="graphics/elfmeter_white.svg" alt="Elfmeter Icon" style="position: relative; top: 1px; width: 18px; height: 18px;">
+                </span>
+                <span class="fas fa-minus-circle" style="margin-left: 15px;" onclick="removeLastEntryAndDeductPoint('player2Score')"></span>
             </div>
             <!-- Listeneinträge für Spieler 2 -->
         </div>
@@ -429,36 +429,35 @@ let player2GreenSquares = 0;
   }
   }
 
-// Funktion, um die Torzahl eines Spielers zu verringern
-  function decreaseScore(playerId) {
-  const playerScoreElement = document.getElementById(playerId);
-  let score = parseInt(playerScoreElement.textContent);
+function removeLastEntryAndDeductPoint(playerId) {
+    const playerScoreElement = document.getElementById(playerId);
+    const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
 
-  if (score > 0) {
-  // Alle Listeneinträge des Spielers auswählen
-  const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
-  let lastEntryWithIcon = null;
+    if (entryElements.length > 0) {
+        const lastEntry = entryElements[entryElements.length - 1];
+        const futbolIcon = lastEntry.querySelector(".fas.fa-futbol");
+        const elfmeterIcon = lastEntry.querySelector("img[src='graphics/elfmeter_black.svg']");
 
-  // Den letzten Eintrag finden, der das "fas fa-futbol" Symbol enthält
-  for (let i = entryElements.length - 1; i >= 0; i--) {
-  const entry = entryElements[i];
-  const iconElement = entry.querySelector(".fas.fa-futbol");
-  if (iconElement) {
-  lastEntryWithIcon = entry;
-  break;
-  }
-  }
+        if (futbolIcon) {
+            // Remove 1 point if the futbol icon is present
+            let score = parseInt(playerScoreElement.textContent);
+            if (score > 0) {
+                playerScoreElement.textContent = score - 1;
+            }
+        }
 
-  if (lastEntryWithIcon) {
-  // Torzahl des Spielers um 1 verringern und den letzten Eintrag mit dem Symbol entfernen
-  playerScoreElement.textContent = score - 1;
-  lastEntryWithIcon.remove();
-  } else {
-  alert("Kein Eintrag vorhanden.");
-  }
-  } else {
-  }
-  }
+        if (elfmeterIcon) {
+            // Remove 1 point if the elfmeter icon is present
+            let score = parseInt(playerScoreElement.textContent);
+            if (score > 0) {
+                playerScoreElement.textContent = score - 1;
+            }
+        }
+
+        // Den letzten Eintrag entfernen
+        lastEntry.remove();
+    }
+}
 
 // Funktion, um ein Foul für einen Spieler hinzuzufügen
   function addFoul(playerId) {
@@ -477,28 +476,6 @@ let player2GreenSquares = 0;
   }
   }
 
-// Funktion, um ein Foul für einen Spieler zu entfernen
-  function decreaseFoul(playerId) {
-  const playerScoreElement = document.getElementById(playerId);
-
-  // Alle Listeneinträge des Spielers auswählen
-  const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
-
-  if (entryElements.length > 0) {
-  // Den letzten Eintrag finden, der ein Foul enthält
-  for (let i = entryElements.length - 1; i >= 0; i--) {
-  const entry = entryElements[i];
-  const iconElement = entry.querySelector(".material-icons");
-  if (iconElement && iconElement.textContent.trim() === "sports") {
-  // Den Eintrag entfernen und die Schleife beenden
-  entry.remove();
-  break;
-  }
-  }
-  } else {
-  }
-  }
-
 // Funktion, um eine gelbe Karte für einen Spieler hinzuzufügen
   function addYellowCard(playerId) {
   const playerScoreElement = document.getElementById(playerId);
@@ -513,28 +490,6 @@ let player2GreenSquares = 0;
   playerScoreElement.parentElement.appendChild(entryElement);
   } else {
   alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
-  }
-  }
-
-// Funktion, um eine gelbe Karte für einen Spieler zu entfernen
-  function decreaseYellow(playerId) {
-  const playerScoreElement = document.getElementById(playerId);
-
-  // Alle Listeneinträge des Spielers auswählen
-  const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
-
-  if (entryElements.length > 0) {
-  // Den letzten Eintrag finden, der ein rotes Icon enthält
-  for (let i = entryElements.length - 1; i >= 0; i--) {
-  const entry = entryElements[i];
-  const iconElement = entry.querySelector(".yellow-rectangle-list");
-  if (iconElement) {
-  // Den Eintrag entfernen und die Schleife beenden
-  entry.remove();
-  break;
-  }
-  }
-  } else {
   }
   }
 
@@ -558,27 +513,46 @@ let player2GreenSquares = 0;
   }
   }
 
-// Funktion, um eine rote Karte für einen Spieler zu entfernen
-  function decreaseRed(playerId) {
-  const playerScoreElement = document.getElementById(playerId);
+// Funktion, um einen Elfmeter für einen Spieler hinzuzufügen
+function addPenalty(playerId) {
+    const playerScoreElement = document.getElementById(playerId);
 
-  // Alle Listeneinträge des Spielers auswählen
-  const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+    // Ask the user if the penalty was converted
+    const penaltyConverted = window.confirm("Elfmeter verwandelt?");
 
-  if (entryElements.length > 0) {
-  // Den letzten Eintrag finden, der ein rotes Icon enthält
-  for (let i = entryElements.length - 1; i >= 0; i--) {
-  const entry = entryElements[i];
-  const iconElement = entry.querySelector(".red-rectangle-list");
-  if (iconElement) {
-  // Den Eintrag entfernen und die Schleife beenden
-  entry.remove();
-  break;
-  }
-  }
-  } else {
-  }
-  }
+    if (penaltyConverted) {
+        let score = parseInt(playerScoreElement.textContent);
+
+        // Eingabeaufforderung für Spielminute und Torschützen
+        const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+        if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+
+            // Erstellen der neuen Einträge mit Elfmeter-Icon und Informationen
+            const entryElement = document.createElement("div");
+            entryElement.classList.add("entry");
+            entryElement.innerHTML = `<img src="graphics/elfmeter_black.svg" alt="Elfmeter Icon" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
+            playerScoreElement.parentElement.appendChild(entryElement);
+
+            // Torzahl des Spielers um 1 erhöhen
+            playerScoreElement.textContent = score + 1;
+        } else {
+            alert("Ungültige Eingabe. Tor wird nicht gezählt.");
+        }
+    } else {
+        // Eingabeaufforderung für Spielminute und Torschützen
+        const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+        if (minuteInput && /^\d{2}$/.test(minuteInput)) {
+
+            // Erstellen der neuen Einträge mit Elfmeter-Icon und Informationen
+            const entryElement = document.createElement("div");
+            entryElement.classList.add("entry");
+            entryElement.innerHTML = `<img src="graphics/elfmeter_missed.svg" alt="Elfmeter Icon" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
+            playerScoreElement.parentElement.appendChild(entryElement);
+        } else {
+            alert("Ungültige Eingabe. Tor wird nicht gezählt.");
+        }
+    }
+}
 
 // Event Listener hinzufügen, um die Zeichenanzahl bei der Eingabe zu überwachen
   const playerNameElements = document.querySelectorAll(".player-name[contenteditable]");
