@@ -434,6 +434,18 @@ let player2GreenSquares = 0;
   // Globale Variable, um den aktuellen Namen von Spieler 1 zu speichern
   let player1Name = "Spieler 1"; // Standardname
 
+  // Eine Funktion erstellen, um einen leeren Eintrag für den anderen Spieler hinzuzufügen
+  function addEmptyEntry(playerId) {
+  const playerScoreElement = document.getElementById(playerId);
+  const playerName = playerId === "player1Score" ? "Spieler 2" : "Spieler 1";
+
+  const entryElement = document.createElement("div");
+  entryElement.classList.add("entry");
+  entryElement.innerHTML = `&nbsp;`;
+
+  playerScoreElement.parentElement.appendChild(entryElement);
+}
+
 // Funktion, um die Torzahl eines Spielers zu erhöhen
   function increaseScore(playerId) {
   const playerScoreElement = document.getElementById(playerId);
@@ -453,6 +465,10 @@ let player2GreenSquares = 0;
 
   // Torzahl des Spielers um 1 erhöhen
   playerScoreElement.textContent = score + 1;
+
+  // Einen leeren Eintrag für den anderen Spieler hinzufügen
+  const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+  addEmptyEntry(otherPlayerId);
   } else {
   alert("Ungültige Eingabe. Tor wird nicht gezählt.");
   }
@@ -500,6 +516,10 @@ function removeLastEntryAndDeductPoint(playerId) {
   entryElement.classList.add("entry");
   entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px; margin-right: -5px; margin-top: -6px;">sports</span> ${minuteInput}' Foul`;
   playerScoreElement.parentElement.appendChild(entryElement);
+
+  // Einen leeren Eintrag für den anderen Spieler hinzufügen
+  const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+  addEmptyEntry(otherPlayerId);
   } else {
   alert("Ungültige Eingabe. Das Foul wird nicht hinzugefügt.");
   }
@@ -517,6 +537,10 @@ function removeLastEntryAndDeductPoint(playerId) {
   entryElement.classList.add("entry");
   entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' Gelbe Karte`;
   playerScoreElement.parentElement.appendChild(entryElement);
+
+  // Einen leeren Eintrag für den anderen Spieler hinzufügen
+  const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+  addEmptyEntry(otherPlayerId);
   } else {
   alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
   }
@@ -537,6 +561,10 @@ function removeLastEntryAndDeductPoint(playerId) {
   entryElement.classList.add("entry");
   entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' ${playerName}`;
   playerScoreElement.parentElement.appendChild(entryElement);
+
+  // Einen leeren Eintrag für den anderen Spieler hinzufügen
+  const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+  addEmptyEntry(otherPlayerId);
   } else {
   alert("Ungültige Eingabe. Die rote Karte wird nicht hinzugefügt.");
   }
@@ -559,11 +587,15 @@ function addPenalty(playerId) {
             // Erstellen der neuen Einträge mit Elfmeter-Icon und Informationen
             const entryElement = document.createElement("div");
             entryElement.classList.add("entry");
-            entryElement.innerHTML = `<img src="graphics/elfmeter_black.svg" alt="Elfmeter Icon" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
+            entryElement.innerHTML = `<img src="graphics/elfmeter_black.svg" alt="" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
             playerScoreElement.parentElement.appendChild(entryElement);
 
             // Torzahl des Spielers um 1 erhöhen
             playerScoreElement.textContent = score + 1;
+
+  // Einen leeren Eintrag für den anderen Spieler hinzufügen
+  const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+  addEmptyEntry(otherPlayerId);
         } else {
             alert("Ungültige Eingabe. Tor wird nicht gezählt.");
         }
