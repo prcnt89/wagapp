@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
+<audio id="goalSound" preload="auto">
+    <source src="sounds/goal.mp3" type="audio/mpeg">
+    Sounddateien werden von diesem Browser nicht unterstützt.
+</audio>
+
     <style>
         #overlay {
             display: none;
@@ -23,33 +28,57 @@
             z-index: 9998;
         }
 
-        #menu {
-            position: absolute;
-            top: 40px;
-            right: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 10px;
-            z-index: 9999;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
+       #menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 150px;
+    max-width: 150px;
+    display: none;
+    z-index: 9999;
+}
 
-        #menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+#menu.active {
+    display: block;
+}
 
-        #menu ul li {
-            cursor: pointer;
-            padding: 5px;
-        }
+#menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-        #menu ul li:hover {
-            background-color: #f0f0f0;
-        }
+#menu ul li {
+    cursor: pointer;
+    padding: 10px 0;
+    font-size: 18px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#menu ul li:hover {
+    background-color: #f8f8f8;
+}
+
+#menu .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s ease-in-out;
+}
+
+#menu .close:hover {
+    color: #333;
+}
 
         body {
             font-family: Arial, sans-serif;
@@ -68,17 +97,21 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            overflow-x: hidden;
             gap: 20px;
         }
 
         .player-container {
-            background-color: white;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            min-width: 300px;
-            max-width: 300px;
-        }
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    min-width: 300px;
+    max-width: 300px;
+    max-height: 298px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
         .player-name {
             font-size: 24px;
@@ -269,14 +302,31 @@
     justify-content: center;
     align-items: center;
 }
+
+/* CSS für die Tor-Animation */
+.score-animation {
+  animation-name: scoreAnimation;
+  animation-duration: 1s;
+  animation-iteration-count: 4;
+  animation-fill-mode: both;
+}
+
+@keyframes scoreAnimation {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+}
 </style>
 
 </head>
 <body>
 <div id="overlay"></div>
-    <div class="players-container">
+    <div class="players-container" id="playersContainer">
         <!-- Spieler 1 -->
-        <div class="player-container">
+        <div class="player-container" id="player1Container">
             <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 1</div>
             <div class="player-score" id="player1Score">0</div>
             <div class="icons">
@@ -299,7 +349,7 @@
         </div>
 
         <!-- Spieler 2 -->
-        <div class="player-container">
+        <div class="player-container" id="player2Container">
             <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 2</div>
             <div class="player-score" id="player2Score">0</div>
             <div class="icons">
@@ -329,13 +379,12 @@
     </div>
 
 <!-- Menü -->
-    <div id="menu" style="display: none;">
+    <div id="menu" class="active" style="display: none;">
     <ul>
     <span class="close" onclick="closeMenu()">&times;</span>
     <li onclick="addExtraTime(); closeMenu();">Nachspielzeit</li>
     <li onclick="addHalftime(); closeMenu();">Halbzeit</li>
-    <li onclick="startElfmeterschiessen(); closeMenu();">Elfmeterschießen</li>
-    <li onclick="addFinalScore(); closeMenu();">Spielende</li>
+    <li style="margin-bottom: 15px;" onclick="addFinalScore(); closeMenu();">Spielende</li>
     <li onclick="startNewGame(); closeMenu();">Neues Spiel</li>
     </ul>
     </div>
@@ -466,6 +515,17 @@ let player2GreenSquares = 0;
   // Torzahl des Spielers um 1 erhöhen
   playerScoreElement.textContent = score + 1;
 
+  // Torsound abspielen
+  playGoalSound();
+
+// Punkt-Animation hinzufügen
+  playerScoreElement.classList.add("score-animation");
+
+  // Nach 3 Sekunden die Punkt-Animation entfernen
+  setTimeout(() => {
+    playerScoreElement.classList.remove("score-animation");
+  }, 3000);
+
   // Einen leeren Eintrag für den anderen Spieler hinzufügen
   const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
   addEmptyEntry(otherPlayerId);
@@ -592,6 +652,17 @@ function addPenalty(playerId) {
 
             // Torzahl des Spielers um 1 erhöhen
             playerScoreElement.textContent = score + 1;
+
+  // Torsound abspielen
+  playGoalSound();
+
+// Punkt-Animation hinzufügen
+  playerScoreElement.classList.add("score-animation");
+
+  // Nach 3 Sekunden die Punkt-Animation entfernen
+  setTimeout(() => {
+    playerScoreElement.classList.remove("score-animation");
+  }, 3000);
 
   // Einen leeren Eintrag für den anderen Spieler hinzufügen
   const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
@@ -750,11 +821,31 @@ function suddenDeath() {
             const player1ScoreElement = document.getElementById("player1Score");
             let player1Score = parseInt(player1ScoreElement.textContent);
             player1ScoreElement.textContent = player1Score + 1; // Punkt für Spieler 1 hinzufügen
+  // Torsound abspielen
+  playGoalSound();
+
+// Punkt-Animation hinzufügen
+  playerScoreElement.classList.add("score-animation");
+
+  // Nach 3 Sekunden die Punkt-Animation entfernen
+  setTimeout(() => {
+    playerScoreElement.classList.remove("score-animation");
+  }, 3000);
           } else {
             player2GreenSquares++;
             const player2ScoreElement = document.getElementById("player2Score");
             let player2Score = parseInt(player2ScoreElement.textContent);
             player2ScoreElement.textContent = player2Score + 1; // Punkt für Spieler 2 hinzufügen
+  // Torsound abspielen
+  playGoalSound();
+
+// Punkt-Animation hinzufügen
+  playerScoreElement.classList.add("score-animation");
+
+  // Nach 3 Sekunden die Punkt-Animation entfernen
+  setTimeout(() => {
+    playerScoreElement.classList.remove("score-animation");
+  }, 3000);
           }
         } else {
           if (firstPenaltyPlayerNumber === 1) {
@@ -770,11 +861,31 @@ function suddenDeath() {
             const player1ScoreElement = document.getElementById("player1Score");
             let player1Score = parseInt(player1ScoreElement.textContent);
             player1ScoreElement.textContent = player1Score + 1; // Punkt für Spieler 1 hinzufügen
+  // Torsound abspielen
+  playGoalSound();
+
+// Punkt-Animation hinzufügen
+  playerScoreElement.classList.add("score-animation");
+
+  // Nach 3 Sekunden die Punkt-Animation entfernen
+  setTimeout(() => {
+    playerScoreElement.classList.remove("score-animation");
+  }, 3000);
           } else {
             player2GreenSquares++;
             const player2ScoreElement = document.getElementById("player2Score");
             let player2Score = parseInt(player2ScoreElement.textContent);
             player2ScoreElement.textContent = player2Score + 1; // Punkt für Spieler 2 hinzufügen
+  // Torsound abspielen
+  playGoalSound();
+
+// Punkt-Animation hinzufügen
+  playerScoreElement.classList.add("score-animation");
+
+  // Nach 3 Sekunden die Punkt-Animation entfernen
+  setTimeout(() => {
+    playerScoreElement.classList.remove("score-animation");
+  }, 3000);
           }
         } else {
           if (secondPenaltyPlayerNumber === 1) {
@@ -832,6 +943,16 @@ function showPenaltyResultModal(playerNumber) {
         const playerScoreElement = document.getElementById(`player${playerNumber}Score`);
         let score = parseInt(playerScoreElement.textContent);
         playerScoreElement.textContent = score + 1; // Punktestand des Spielers wird um 1 erhöht
+  // Torsound abspielen
+  playGoalSound();
+
+// Punkt-Animation hinzufügen
+  playerScoreElement.classList.add("score-animation");
+
+  // Nach 3 Sekunden die Punkt-Animation entfernen
+  setTimeout(() => {
+    playerScoreElement.classList.remove("score-animation");
+  }, 3000);
 
         // Zähle die grünen Quadrate und verringere die Anzahl der ungefärbten Quadrate
         if (playerNumber === 1) {
@@ -881,7 +1002,7 @@ function showPenaltyResultModal(playerNumber) {
 
 // Funktion, um die Nachspielzeit hinzuzufügen
 function addExtraTime() {
-  const extraTimeInput = prompt("Wieviel Nachspielzeit gibt es? (2-stellige Zahl):");
+  const extraTimeInput = prompt("Wie viel Nachspielzeit gibt es? (2-stellige Zahl):");
 
   if (extraTimeInput && /^\d{2}$/.test(extraTimeInput)) {
     const extraTimeElement = document.createElement("div");
@@ -1004,6 +1125,23 @@ function checkGameEndAndPoints() {
     }
 }
 
+const playersContainer = document.getElementById('playersContainer');
+        const player1Container = document.getElementById('player1Container');
+        const player2Container = document.getElementById('player2Container');
+
+        // Event-Handler, der auf das Scrollen eines Containers reagiert
+        player1Container.addEventListener('scroll', function () {
+            player2Container.scrollTop = player1Container.scrollTop;
+        });
+
+        player2Container.addEventListener('scroll', function () {
+            player1Container.scrollTop = player2Container.scrollTop;
+        });
+
+function playGoalSound() {
+    const goalSound = new Audio('sounds/goal.mp3');
+    goalSound.play();
+}
 </script>
 </body>
 
