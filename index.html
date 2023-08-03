@@ -662,7 +662,7 @@ function addPenalty(playerId) {
   // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
-  }, 3000);
+  }, 8000);
 
   // Einen leeren Eintrag für den anderen Spieler hinzufügen
   const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
@@ -830,7 +830,7 @@ function suddenDeath() {
   // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
-  }, 3000);
+  }, 8000);
           } else {
             player2GreenSquares++;
             const player2ScoreElement = document.getElementById("player2Score");
@@ -845,7 +845,7 @@ function suddenDeath() {
   // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
-  }, 3000);
+  }, 8000);
           }
         } else {
           if (firstPenaltyPlayerNumber === 1) {
@@ -870,7 +870,7 @@ function suddenDeath() {
   // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
-  }, 3000);
+  }, 8000);
           } else {
             player2GreenSquares++;
             const player2ScoreElement = document.getElementById("player2Score");
@@ -885,7 +885,7 @@ function suddenDeath() {
   // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
-  }, 3000);
+  }, 8000);
           }
         } else {
           if (secondPenaltyPlayerNumber === 1) {
@@ -952,7 +952,7 @@ function showPenaltyResultModal(playerNumber) {
   // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
-  }, 3000);
+  }, 8000);
 
         // Zähle die grünen Quadrate und verringere die Anzahl der ungefärbten Quadrate
         if (playerNumber === 1) {
