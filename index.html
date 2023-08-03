@@ -307,7 +307,7 @@
 .score-animation {
   animation-name: scoreAnimation;
   animation-duration: 1s;
-  animation-iteration-count: 4;
+  animation-iteration-count: 7;
   animation-fill-mode: both;
 }
 
@@ -521,10 +521,10 @@ let player2GreenSquares = 0;
 // Punkt-Animation hinzufügen
   playerScoreElement.classList.add("score-animation");
 
-  // Nach 3 Sekunden die Punkt-Animation entfernen
+  // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
-  }, 3000);
+  }, 8000);
 
   // Einen leeren Eintrag für den anderen Spieler hinzufügen
   const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
@@ -659,7 +659,7 @@ function addPenalty(playerId) {
 // Punkt-Animation hinzufügen
   playerScoreElement.classList.add("score-animation");
 
-  // Nach 3 Sekunden die Punkt-Animation entfernen
+  // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
   }, 3000);
@@ -827,7 +827,7 @@ function suddenDeath() {
 // Punkt-Animation hinzufügen
   playerScoreElement.classList.add("score-animation");
 
-  // Nach 3 Sekunden die Punkt-Animation entfernen
+  // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
   }, 3000);
@@ -842,7 +842,7 @@ function suddenDeath() {
 // Punkt-Animation hinzufügen
   playerScoreElement.classList.add("score-animation");
 
-  // Nach 3 Sekunden die Punkt-Animation entfernen
+  // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
   }, 3000);
@@ -867,7 +867,7 @@ function suddenDeath() {
 // Punkt-Animation hinzufügen
   playerScoreElement.classList.add("score-animation");
 
-  // Nach 3 Sekunden die Punkt-Animation entfernen
+  // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
   }, 3000);
@@ -882,7 +882,7 @@ function suddenDeath() {
 // Punkt-Animation hinzufügen
   playerScoreElement.classList.add("score-animation");
 
-  // Nach 3 Sekunden die Punkt-Animation entfernen
+  // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
   }, 3000);
@@ -949,7 +949,7 @@ function showPenaltyResultModal(playerNumber) {
 // Punkt-Animation hinzufügen
   playerScoreElement.classList.add("score-animation");
 
-  // Nach 3 Sekunden die Punkt-Animation entfernen
+  // Nach 8 Sekunden die Punkt-Animation entfernen
   setTimeout(() => {
     playerScoreElement.classList.remove("score-animation");
   }, 3000);
