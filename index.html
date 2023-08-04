@@ -16,6 +16,11 @@
     Sounddateien werden von diesem Browser nicht unterstützt.
 </audio>
 
+<audio id="winSound" preload="auto">
+    <source src="sounds/win.wav" type="audio/mpeg">
+    Sounddateien werden von diesem Browser nicht unterstützt.
+</audio>
+
 <style>
 #overlay {
     display: none;
@@ -1336,6 +1341,12 @@ function playGoalSound() {
     goalSound.play();
 }
 
+// Funktion zum Abspielen des Sieger-Sounds
+function playWinSound() {
+    const sound = new Audio("sounds/win.wav");
+    sound.play();
+}
+
 // Funktion, um den Siegerbildschirm anzuzeigen
 function showWinnerScreen(player1Name) {
     // Erstellen des Overlay-Divs
@@ -1400,14 +1411,25 @@ function showWinnerScreen(winnerName) {
     // Hinzufügen des zusätzlichen Texts
     const additionalText = document.createElement("p");
     additionalText.classList.add("additional-text");
-    additionalText.textContent = "Du hast das Spiel 'WHAT A GOAL!' gewonnen!";
+    additionalText.textContent = "Du hast das Spiel 'WHAT a GOAL!' gewonnen!";
     winnerContent.appendChild(additionalText);
     winnerText.textContent = "Gratulation, " + winnerName + "!";
+
     // Hinzufügen des "Neues Spiel"-Buttons
     const newGameButton = document.createElement("button");
     newGameButton.textContent = "Neues Spiel starten";
     newGameButton.addEventListener("click", startNewGame);
     winnerContent.appendChild(newGameButton);
+
+    // Hinzufügen des "Spielverlauf ansehen"-Buttons
+    const viewGameHistoryButton = document.createElement("button");
+    viewGameHistoryButton.textContent = "Spielverlauf ansehen";
+    
+    // Hier wird der Abstand von 20px links hinzugefügt
+    viewGameHistoryButton.style.marginLeft = "20px";
+    
+    viewGameHistoryButton.addEventListener("click", closeWinnerScreen);
+    winnerContent.appendChild(viewGameHistoryButton);
 
     overlay.appendChild(winnerContent);
 
@@ -1430,10 +1452,20 @@ function checkWinnerAndShowScreen() {
 
     if (player1Score > player2Score) {
         showWinnerScreen(player1Name);
+        playWinSound();
     } else if (player2Score > player1Score) {
         showWinnerScreen(player2Name);
+        playWinSound();
     } else {
-        // Hier kannst du deine Aktion für ein Unentschieden hinzufügen
+        checkGameEndAndPoints()
+    }
+}
+
+// Funktion, um den Siegerbildschirm zu schließen
+function closeWinnerScreen() {
+    const overlay = document.querySelector(".winner-overlay");
+    if (overlay) {
+        overlay.remove();
     }
 }
 </script>
