@@ -429,6 +429,7 @@ margin-top: 20px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
+    font-family: 'DINCond Medium';
 }
 
 .winner-content button:hover {
@@ -1233,7 +1234,28 @@ function addHalftime() {
     const closeButton = document.createElement("button");
     closeButton.textContent = "Erledigt";
     closeButton.classList.add("modal-close-button");
-    closeButton.style.marginTop = "15px"; // Hinzugefügter Abstand oben
+
+    // Stil für den "Erledigt"-Button
+    closeButton.style.marginTop = "20px";
+    closeButton.style.backgroundColor = "#007bff";
+    closeButton.style.color = "white";
+    closeButton.style.border = "none";
+    closeButton.style.padding = "10px 20px";
+    closeButton.style.fontSize = "16px";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.borderRadius = "5px";
+    closeButton.style.fontFamily = "DINCond Medium";
+
+    // Hover-Stil für den Button
+    closeButton.addEventListener("mouseover", () => {
+    closeButton.style.backgroundColor = "#0056b3";
+    });
+
+    closeButton.addEventListener("mouseout", () => {
+    closeButton.style.backgroundColor = "#007bff";
+    });
+
+    // Event Listener für den Button hinzufügen
     closeButton.addEventListener("click", () => {
     document.body.removeChild(modalOverlay);
     });
