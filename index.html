@@ -27,6 +27,24 @@
 </audio>
 
 <style>
+@font-face {
+      font-family: 'DINCond Medium';
+      src: url('fonts/DINCond-Medium Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'DINCond Black';
+      src: url('fonts/DINCond-Black Regular.otf') format('opentype');
+      font-weight: bold;
+      font-style: normal;
+    }
+
+strong {
+      font-family: 'DINCond Black';
+    }
+
 #overlay {
     display: none;
     position: fixed;
@@ -91,7 +109,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: DINCond Medium;
     margin: 0;
     padding: 0;
     background-image: url("graphics/background.jpg");
@@ -264,13 +282,13 @@ body {
 }
 
 #player1ModalName {
-    font-family: Arial, sans-serif;
+    font-family: DINCond Medium;
     color: #ba3f1e;
 }
 
 .player-name,
     #player1ModalName {
-    font-family: Arial, sans-serif;
+    font-family: DINCond Medium;
     color: #ba3f1e;
 }
 
