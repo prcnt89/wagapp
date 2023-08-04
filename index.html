@@ -21,6 +21,11 @@
     Sounddateien werden von diesem Browser nicht unterstützt.
 </audio>
 
+<audio id="halftimeSound" preload="auto">
+    <source src="sounds/haltime.mp3" type="audio/mpeg">
+    Sounddateien werden von diesem Browser nicht unterstützt.
+</audio>
+
 <style>
 #overlay {
     display: none;
@@ -1170,6 +1175,9 @@ function addHalftime() {
     halftimeContent.classList.add("halftime-content");
     halftimeContent.textContent = "Halbzeit";
 
+    // Halbzeit-Sound abspielen
+    playHalftimeSound();
+
     const player1ScoreElement = document.getElementById("player1Score");
     const player2ScoreElement = document.getElementById("player2Score");
 
@@ -1316,7 +1324,7 @@ function checkGameEndAndPoints() {
     if (shootoutConfirmed) {
     startElfmeterschiessen();
     } else {
-    checkWinnerAndShowScreen();
+    alert("Das Spiel endet Unentschieden.");
     }
     }
 }
@@ -1340,6 +1348,13 @@ function playGoalSound() {
     const goalSound = new Audio('sounds/goal.mp3');
     goalSound.play();
 }
+
+// Funktion zum Abspielen des Halbzeit-Sounds
+    function playHalftimeSound() {
+        const halftimeSound = new Audio("sounds/halftime.mp3");
+        halftimeSound.currentTime = 0.3; // Setze die Startposition auf 0,3 Sekunden
+        halftimeSound.play();
+    }
 
 // Funktion zum Abspielen des Sieger-Sounds
 function playWinSound() {
@@ -1372,7 +1387,7 @@ function showWinnerScreen(player1Name) {
     // Hinzufügen des zusätzlichen Texts
     const additionalText = document.createElement("p");
     additionalText.classList.add("additional-text");
-    additionalText.textContent = "Du hast das Spiel 'WHAT A GOAL!' gewonnen!";
+    additionalText.textContent = "Du hast das Spiel 'WHAT a GOAL!' gewonnen!";
     winnerContent.appendChild(additionalText);
 
     // Hinzufügen des "Neues Spiel"-Buttons
