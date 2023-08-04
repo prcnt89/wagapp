@@ -590,7 +590,7 @@ function removeLastEntryAndDeductPoint(playerId) {
             const lastOtherEntry = otherEntryElements[otherEntryElements.length - 1];
             if (lastOtherEntry.textContent.trim() !== "") {
                 // Eintrag mit Text vorhanden, zeige einen Fehler an
-                alert("Kann Eintrag nicht löschen. Beim anderen Spieler befindet sich ein Eintrag.");
+                alert("Dieser Eintrag kann nicht gelöscht werden.");
                 return; // Beende die Funktion ohne weiteren Aktionen
             }
         }
