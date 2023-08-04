@@ -347,6 +347,103 @@ body {
     font-size: 14px;
     line-height: 1.5;
 }
+
+
+
+
+
+
+
+.winner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('graphics/winner_background.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    flex-direction: column;
+    color: white;
+    font-size: 34px;
+    text-align: center;
+}
+
+/* Neue Regel für die Hintergrundüberlagerung */
+.winner-overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+.winner-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+}
+
+.winner-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Stil für den Button */
+.winner-content button {
+margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.winner-content button:hover {
+    background-color: #0056b3;
+}
+
+/* Stil für den zusätzlichen Text */
+.winner-content .additional-text {
+    font-size: 24px;
+  animation: pulse 2.5s infinite;
+  margin-top: -20px;
+}
+
+/* Stil für den fett gedruckten Text */
+.winner-content .bold-text {
+    font-weight: bold;
+  animation: pulse 2.5s infinite;
+  margin-top: -60px;
+}
+
+/* Pulsierende Animation */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  #animation p {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  #animation strong {
+    font-weight: bold;
+    font-size: 34px;
+  }
+  #animation p:last-child {
+    margin-top: -1px;
+  }
 </style>
 </head>
 
@@ -906,11 +1003,11 @@ function suddenDeath() {
 
     // Überprüfe, wer das suddenDeath gewonnen hat oder ob es unentschieden ist
     if (player1GreenSquares > player2GreenSquares) {
-    alert(`${player1Name} gewinnt!`);
     addFinalScoreAndPenalty();
+    checkWinnerAndShowScreen();
     } else if (player2GreenSquares > player1GreenSquares) {
-    alert(`${player2Name} gewinnt!`);
     addFinalScoreAndPenalty();
+    checkWinnerAndShowScreen();
     } else {
     // Bei Gleichstand müssen wir eine zusätzliche Entscheidungsrunde hinzufügen
     while (true) {
@@ -920,11 +1017,11 @@ function suddenDeath() {
     if (firstPenaltyResult !== secondPenaltyResult) {
     // Der Spieler, der seinen Elfmeter verwandelt hat, gewinnt das suddenDeath
     if (firstPenaltyResult) {
-    alert(`${player1Name} gewinnt!`);
     addFinalScoreAndPenalty();
+    checkWinnerAndShowScreen();
     } else {
-    alert(`${player2Name} gewinnt!`);
     addFinalScoreAndPenalty();
+    checkWinnerAndShowScreen();
     }
     break;
     }
@@ -999,11 +1096,11 @@ function showPenaltyResultModal(playerNumber) {
 
     // Überprüfe, ob ein Spieler gewonnen hat und zeige entsprechende Meldung an
     if (player1GreenSquares > player2MaxPossibleScore && player2GreenSquares <= player1MaxPossibleScore) {
-    alert(player1Name + " gewinnt!");
     addFinalScoreAndPenalty();
+    checkWinnerAndShowScreen();
     } else if (player2GreenSquares > player1MaxPossibleScore && player1GreenSquares <= player2MaxPossibleScore) {
-    alert(player2Name + " gewinnt!");
     addFinalScoreAndPenalty();
+    checkWinnerAndShowScreen();
     } else if (player1GreenSquares === player2GreenSquares && player1UnfilledSquares === 0 && player2UnfilledSquares === 0) {
     // Wenn beide Spieler nach den ersten fünf Elfmetern immer noch unentschieden sind und keine ungenutzten Elfmeter mehr haben, starte den suddenDeath.
     alert("Unentschieden! Es geht weiter ...");
@@ -1157,7 +1254,7 @@ function addFinalScore() {
 
     player1EventsContainer.appendChild(finalscoreElement.cloneNode(true));
     player2EventsContainer.appendChild(finalscoreElement);
-    checkGameEndAndPoints();
+    checkWinnerAndShowScreen();
 }
 
 // Funktion, um den Endstand + Elfmeter anzuzeigen
@@ -1214,7 +1311,7 @@ function checkGameEndAndPoints() {
     if (shootoutConfirmed) {
     startElfmeterschiessen();
     } else {
-    // SIEGERPOPUP
+    checkWinnerAndShowScreen();
     }
     }
 }
@@ -1237,6 +1334,107 @@ const player2Container = document.getElementById('player2Container');
 function playGoalSound() {
     const goalSound = new Audio('sounds/goal.mp3');
     goalSound.play();
+}
+
+// Funktion, um den Siegerbildschirm anzuzeigen
+function showWinnerScreen(player1Name) {
+    // Erstellen des Overlay-Divs
+    const overlay = document.createElement("div");
+    overlay.classList.add("winner-overlay");
+
+    // Hinzufügen des Siegerinhalts
+    const winnerContent = document.createElement("div");
+    winnerContent.classList.add("winner-content");
+
+    // Hinzufügen des Sieger-GIFs
+    const winnerGif = document.createElement("img");
+    winnerGif.src = "graphics/winner.gif";
+    winnerGif.alt = "Winner GIF";
+    winnerContent.appendChild(winnerGif);
+
+    // Hinzufügen des Siegertexts
+    const winnerText = document.createElement("p");
+    winnerText.classList.add("bold-text"); // Fett gedruckter Text
+    winnerText.textContent = "Gratulation, " + player1Name + "!";
+    winnerContent.appendChild(winnerText);
+
+    // Hinzufügen des zusätzlichen Texts
+    const additionalText = document.createElement("p");
+    additionalText.classList.add("additional-text");
+    additionalText.textContent = "Du hast das Spiel 'WHAT A GOAL!' gewonnen!";
+    winnerContent.appendChild(additionalText);
+
+    // Hinzufügen des "Neues Spiel"-Buttons
+    const newGameButton = document.createElement("button");
+    newGameButton.textContent = "Neues Spiel starten";
+    newGameButton.addEventListener("click", startNewGame);
+    winnerContent.appendChild(newGameButton);
+
+    overlay.appendChild(winnerContent);
+
+    // Hinzufügen des Overlay-Divs zum Dokument
+    document.body.appendChild(overlay);
+}
+
+// Funktion, um den Siegerbildschirm anzuzeigen
+function showWinnerScreen(winnerName) {
+    const overlay = document.createElement("div");
+    overlay.classList.add("winner-overlay");
+
+    // Hinzufügen des Siegerinhalts
+    const winnerContent = document.createElement("div");
+    winnerContent.classList.add("winner-content");
+
+    // Hinzufügen des Sieger-GIFs
+    const winnerGif = document.createElement("img");
+    winnerGif.src = "graphics/winner.gif";
+    winnerGif.alt = "Winner GIF";
+    winnerContent.appendChild(winnerGif);
+
+    // Hinzufügen des Siegertexts
+    const winnerText = document.createElement("p");
+    winnerText.classList.add("bold-text"); // Fett gedruckter Text
+
+    winnerContent.appendChild(winnerText);
+
+    // Hinzufügen des zusätzlichen Texts
+    const additionalText = document.createElement("p");
+    additionalText.classList.add("additional-text");
+    additionalText.textContent = "Du hast das Spiel 'WHAT A GOAL!' gewonnen!";
+    winnerContent.appendChild(additionalText);
+    winnerText.textContent = "Gratulation, " + winnerName + "!";
+    // Hinzufügen des "Neues Spiel"-Buttons
+    const newGameButton = document.createElement("button");
+    newGameButton.textContent = "Neues Spiel starten";
+    newGameButton.addEventListener("click", startNewGame);
+    winnerContent.appendChild(newGameButton);
+
+    overlay.appendChild(winnerContent);
+
+    // Hinzufügen des Overlay-Divs zum Dokument
+    document.body.appendChild(overlay);
+}
+
+// Funktion, um den Gewinner zu ermitteln und den Siegerbildschirm anzuzeigen
+function checkWinnerAndShowScreen() {
+    const player1ScoreElement = document.getElementById("player1Score");
+    const player2ScoreElement = document.getElementById("player2Score");
+
+    const player1NameElement = document.querySelector(".player-container:nth-child(1) .player-name");
+    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+    const player1Name = player1NameElement.textContent.trim();
+    const player2Name = player2NameElement.textContent.trim();
+
+    const player1Score = parseInt(player1ScoreElement.textContent);
+    const player2Score = parseInt(player2ScoreElement.textContent);
+
+    if (player1Score > player2Score) {
+        showWinnerScreen(player1Name);
+    } else if (player2Score > player1Score) {
+        showWinnerScreen(player2Name);
+    } else {
+        // Hier kannst du deine Aktion für ein Unentschieden hinzufügen
+    }
 }
 </script>
 </body>
