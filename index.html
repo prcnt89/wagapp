@@ -821,31 +821,11 @@ function suddenDeath() {
             const player1ScoreElement = document.getElementById("player1Score");
             let player1Score = parseInt(player1ScoreElement.textContent);
             player1ScoreElement.textContent = player1Score + 1; // Punkt für Spieler 1 hinzufügen
-  // Torsound abspielen
-  playGoalSound();
-
-// Punkt-Animation hinzufügen
-  playerScoreElement.classList.add("score-animation");
-
-  // Nach 8 Sekunden die Punkt-Animation entfernen
-  setTimeout(() => {
-    playerScoreElement.classList.remove("score-animation");
-  }, 8000);
           } else {
             player2GreenSquares++;
             const player2ScoreElement = document.getElementById("player2Score");
             let player2Score = parseInt(player2ScoreElement.textContent);
             player2ScoreElement.textContent = player2Score + 1; // Punkt für Spieler 2 hinzufügen
-  // Torsound abspielen
-  playGoalSound();
-
-// Punkt-Animation hinzufügen
-  playerScoreElement.classList.add("score-animation");
-
-  // Nach 8 Sekunden die Punkt-Animation entfernen
-  setTimeout(() => {
-    playerScoreElement.classList.remove("score-animation");
-  }, 8000);
           }
         } else {
           if (firstPenaltyPlayerNumber === 1) {
@@ -861,31 +841,11 @@ function suddenDeath() {
             const player1ScoreElement = document.getElementById("player1Score");
             let player1Score = parseInt(player1ScoreElement.textContent);
             player1ScoreElement.textContent = player1Score + 1; // Punkt für Spieler 1 hinzufügen
-  // Torsound abspielen
-  playGoalSound();
-
-// Punkt-Animation hinzufügen
-  playerScoreElement.classList.add("score-animation");
-
-  // Nach 8 Sekunden die Punkt-Animation entfernen
-  setTimeout(() => {
-    playerScoreElement.classList.remove("score-animation");
-  }, 8000);
           } else {
             player2GreenSquares++;
             const player2ScoreElement = document.getElementById("player2Score");
             let player2Score = parseInt(player2ScoreElement.textContent);
             player2ScoreElement.textContent = player2Score + 1; // Punkt für Spieler 2 hinzufügen
-  // Torsound abspielen
-  playGoalSound();
-
-// Punkt-Animation hinzufügen
-  playerScoreElement.classList.add("score-animation");
-
-  // Nach 8 Sekunden die Punkt-Animation entfernen
-  setTimeout(() => {
-    playerScoreElement.classList.remove("score-animation");
-  }, 8000);
           }
         } else {
           if (secondPenaltyPlayerNumber === 1) {
@@ -903,8 +863,10 @@ function suddenDeath() {
       // Überprüfe, wer das suddenDeath gewonnen hat oder ob es unentschieden ist
       if (player1GreenSquares > player2GreenSquares) {
         alert(`${player1Name} gewinnt!`);
+        addFinalScoreAndPenalty();
       } else if (player2GreenSquares > player1GreenSquares) {
         alert(`${player2Name} gewinnt!`);
+        addFinalScoreAndPenalty();
       } else {
         // Bei Gleichstand müssen wir eine zusätzliche Entscheidungsrunde hinzufügen
         while (true) {
@@ -915,8 +877,10 @@ function suddenDeath() {
             // Der Spieler, der seinen Elfmeter verwandelt hat, gewinnt das suddenDeath
             if (firstPenaltyResult) {
               alert(`${player1Name} gewinnt!`);
+              addFinalScoreAndPenalty();
             } else {
               alert(`${player2Name} gewinnt!`);
+              addFinalScoreAndPenalty();
             }
             break;
           }
@@ -991,8 +955,10 @@ function showPenaltyResultModal(playerNumber) {
     // Überprüfe, ob ein Spieler gewonnen hat und zeige entsprechende Meldung an
     if (player1GreenSquares > player2MaxPossibleScore && player2GreenSquares <= player1MaxPossibleScore) {
       alert(player1Name + " gewinnt!");
+      addFinalScoreAndPenalty();
     } else if (player2GreenSquares > player1MaxPossibleScore && player1GreenSquares <= player2MaxPossibleScore) {
       alert(player2Name + " gewinnt!");
+      addFinalScoreAndPenalty();
     } else if (player1GreenSquares === player2GreenSquares && player1UnfilledSquares === 0 && player2UnfilledSquares === 0) {
       // Wenn beide Spieler nach den ersten fünf Elfmetern immer noch unentschieden sind und keine ungenutzten Elfmeter mehr haben, starte den suddenDeath.
       alert("Unentschieden! Es geht weiter ...");
@@ -1100,6 +1066,42 @@ function addFinalScore() {
     player1EventsContainer.appendChild(finalscoreElement.cloneNode(true));
     player2EventsContainer.appendChild(finalscoreElement);
     checkGameEndAndPoints();
+}
+
+// Funktion, um die Halbzeit anzuzeigen
+function addFinalScoreAndPenalty() {
+    const finalscoreElement = document.createElement("div");
+    finalscoreElement.classList.add("entry");
+    finalscoreElement.classList.add("finalscore-entry");
+
+    // Stil für die graue Hintergrundfläche mit abgerundeten Ecken und Anpassungen
+    finalscoreElement.style.backgroundColor = "rgba(0, 0, 0, 0.08)";
+    finalscoreElement.style.borderRadius = "10px";
+    finalscoreElement.style.padding = "3px 0";
+    finalscoreElement.style.margin = "10px 0";
+
+    const finalscoreContent = document.createElement("span");
+    finalscoreContent.classList.add("finalscore-content");
+    finalscoreContent.textContent = "Endstand + Elfmeter";
+
+    const player1ScoreElement = document.getElementById("player1Score");
+    const player2ScoreElement = document.getElementById("player2Score");
+
+    const player1EventsContainer = player1ScoreElement.parentElement;
+    const player2EventsContainer = player2ScoreElement.parentElement;
+
+    const scoreSpacer = document.createElement("span");
+    scoreSpacer.classList.add("score-spacer");
+    scoreSpacer.textContent = "\u00A0"; // Unicode-Zeichen für ein schmales Leerzeichen
+
+    finalscoreElement.appendChild(finalscoreContent);
+    finalscoreElement.appendChild(scoreSpacer.cloneNode(true));
+    finalscoreElement.appendChild(document.createTextNode(player1ScoreElement.textContent));
+    finalscoreElement.appendChild(document.createTextNode("-"));
+    finalscoreElement.appendChild(document.createTextNode(player2ScoreElement.textContent));
+
+    player1EventsContainer.appendChild(finalscoreElement.cloneNode(true));
+    player2EventsContainer.appendChild(finalscoreElement);
 }
 
 // Funktion, um das Ergebnis nach dem Spiel zu kontrollieren
