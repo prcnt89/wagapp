@@ -1460,7 +1460,7 @@ function showWinnerScreen(winnerName) {
     // Hinzufügen des zusätzlichen Texts
     const additionalText = document.createElement("p");
     additionalText.classList.add("additional-text");
-    additionalText.textContent = "Du hast das Spiel 'WHAT a GOAL!' gewonnen!";
+    additionalText.innerHTML = 'Du hast das ein Spiel von <strong>WHAT A GOAL!</strong> gewonnen!';
     winnerContent.appendChild(additionalText);
     winnerText.textContent = "Gratulation, " + winnerName + "!";
 
