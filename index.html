@@ -1656,7 +1656,7 @@ xgAddShotBtns.forEach(btn => {
 
     const requiredRoll = intermediateResult - opponentGoalieBonuses;
     const minRequiredRoll = Math.max(Math.round(requiredRoll), 0);
-    alert(`Benötigter Mindestwürfelwurf: ${minRequiredRoll.toLocaleString('de-DE')}`);
+    alert(`Benötigter Mindestwürfelwurf des Torwarts: ${minRequiredRoll.toLocaleString('de-DE')}`);
 
     const xgValue = xgCalculatexG(opponentMarkerValue, minRequiredRoll);
 
