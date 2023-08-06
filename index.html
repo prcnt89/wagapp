@@ -1645,14 +1645,14 @@ xgAddShotBtns.forEach(btn => {
     btn.addEventListener('click', () => {
     const playerNum = btn.getAttribute('data-player');
     const shotStrength = parseFloat(prompt(`Schussstärke`).replace(',', '.')) || 0;
-    const ownMarkerValue = parseFloat(prompt(`Eigener Aufstellungsmarkerwert auf dem Feld`).replace(',', '.')) || 0;
+    const ownMarkerValue = parseFloat(prompt(`Aufstellungsmarkerwert auf dem Feld`).replace(',', '.')) || 0;
     const fieldsToGoal = parseFloat(prompt(`Felder bis zum Tor`).replace(',', '.')) || 0;
     const additionalBonuses = parseFloat(prompt(`Zusätzliche Boni`).replace(',', '.')) || 0;
 
     const intermediateResult = shotStrength + ownMarkerValue - fieldsToGoal + additionalBonuses;
 
-    const opponentMarkerValue = parseFloat(prompt(`Gegnerischer Aufstellungsmarkerwert in der Schusslinie`).replace(',', '.')) || 0;
-    const opponentGoalieBonuses = parseFloat(prompt(`Torwart-Boni des Gegners`).replace(',', '.')) || 0;
+    const opponentMarkerValue = parseFloat(prompt(`Gegn. Aufstellungsmarkerwert in Schusslinie`).replace(',', '.')) || 0;
+    const opponentGoalieBonuses = parseFloat(prompt(`Gegn. Torwart-Boni`).replace(',', '.')) || 0;
 
     const requiredRoll = intermediateResult - opponentGoalieBonuses;
     const minRequiredRoll = Math.max(Math.round(requiredRoll), 0);
