@@ -492,32 +492,29 @@ body {
 }
 
 .xg-add-shot-btn {
+    align-items: center;
     background-color: black;
     color: white;
     border: none;
-    border-radius: 50%;
-    width: 26px;
-    height: 26px;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
     font-size: 16px;
     font-weight: bold;
-    cursor: pointer;
-    margin: 3px;
-    margin-top: -15px;
+    margin-right: 10px;
     margin-bottom: 10px;
 }
 
 .xg-remove-shot-btn {
+    align-items: center;
     background-color: black;
     color: white;
     border: none;
-    border-radius: 50%;
-    width: 26px;
-    height: 26px;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
     font-size: 16px;
     font-weight: bold;
-    cursor: pointer;
-    margin: 3px;
-    margin-top: -15px;
     margin-bottom: 10px;
 }
 
@@ -537,13 +534,13 @@ body {
 }
 
 #xgPlayer1Totalxg, #xgPlayer2Totalxg {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: bold;
     text-align: center;
   }
 
 .xg-label {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: bold;
     text-align: center;
 }
@@ -656,31 +653,30 @@ body {
 <button id="xgOpenModal" class="hidden">xG Rechner öffnen</button>
 <div id="xgRechnerModal" class="xg-modal">
     <div class="xg-modal-content">
-    <span class="close" onclick="closeXGRechner()">&times;</span>
-    <button id="xgCloseModal" class="hidden">Schließen</button>
-    <h2>xG-Rechner</h2>    
-    <!-- Spieler 1 -->
-    <div>
-    <p>
-    <span id="player1XGModalName" class="player-name"></span>
-    </p>
-    <button class="xg-add-shot-btn" data-player="1">+</button>
-    <ul id="xgPlayer1Shots" class="xg-ul"></ul>
-    <hr class="xg-line-thin" />
-    <p><strong><span id="xgPlayer1Totalxg">0,00</span></strong><span class="xg-label"> xG</span></p>
-    <hr class="xg-line-thick" />
-    </div>
-    
-    <!-- Spieler 2 -->
-    <div>
-    <p>
-    <span id="player2XGModalName" class="player-name"></span>
-    </p>
-    <button class="xg-add-shot-btn" data-player="2">+</button>
-    <ul id="xgPlayer2Shots" class="xg-ul"></ul>
-    <hr class="xg-line-thin" />
-    <p><strong><span id="xgPlayer2Totalxg">0,00</span></strong><span class="xg-label"> xG</span></p>
-    </div>
+        <span class="close" onclick="closeXGRechner()">&times;</span>
+        <button id="xgCloseModal" class="hidden">Schließen</button>
+        <h2>xG-Rechner</h2>
+        <!-- Spieler 1 -->
+        <div>
+            <p>
+                <span id="player1XGModalName" class="player-name"></span>
+            </p>
+            <button class="xg-add-shot-btn" data-player="1">+</button>
+            <ul id="xgPlayer1Shots" class="xg-ul"></ul>
+            <hr class="xg-line-thin" />
+            <p style="text-align: center;"><strong><span id="xgPlayer1Totalxg">0,00</span></strong><span class="xg-label"> xG</span></p>
+            <hr class="xg-line-thick" />
+        </div>
+        <!-- Spieler 2 -->
+        <div>
+            <p>
+                <span id="player2XGModalName" class="player-name"></span>
+            </p>
+            <button class="xg-add-shot-btn" data-player="2">+</button>
+            <ul id="xgPlayer2Shots" class="xg-ul"></ul>
+            <hr class="xg-line-thin" />
+            <p style="text-align: center;"><strong><span id="xgPlayer2Totalxg">0,00</span></strong><span class="xg-label"> xG</span></p>
+        </div>
     </div>
 </div>
 
