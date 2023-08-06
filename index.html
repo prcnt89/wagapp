@@ -491,24 +491,8 @@ body {
     margin: 0;
 }
 
-.xg-add-shot-btn {
-    align-items: center;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    width: 30px;
-    height: 30px;
-    font-size: 16px;
-    font-weight: bold;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
-}
-
+.xg-add-shot-btn,
 .xg-remove-shot-btn {
-    align-items: center;
     background-color: black;
     color: white;
     border: none;
@@ -517,9 +501,11 @@ body {
     height: 30px;
     font-size: 16px;
     font-weight: bold;
+    display: inline-block;
+    text-align: center;
+    line-height: 30px;
+    margin-right: 8px;
     margin-bottom: 10px;
-    display: inline-flex;
-    justify-content: center;
 }
 
 .hidden {
@@ -666,6 +652,7 @@ body {
                 <span id="player1XGModalName" class="player-name"></span>
             </p>
             <button class="xg-add-shot-btn" data-player="1">+</button>
+            <button class="xg-remove-shot-btn" data-player="1">-</button>
             <ul id="xgPlayer1Shots" class="xg-ul"></ul>
             <hr class="xg-line-thin" />
             <p style="text-align: center;"><strong><span id="xgPlayer1Totalxg">0,00</span></strong><span class="xg-label"> xG</span></p>
@@ -677,6 +664,7 @@ body {
                 <span id="player2XGModalName" class="player-name"></span>
             </p>
             <button class="xg-add-shot-btn" data-player="2">+</button>
+            <button class="xg-remove-shot-btn" data-player="2">-</button>
             <ul id="xgPlayer2Shots" class="xg-ul"></ul>
             <hr class="xg-line-thin" />
             <p style="text-align: center;"><strong><span id="xgPlayer2Totalxg">0,00</span></strong><span class="xg-label"> xG</span></p>
