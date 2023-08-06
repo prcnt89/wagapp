@@ -28,21 +28,21 @@
 
 <style>
 @font-face {
-      font-family: 'DINCond Medium';
-      src: url('fonts/DINCond-Medium Regular.otf') format('opentype');
-      font-weight: normal;
-      font-style: normal;
-    }
+    font-family: 'DINCond Medium';
+    src: url('fonts/DINCond-Medium Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
 
-    @font-face {
-      font-family: 'DINCond Black';
-      src: url('fonts/DINCond-Black Regular.otf') format('opentype');
-      font-weight: bold;
-      font-style: normal;
-    }
+@font-face {
+    font-family: 'DINCond Black';
+    src: url('fonts/DINCond-Black Regular.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
 
 strong {
-      font-family: 'DINCond Black';
+    font-family: 'DINCond Black';
     }
 
 #overlay {
@@ -395,7 +395,6 @@ body {
     text-align: center;
 }
 
-/* Neue Regel für die Hintergrundüberlagerung */
 .winner-overlay::before {
     content: "";
     position: absolute;
@@ -419,9 +418,8 @@ body {
     height: auto;
 }
 
-/* Stil für den Button */
 .winner-content button {
-margin-top: 20px;
+    margin-top: 20px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -436,21 +434,18 @@ margin-top: 20px;
     background-color: #0056b3;
 }
 
-/* Stil für den zusätzlichen Text */
 .winner-content .additional-text {
     font-size: 24px;
-  animation: pulse 2.5s infinite;
-  margin-top: -20px;
+    animation: pulse 2.5s infinite;
+    margin-top: -20px;
 }
 
-/* Stil für den fett gedruckten Text */
 .winner-content .bold-text {
     font-weight: bold;
-  animation: pulse 2.5s infinite;
-  margin-top: -40px;
+    animation: pulse 2.5s infinite;
+    margin-top: -40px;
 }
 
-/* Pulsierende Animation */
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
@@ -467,6 +462,91 @@ margin-top: 20px;
   #animation p:last-child {
     margin-top: -1px;
   }
+
+.xg-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.xg-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.xg-ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.xg-add-shot-btn {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 3px;
+    margin-top: -15px;
+    margin-bottom: 10px;
+}
+
+.xg-remove-shot-btn {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 3px;
+    margin-top: -15px;
+    margin-bottom: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.xg-line-thin {
+    border-top: 1px solid black;
+    margin-top: 8px;
+    margin-bottom: -15px;
+}
+
+.xg-line-thick {
+    border-top: 4px solid black;
+    margin-top: 5px;
+}
+
+#xgPlayer1Totalxg, #xgPlayer2Totalxg {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+.xg-label {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+}
 </style>
 </head>
 
@@ -531,6 +611,7 @@ margin-top: 20px;
 <div id="menu" class="active" style="display: none;">
     <ul>
     <span class="close" onclick="closeMenu()">&times;</span>
+    <li onclick="openXGRechner(); closeMenu();">xG-Rechner</li>
     <li onclick="addExtraTime(); closeMenu();">Nachspielzeit</li>
     <li onclick="addHalftime(); closeMenu();">Halbzeit</li>
     <li style="margin-bottom: 15px;" onclick="addFinalScore(); closeMenu();">Spielende</li>
@@ -538,7 +619,7 @@ margin-top: 20px;
     </ul>
 </div>
 
-<!-- Das Modal -->
+<!-- Modal für das Elfmeterschießen -->
 <div id="myModal" class="modal">
     <div class="modal-content">
     <span class="close" onclick="closeModal()">&times;</span>
@@ -567,6 +648,38 @@ margin-top: 20px;
     <span class="square" onclick="showPenaltyResultModal(2)"></span>
     <span class="square" onclick="showPenaltyResultModal(2)"></span>
     <span class="square" onclick="showPenaltyResultModal(2)"></span>
+    </div>
+    </div>
+</div>
+
+<!-- Modal für den xG Rechner -->
+<button id="xgOpenModal" class="hidden">xG Rechner öffnen</button>
+<div id="xgRechnerModal" class="xg-modal">
+    <div class="xg-modal-content">
+    <span class="close" onclick="closeXGRechner()">&times;</span>
+    <button id="xgCloseModal" class="hidden">Schließen</button>
+    <h2>xG-Rechner</h2>    
+    <!-- Spieler 1 -->
+    <div>
+    <p>
+    <span id="player1XGModalName" class="player-name"></span>
+    </p>
+    <button class="xg-add-shot-btn" data-player="1">+</button>
+    <ul id="xgPlayer1Shots" class="xg-ul"></ul>
+    <hr class="xg-line-thin" />
+    <p><strong><span id="xgPlayer1Totalxg">0,00</span></strong><span class="xg-label"> xG</span></p>
+    <hr class="xg-line-thick" />
+    </div>
+    
+    <!-- Spieler 2 -->
+    <div>
+    <p>
+    <span id="player2XGModalName" class="player-name"></span>
+    </p>
+    <button class="xg-add-shot-btn" data-player="2">+</button>
+    <ul id="xgPlayer2Shots" class="xg-ul"></ul>
+    <hr class="xg-line-thin" />
+    <p><strong><span id="xgPlayer2Totalxg">0,00</span></strong><span class="xg-label"> xG</span></p>
     </div>
     </div>
 </div>
@@ -1516,6 +1629,108 @@ function closeWinnerScreen() {
     if (overlay) {
         overlay.remove();
     }
+}
+
+// Modal und Buttons auswählen
+  const xgModal = document.getElementById('xgRechnerModal');
+  const xgOpenModalBtn = document.getElementById('xgOpenModal');
+  const xgCloseModalBtn = document.getElementById('xgCloseModal');
+  const xgAddShotBtns = document.querySelectorAll('.xg-add-shot-btn');
+
+  // Modal öffnen
+  xgOpenModalBtn.addEventListener('click', () => {
+    xgModal.style.display = 'flex';
+  });
+
+  // Modal schließen
+  xgCloseModalBtn.addEventListener('click', () => {
+    xgModal.style.display = 'none';
+  });
+
+  // Funktion zur Formatierung von Dezimalzahlen
+  function xgFormatNumber(number) {
+    return number.toString().replace('.', ',');
+  }
+
+  // Schüsse hinzufügen und entfernen
+xgAddShotBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+    const playerNum = btn.getAttribute('data-player');
+    const shotStrength = parseFloat(prompt(`Schussstärke`).replace(',', '.')) || 0;
+    const ownMarkerValue = parseFloat(prompt(`Eigener Aufstellungsmarkerwert auf dem Feld`).replace(',', '.')) || 0;
+    const fieldsToGoal = parseFloat(prompt(`Felder bis zum Tor`).replace(',', '.')) || 0;
+    const additionalBonuses = parseFloat(prompt(`Zusätzliche Boni`).replace(',', '.')) || 0;
+
+    const intermediateResult = shotStrength + ownMarkerValue - fieldsToGoal + additionalBonuses;
+
+    const opponentMarkerValue = parseFloat(prompt(`Gegnerischer Aufstellungsmarkerwert in der Schusslinie`).replace(',', '.')) || 0;
+    const opponentGoalieBonuses = parseFloat(prompt(`Torwart-Boni des Gegners`).replace(',', '.')) || 0;
+
+    const requiredRoll = intermediateResult - opponentGoalieBonuses;
+    const minRequiredRoll = Math.max(Math.round(requiredRoll), 0);
+    alert(`Benötigter Mindestwürfelwurf: ${minRequiredRoll.toLocaleString('de-DE')}`);
+
+    const xgValue = xgCalculatexG(opponentMarkerValue, minRequiredRoll);
+
+    const xgList = document.getElementById(`xgPlayer${playerNum}Shots`);
+    const li = document.createElement('li');
+    li.textContent = `Schuss ${xgList.childElementCount + 1}: ${xgValue.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')} xG`;
+    xgList.appendChild(li);
+
+    const totalxg = document.getElementById(`xgPlayer${playerNum}Totalxg`);
+    const newXgTotal = parseFloat(totalxg.textContent.replace(',', '.')) + xgValue;
+    totalxg.textContent = newXgTotal === 0 ? '0,00' : newXgTotal.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',');
+
+    // Überprüfe, ob bereits ein "Schuss entfernen" Button vorhanden ist
+    const existingRemoveBtn = document.querySelector('.xg-remove-shot-btn[data-player="' + playerNum + '"]');
+    if (existingRemoveBtn) {
+      existingRemoveBtn.parentNode.removeChild(existingRemoveBtn);
+    }
+
+    // Füge den "Schuss entfernen" Button hinzu
+    const removeShotBtn = document.createElement('button');
+    removeShotBtn.textContent = '-';
+    removeShotBtn.classList.add('xg-remove-shot-btn');
+    removeShotBtn.setAttribute('data-player', playerNum);
+    removeShotBtn.addEventListener('click', () => {
+      const lastShot = xgList.lastElementChild;
+      if (lastShot) {
+        const xgValueToRemove = parseFloat(lastShot.textContent.match(/\d+\,\d+/)[0].replace(',', '.'));
+
+        xgList.removeChild(lastShot);
+
+        const updatedXgTotal = parseFloat(totalxg.textContent.replace(',', '.')) - xgValueToRemove;
+        totalxg.textContent = updatedXgTotal === 0 ? '0,00' : updatedXgTotal.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',');
+      }
+    });
+    btn.parentNode.insertBefore(removeShotBtn, btn.nextSibling);
+  });
+});
+
+// Funktion zur Berechnung der Torwahrscheinlichkeit
+function xgCalculatexG(opponentMarkerValue, requiredRoll) {
+    const valueA = opponentMarkerValue;
+    const valueB = requiredRoll;
+    const xg = ((1 - (1 - (5 / 6) ** valueA))) * (valueB >= 7 ? 1 : (1 - (7 - valueB) / 6 > 1 ? 1 : ((1 - (1 - (5 / 6) ** valueA)) * (1 - (7 - valueB) / 6 < 0 ? 0 : 1 - (7 - valueB) / 6))));
+    return xg;
+  }
+
+// Funktion zum Öffnen des xG-Rechners
+function openXGRechner() {
+  const xgModal = document.getElementById("xgRechnerModal");
+  const player1XGModalNameElement = document.getElementById("player1XGModalName");
+  player1XGModalNameElement.textContent = player1Name;
+
+  const player2XGModalNameElement = document.getElementById("player2XGModalName");
+  const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+  player2XGModalNameElement.textContent = player2NameElement.textContent;
+  player2XGModalNameElement.style.color = getComputedStyle(player2NameElement).color;
+
+  xgModal.style.display = 'flex';
+}
+
+function closeXGRechner() {
+    xgModal.style.display = 'none';
 }
 </script>
 </body>
