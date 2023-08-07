@@ -144,18 +144,20 @@ body {
 .player-name {
     font-size: 24px;
     margin-top: 10px;
+    margin-bottom: 10px;
     cursor: pointer;
 }
 
 .player-score {
     font-size: 90px;
     font-weight: bold;
+    margin-bottom: -10px;
 }
 
 .icons {
     font-size: 30px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 
 .circle-icon {
@@ -169,8 +171,15 @@ body {
     margin-right: -3px;
 }
 
-.fas.fa-minus-circle {
-    margin-right: 3px;
+.circle-icon-menu {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: black;
+    margin-right: -3px;
 }
 
 .fas.fa-bars {
@@ -546,20 +555,20 @@ body {
     <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 1</div>
     <div class="player-score" id="player1Score">0</div>
     <div class="icons">
-    <span class="fas fa-futbol" style="color: black; margin-right: -3px;" onclick="increaseScore('player1Score')"></span>
-    <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player1Score')">
-    <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
+    <span class="fas fa-futbol" style="color: black; margin-right: 5px;" onclick="increaseScore('player1Score')"></span>
+    <span class="circle-icon" style="position: relative; top: 1px; margin-right: 5px;" onclick="addFoul('player1Score')">
+    <span class="material-icons" style="color: white; position: relative; top: 1px;">sports</span>
     </span>
-    <span class="circle-icon" style="position: relative; top: -3px;" onclick="addYellowCard('player1Score')">
+    <span class="circle-icon" style="position: relative; top: -3px; margin-right: 5px;" onclick="addYellowCard('player1Score')">
     <span class="yellow-rectangle" style="position: relative; top: 0px"></span>
     </span>
-    <span class="circle-icon" style="position: relative; top: -3px;" onclick="addRedCard('player1Score')">
+    <span class="circle-icon" style="position: relative; top: -3px; margin-right: 5px;" onclick="addRedCard('player1Score')">
     <span class="red-rectangle" style="position: relative; top: 0px"></span>
     </span>
-    <span class="circle-icon" style="position: relative; top: -2px;" onclick="addPenalty('player1Score')">
+    <span class="circle-icon" style="position: relative; top: -2px; margin-right: 5px;" onclick="addPenalty('player1Score')">
     <img src="graphics/elfmeter_white.svg" alt="" style="position: relative; top: 1px; width: 18px; height: 18px;">
     </span>
-    <span class="fas fa-minus-circle" style="margin-left: 15px;" onclick="removeLastEntryAndDeductPoint('player1Score')"></span>
+    <span class="fas fa-minus-circle" style="margin-left: 20px;" onclick="removeLastEntryAndDeductPoint('player1Score')"></span>
     </div>
     <!-- Listeneinträge für Spieler 1 -->
     </div>
@@ -569,20 +578,20 @@ body {
     <div class="player-name" contenteditable onclick="selectPlayerName(this)" onfocus="selectAllText(this)">Spieler 2</div>
     <div class="player-score" id="player2Score">0</div>
     <div class="icons">
-    <span class="fas fa-futbol" style="color: black; margin-right: -3px;" onclick="increaseScore('player2Score')"></span>
-    <span class="circle-icon" style="position: relative; top: 1px;" onclick="addFoul('player2Score')">
-    <span class="material-icons" style="color: white; position: relative; top: 1px">sports</span>
+    <span class="fas fa-futbol" style="color: black; margin-right: 5px;" onclick="increaseScore('player2Score')"></span>
+    <span class="circle-icon" style="position: relative; top: 1px; margin-right: 5px;" onclick="addFoul('player2Score')">
+    <span class="material-icons" style="color: white; position: relative; top: 1px;">sports</span>
     </span>
-    <span class="circle-icon" style="position: relative; top: -3px;" onclick="addYellowCard('player2Score')">
+    <span class="circle-icon" style="position: relative; top: -3px; margin-right: 5px;" onclick="addYellowCard('player2Score')">
     <span class="yellow-rectangle" style="position: relative; top: 0px"></span>
     </span>
-    <span class="circle-icon" style="position: relative; top: -3px;" onclick="addRedCard('player2Score')">
+    <span class="circle-icon" style="position: relative; top: -3px; margin-right: 5px;" onclick="addRedCard('player2Score')">
     <span class="red-rectangle" style="position: relative; top: 0px"></span>
     </span>
-    <span class="circle-icon" style="position: relative; top: -2px;" onclick="addPenalty('player2Score')">
+    <span class="circle-icon" style="position: relative; top: -2px; margin-right: 5px;" onclick="addPenalty('player2Score')">
     <img src="graphics/elfmeter_white.svg" alt="" style="position: relative; top: 1px; width: 18px; height: 18px;">
     </span>
-    <span class="fas fa-minus-circle" style="margin-left: 15px;" onclick="removeLastEntryAndDeductPoint('player2Score')"></span>
+    <span class="fas fa-minus-circle" style="margin-left: 20px;" onclick="removeLastEntryAndDeductPoint('player2Score')"></span>
     </div>
     <!-- Listeneinträge für Spieler 2 -->
     </div>
@@ -591,7 +600,7 @@ body {
 
 <!-- Moderner Button für Elfmeterschießen -->
 <div class="modern-button">
-    <span class="fas fa-bars circle-icon" style="margin-right: 8px; cursor: pointer;" onclick="toggleMenu()"></span>
+    <span class="fas fa-bars circle-icon-menu" style="margin-right: 10px; cursor: pointer;" onclick="toggleMenu()"></span>
 </div>
 
 <!-- Menü -->
