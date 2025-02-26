@@ -108,6 +108,110 @@ strong {
     color: #333;
 }
 
+#menu1 {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 150px;
+    max-width: 150px;
+    display: none;
+    z-index: 9999;
+}
+
+#menu1.active {
+    display: block;
+}
+
+#menu1 ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu1 ul li {
+    cursor: pointer;
+    padding: 10px 0;
+    font-size: 18px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#menu1 ul li:hover {
+    background-color: #f8f8f8;
+}
+
+#menu1 .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s ease-in-out;
+}
+
+#menu1 .close:hover {
+    color: #333;
+}
+
+#menu2 {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 150px;
+    max-width: 150px;
+    display: none;
+    z-index: 9999;
+}
+
+#menu2.active {
+    display: block;
+}
+
+#menu2 ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu2 ul li {
+    cursor: pointer;
+    padding: 10px 0;
+    font-size: 18px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#menu2 ul li:hover {
+    background-color: #f8f8f8;
+}
+
+#menu2 .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s ease-in-out;
+}
+
+#menu2 .close:hover {
+    color: #333;
+}
+
 body {
     font-family: DINCond Medium;
     margin: 0;
@@ -548,6 +652,54 @@ body {
     font-weight: bold;
     text-align: center;
 }
+
+.stats-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.stats-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-width: 80%;
+    text-align: left;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stats-table td {
+    padding: 3px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.stats-table td:first-child,
+.stats-table td:last-child {
+    width: 45%;
+}
+
+.stats-modal .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    cursor: pointer;
+}
 </style>
 </head>
 
@@ -574,7 +726,9 @@ body {
     <span class="circle-icon" style="position: relative; top: -2px; margin-right: 5px;" onclick="addPenalty('player1Score')">
     <img src="graphics/elfmeter_white.svg" alt="" style="position: relative; top: 1px; width: 18px; height: 18px;">
     </span>
-    <span class="fas fa-minus-circle" style="margin-left: 20px;" onclick="removeLastEntryAndDeductPoint('player1Score')"></span>
+    <span class="circle-icon" style="position: relative; top: 1px; margin-right: 5px;" onclick="toggleMenu1()">
+    <span class="material-icons" style="color: white; position: relative; top: 1px;">equalizer</span>
+    </span>
     </div>
     <!-- Listeneinträge für Spieler 1 -->
     </div>
@@ -598,7 +752,9 @@ body {
     <span class="circle-icon" style="position: relative; top: -2px; margin-right: 5px;" onclick="addPenalty('player2Score')">
     <img src="graphics/elfmeter_white.svg" alt="" style="position: relative; top: 1px; width: 18px; height: 18px;">
     </span>
-    <span class="fas fa-minus-circle" style="margin-left: 20px;" onclick="removeLastEntryAndDeductPoint('player2Score')"></span>
+    <span class="circle-icon" style="position: relative; top: 1px; margin-right: 5px;" onclick="toggleMenu2()">
+    <span class="material-icons" style="color: white; position: relative; top: 1px;">equalizer</span>
+    </span>
     </div>
     <!-- Listeneinträge für Spieler 2 -->
     </div>
@@ -615,10 +771,35 @@ body {
     <ul>
     <span class="close" onclick="closeMenu()">&times;</span>
     <li onclick="openXGRechner(); closeMenu();">xG-Rechner</li>
+    <li onclick="openStats(); closeMenu();">Statistiken</li>
     <li onclick="addExtraTime(); closeMenu();">Nachspielzeit</li>
     <li onclick="addHalftime(); closeMenu();">Halbzeit</li>
     <li style="margin-bottom: 15px;" onclick="addFinalScore(); closeMenu();">Spielende</li>
     <li onclick="startNewGame(); closeMenu();">Neues Spiel</li>
+    </ul>
+</div>
+
+<!-- Menü Spieler 1 -->
+<div id="menu1" class="active" style="display: none;">
+    <ul>
+    <span class="close" onclick="closeMenu1()">&times;</span>
+    <li onclick="confirmBallPossession(1);closeMenu1();">Ballbesitz zum Spielzugende</li>
+    <li onclick="passes(1);closeMenu1();">Pass</li>
+    <li onclick="dribblings(1);closeMenu1();">Dribbling</li>
+    <li onclick="tackles(1);closeMenu1();">Zweikampf</li>
+    <li onclick="starPlayer(1);closeMenu1();">Starspieler ausgespielt</li>
+    </ul>
+</div>
+
+<!-- Menü Spieler 2 -->
+<div id="menu2" class="active" style="display: none;">
+    <ul>
+    <span class="close" onclick="closeMenu2()">&times;</span>
+    <li onclick="confirmBallPossession(2);closeMenu2();">Ballbesitz zum Spielzugende</li>
+    <li onclick="passes(2);closeMenu2();">Pass</li>
+    <li onclick="dribblings(2);closeMenu2();">Dribbling</li>
+    <li onclick="tackles(2);closeMenu2();">Zweikampf</li>
+    <li onclick="starPlayer(2);closeMenu2();">Starspieler ausgespielt</li>
     </ul>
 </div>
 
@@ -688,6 +869,103 @@ body {
     </div>
 </div>
 
+<!-- Statistiken Modal -->
+<div id="statsModal" class="stats-modal">
+    <div class="stats-modal-content">
+        <span class="close" onclick="closeStats()">&times;</span>
+        <h2>Statistiken</h2>
+        <table class="stats-table">
+            <tr>
+                <td id="player1StatsName" class="player-name"></td>
+                <td></td>
+                <td id="player2StatsName" class="player-name"></td>
+            </tr>
+            <tr>
+                <td id="player1ScoreModal">0</td>
+                <td>Tore</td>
+                <td id="player2ScoreModal">0</td>
+            </tr>
+            <tr>
+                <td id="player1XGModal">0</td>
+                <td>xG</td>
+                <td id="player2XGModal">0</td>
+            </tr>
+            <tr>
+                <td id="lastShotPlayer1">0</td>
+                <td>Torschüsse</td>
+                <td id="lastShotPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="passesPlayer1">0</td>
+                <td>Pässe</td>
+                <td id="passesPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="successfulPassesPlayer1">0</td>
+                <td>erfolgreiche Pässe</td>
+                <td id="successfulPassesPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="ballPossessionPlayer1">0</td>
+                <td>Ballbesitz</td>
+                <td id="ballPossessionPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="dribblingsPlayer1">0</td>
+                <td>Dribblings</td>
+                <td id="dribblingsPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="successfulDribblingsPlayer1">0</td>
+                <td>erfolgreiche Dribblings</td>
+                <td id="successfulDribblingsPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="tacklesPlayer1">0</td>
+                <td>Zweikämpfe</td>
+                <td id="tacklesPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="foulsPlayer1">0</td>
+                <td>Fouls</td>
+                <td id="foulsPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="yellowCardPlayer1">0</td>
+                <td>Gelbe Karten</td>
+                <td id="yellowCardPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="redCardsPlayer1">0</td>
+                <td>Rote Karten</td>
+                <td id="redCardsPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="penaltiesPlayer1">0</td>
+                <td>Elfmeter</td>
+                <td id="penaltiesPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="successfultacklesPlayer1">0</td>
+                <td>erfolgreiche Zweikämpfe</td>
+                <td id="successfultacklesPlayer2">0</td>
+            </tr>
+            <tr>
+                <td id="starPlayer1">0</td>
+                <td>Starspieler ausgespielt</td>
+                <td id="starPlayer2">0</td>
+            </tr>
+            <!-- Hier kannst du weitere Statistiken hinzufügen -->
+            <tr>
+            <td></td>
+            </tr>
+            <tr>
+            <td colspan="3" id="totalTurns"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
 <script>
 let player1UnfilledSquares = 5;
 let player1GreenSquares = 0;
@@ -716,12 +994,54 @@ function toggleMenu() {
     }
 }
 
+function toggleMenu1() {
+    const menu1 = document.getElementById("menu1");
+    const overlay = document.getElementById("overlay");
+
+    if (menu1.style.display === "none") {
+    menu1.style.display = "block";
+    overlay.style.display = "block";
+    } else {
+    menu1.style.display = "none";
+    overlay.style.display = "none";
+    }
+}
+
+function toggleMenu2() {
+    const menu2 = document.getElementById("menu2");
+    const overlay = document.getElementById("overlay");
+
+    if (menu2.style.display === "none") {
+    menu2.style.display = "block";
+    overlay.style.display = "block";
+    } else {
+    menu2.style.display = "none";
+    overlay.style.display = "none";
+    }
+}
+
 // Funktion zum Schließen des Menüs nach Auswahl eines Menüpunkts
 function closeMenu() {
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("overlay");
   
     menu.style.display = "none";
+    overlay.style.display = "none";
+}
+
+function closeMenu1() {
+    const menu1 = document.getElementById("menu1");
+    const overlay = document.getElementById("overlay");
+  
+    menu1.style.display = "none";
+    overlay.style.display = "none";
+}
+
+function closeMenu2() {
+    const menu2 = document.getElementById("menu2");
+    const overlay = document.getElementById("overlay");
+  
+    menu2.style.display = "none";
     overlay.style.display = "none";
 }
 
@@ -845,6 +1165,9 @@ function removeLastEntryAndDeductPoint(playerId) {
     }
 }
 
+let foulsPlayer1 = 0;  // Variable für Fouls von Spieler 1
+let foulsPlayer2 = 0;  // Variable für Fouls von Spieler 2
+
 // Funktion, um ein Foul für einen Spieler hinzuzufügen
 function addFoul(playerId) {
     const playerScoreElement = document.getElementById(playerId);
@@ -852,19 +1175,35 @@ function addFoul(playerId) {
     // Eingabeaufforderung für Spielminute
     const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
     if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-    // Erstellen der neuen Einträge mit Foul und Informationen
-    const entryElement = document.createElement("div");
-    entryElement.classList.add("entry");
-    entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px; margin-right: -5px; margin-top: -6px;">sports</span> ${minuteInput}' Foul`;
-    playerScoreElement.parentElement.appendChild(entryElement);
+        // Erstellen der neuen Einträge mit Foul und Informationen
+        const entryElement = document.createElement("div");
+        entryElement.classList.add("entry");
+        entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px; margin-right: -5px; margin-top: -6px;">sports</span> ${minuteInput}' Foul`;
+        playerScoreElement.parentElement.appendChild(entryElement);
 
-    // Einen leeren Eintrag für den anderen Spieler hinzufügen
-    const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
-    addEmptyEntry(otherPlayerId);
+        // Einen leeren Eintrag für den anderen Spieler hinzufügen
+        const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+        addEmptyEntry(otherPlayerId);
+
+        // Foul zählen und im Modal aktualisieren
+        if (playerId === "player1Score") {
+            foulsPlayer1++;  // Foul für Spieler 1
+        } else {
+            foulsPlayer2++;  // Foul für Spieler 2
+        }
+
+        // Foulzähler im Modal aktualisieren
+        document.getElementById('foulsPlayer1').textContent = foulsPlayer1;
+        document.getElementById('foulsPlayer2').textContent = foulsPlayer2;
+
     } else {
-    alert("Ungültige Eingabe. Das Foul wird nicht hinzugefügt.");
+        alert("Ungültige Eingabe. Das Foul wird nicht hinzugefügt.");
     }
 }
+
+// Zählvariablen für gelbe Karten pro Spieler
+let yellowCardCountPlayer1 = 0;
+let yellowCardCountPlayer2 = 0;
 
 // Funktion, um eine gelbe Karte für einen Spieler hinzuzufügen
 function addYellowCard(playerId) {
@@ -873,19 +1212,45 @@ function addYellowCard(playerId) {
     // Eingabeaufforderung für Spielminute
     const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
     if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-    // Erstellen der neuen Einträge mit gelber Karte und Informationen
-    const entryElement = document.createElement("div");
-    entryElement.classList.add("entry");
-    entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' Gelbe Karte`;
-    playerScoreElement.parentElement.appendChild(entryElement);
+        // Erstellen der neuen Einträge mit gelber Karte und Informationen
+        const entryElement = document.createElement("div");
+        entryElement.classList.add("entry");
+        entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' Gelbe Karte`;
+        playerScoreElement.parentElement.appendChild(entryElement);
 
-    // Einen leeren Eintrag für den anderen Spieler hinzufügen
-    const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
-    addEmptyEntry(otherPlayerId);
+        // Erhöhen der gelben Karten-Zählung für den jeweiligen Spieler
+        if (playerId === "player1Score") {
+            yellowCardCountPlayer1++;
+        } else if (playerId === "player2Score") {
+            yellowCardCountPlayer2++;
+        }
+
+        // Einen leeren Eintrag für den anderen Spieler hinzufügen
+        const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+        addEmptyEntry(otherPlayerId);
+        
+        // Optional: Ausgabe der aktuellen Anzahl der gelben Karten für den Spieler
+        console.log(`${playerId} hat jetzt ${playerId === "player1Score" ? yellowCardCountPlayer1 : yellowCardCountPlayer2} gelbe Karte(n).`);
     } else {
-    alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
+        alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
     }
 }
+
+// Eine Funktion erstellen, um einen leeren Eintrag für den anderen Spieler hinzuzufügen
+function addEmptyEntry(playerId) {
+    const playerScoreElement = document.getElementById(playerId);
+    const playerName = playerId === "player1Score" ? "Spieler 2" : "Spieler 1";
+
+    const entryElement = document.createElement("div");
+    entryElement.classList.add("entry");
+    entryElement.innerHTML = `&nbsp;`;
+
+    playerScoreElement.parentElement.appendChild(entryElement);
+}
+
+// Zählvariablen für rote Karten pro Spieler
+let redCardsPlayer1 = 0;
+let redCardsPlayer2 = 0;
 
 // Funktion, um eine rote Karte für einen Spieler hinzuzufügen
 function addRedCard(playerId) {
@@ -894,81 +1259,106 @@ function addRedCard(playerId) {
     // Eingabeaufforderung für Spielminute und Spielername
     const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
     if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-    const scorerName = prompt("Spielernamen eingeben (leer = 'Standardspieler'):");
-    const playerName = scorerName || "Standardspieler";
+        const scorerName = prompt("Spielernamen eingeben (leer = 'Standardspieler'):");
+        const playerName = scorerName || "Standardspieler";
 
-    // Erstellen der neuen Einträge mit roter Karte und Informationen
-    const entryElement = document.createElement("div");
-    entryElement.classList.add("entry");
-    entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' ${playerName}`;
-    playerScoreElement.parentElement.appendChild(entryElement);
+        // Erstellen der neuen Einträge mit roter Karte und Informationen
+        const entryElement = document.createElement("div");
+        entryElement.classList.add("entry");
+        entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' ${playerName}`;
+        playerScoreElement.parentElement.appendChild(entryElement);
 
-    // Einen leeren Eintrag für den anderen Spieler hinzufügen
-    const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
-    addEmptyEntry(otherPlayerId);
+        // Einen leeren Eintrag für den anderen Spieler hinzufügen
+        const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+        addEmptyEntry(otherPlayerId);
+
+        // Rote Karte zählen und im Modal aktualisieren
+        if (playerId === "player1Score") {
+            redCardsPlayer1++;  // Rote Karte für Spieler 1
+        } else {
+            redCardsPlayer2++;  // Rote Karte für Spieler 2
+        }
+
+        // Rote Karten im Modal aktualisieren
+        document.getElementById('redCardsPlayer1').textContent = redCardsPlayer1;
+        document.getElementById('redCardsPlayer2').textContent = redCardsPlayer2;
+
     } else {
-    alert("Ungültige Eingabe. Die rote Karte wird nicht hinzugefügt.");
+        alert("Ungültige Eingabe. Die rote Karte wird nicht hinzugefügt.");
     }
 }
 
-// Funktion, um einen Elfmeter für einen Spieler hinzuzufügen
+// Variablen zur Speicherung der Elfmeter-Statistiken
+let penaltiesPlayer1 = 0;
+let penaltiesPlayer2 = 0;
+let penaltiesScoredPlayer1 = 0;
+let penaltiesScoredPlayer2 = 0;
+let penaltiesMissedPlayer1 = 0;
+let penaltiesMissedPlayer2 = 0;
+
 function addPenalty(playerId) {
     const playerScoreElement = document.getElementById(playerId);
 
-    // Ask the user if the penalty was converted
+    // Abfrage, ob der Elfmeter verwandelt wurde
     const penaltyConverted = window.confirm("Elfmeter verwandelt?");
+    
+    // Eingabe der Spielminute
+    const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
+    if (!(minuteInput && /^\d{2}$/.test(minuteInput))) {
+        alert("Ungültige Eingabe. Tor wird nicht gezählt.");
+        return;
+    }
 
+    // Festlegen des Icons für verwandelten oder verschossenen Elfmeter
+    const iconSrc = penaltyConverted ? "graphics/elfmeter_black.svg" : "graphics/elfmeter_missed.svg";
+    
+    // Erstellen des Eintrags für den Elfmeter
+    const entryElement = document.createElement("div");
+    entryElement.classList.add("entry");
+    entryElement.innerHTML = `<img src="${iconSrc}" alt="" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
+    playerScoreElement.parentElement.appendChild(entryElement);
+
+    // Statistiken aktualisieren
+    if (playerId === "player1Score") {
+        penaltiesPlayer1++;
+        if (penaltyConverted) {
+            penaltiesScoredPlayer1++;
+        } else {
+            penaltiesMissedPlayer1++;
+        }
+    } else {
+        penaltiesPlayer2++;
+        if (penaltyConverted) {
+            penaltiesScoredPlayer2++;
+        } else {
+            penaltiesMissedPlayer2++;
+        }
+    }
+
+    console.log(`Spieler 1: ${penaltiesPlayer1} Elfmeter (${penaltiesScoredPlayer1} getroffen, ${penaltiesMissedPlayer1} verschossen)`);
+    console.log(`Spieler 2: ${penaltiesPlayer2} Elfmeter (${penaltiesScoredPlayer2} getroffen, ${penaltiesMissedPlayer2} verschossen)`);
+
+    // Falls der Elfmeter verwandelt wurde, Torzahl aktualisieren und Animation/Sound ausführen
     if (penaltyConverted) {
-    let score = parseInt(playerScoreElement.textContent);
+        let score = parseInt(playerScoreElement.textContent);
+        playerScoreElement.textContent = score + 1;
+        playGoalSound();
+        playerScoreElement.classList.add("score-animation");
+        setTimeout(() => playerScoreElement.classList.remove("score-animation"), 8000);
+    }
 
-    // Eingabeaufforderung für Spielminute und Torschützen
-    const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-    if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-
-    // Erstellen der neuen Einträge mit Elfmeter-Icon und Informationen
-    const entryElement = document.createElement("div");
-    entryElement.classList.add("entry");
-    entryElement.innerHTML = `<img src="graphics/elfmeter_black.svg" alt="" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
-    playerScoreElement.parentElement.appendChild(entryElement);
-
-    // Torzahl des Spielers um 1 erhöhen
-    playerScoreElement.textContent = score + 1;
-
-    // Torsound abspielen
-    playGoalSound();
-
-    // Punkt-Animation hinzufügen
-    playerScoreElement.classList.add("score-animation");
-
-    // Nach 8 Sekunden die Punkt-Animation entfernen
-    setTimeout(() => {
-    playerScoreElement.classList.remove("score-animation");
-    }, 8000);
-
-    // Einen leeren Eintrag für den anderen Spieler hinzufügen
+    // Leeren Eintrag für den anderen Spieler hinzufügen
     const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
     addEmptyEntry(otherPlayerId);
-    } else {
-    alert("Ungültige Eingabe. Tor wird nicht gezählt.");
-    }
-    } else {
-    // Eingabeaufforderung für Spielminute und Torschützen
-    const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-    if (minuteInput && /^\d{2}$/.test(minuteInput)) {
 
-    // Erstellen der neuen Einträge mit Elfmeter-Icon und Informationen
-    const entryElement = document.createElement("div");
-    entryElement.classList.add("entry");
-    entryElement.innerHTML = `<img src="graphics/elfmeter_missed.svg" alt="" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
-    playerScoreElement.parentElement.appendChild(entryElement);
+    // Statistiken im Modal aktualisieren
+    updatePenaltyStats();
+}
 
-    // Einen leeren Eintrag für den anderen Spieler hinzufügen
-    const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
-    addEmptyEntry(otherPlayerId);
-    } else {
-    alert("Ungültige Eingabe. Tor wird nicht gezählt.");
-    }
-    }
+// Funktion zur Aktualisierung der Elfmeter-Statistiken im Modal
+function updatePenaltyStats() {
+    document.getElementById('penaltiesPlayer1').textContent = `${penaltiesPlayer1} (${penaltiesScoredPlayer1} getroffen, ${penaltiesMissedPlayer1} verschossen)`;
+    document.getElementById('penaltiesPlayer2').textContent = `${penaltiesPlayer2} (${penaltiesScoredPlayer2} getroffen, ${penaltiesMissedPlayer2} verschossen)`;
 }
 
 // Event Listener hinzufügen, um die Zeichenanzahl bei der Eingabe zu überwachen
@@ -1743,7 +2133,6 @@ function closeXGRechner() {
     xgModal.style.display = 'none';
 }
 
-
 // Funktion, um die xG-Werte im Body anzuzeigen
 function displayXGValuesInBody() {
     // Funktion, die die aktuellen xG-Werte aus dem Modal abruft und im Body anzeigt
@@ -1767,6 +2156,310 @@ function displayXGValuesInBody() {
 
 // Diese Funktion aufrufen, um die xG-Werte im Body anzuzeigen
 displayXGValuesInBody();
+
+// Funktion, um das Statistiken-Modal zu öffnen
+function openStats() {
+    // Namen der Spieler von der Hauptseite holen
+    const player1NameElement = document.querySelector(".player-container:nth-child(1) .player-name");
+    const player2NameElement = document.querySelector(".player-container:nth-child(2) .player-name");
+
+    // Namen in die Modal-Tabelle einfügen
+    document.getElementById('player1StatsName').textContent = player1NameElement.textContent;
+    document.getElementById('player2StatsName').textContent = player2NameElement.textContent;
+    
+    // Stil von Spieler 2 übernehmen
+    document.getElementById('player2StatsName').style.color = getComputedStyle(player2NameElement).color;
+    
+    // Statistiken in die Modal-Tabelle einfügen
+    document.getElementById('passesPlayer1').textContent = passesPlayer1 + missedpassesPlayer1;
+    document.getElementById('passesPlayer2').textContent = passesPlayer2 + missedpassesPlayer2;
+    document.getElementById('dribblingsPlayer1').textContent = dribblingsPlayer1 + faileddribblingsPlayer1;
+    document.getElementById('dribblingsPlayer2').textContent = dribblingsPlayer2 + faileddribblingsPlayer2;
+    document.getElementById('tacklesPlayer1').textContent = tacklesPlayer1 + failedtacklesPlayer1;
+    document.getElementById('tacklesPlayer2').textContent = tacklesPlayer2 + failedtacklesPlayer2;
+    document.getElementById('starPlayer1').textContent = starPlayer1;
+    document.getElementById('starPlayer2').textContent = starPlayer2;
+    
+    // Erfolgreiche Pässe und deren Prozentwert berechnen
+    const successfulPassesPlayer1 = passesPlayer1;
+    const totalPassesPlayer1 = passesPlayer1 + missedpassesPlayer1;
+    const successfulPassesPlayer2 = passesPlayer2;
+    const totalPassesPlayer2 = passesPlayer2 + missedpassesPlayer2;
+    
+    const successfulPassesPlayer1Percent = totalPassesPlayer1 > 0 ? Math.round((successfulPassesPlayer1 / totalPassesPlayer1) * 100) : 0;
+    const successfulPassesPlayer2Percent = totalPassesPlayer2 > 0 ? Math.round((successfulPassesPlayer2 / totalPassesPlayer2) * 100) : 0;
+
+    // Erfolgreiche Pässe und deren Prozentwert in der Tabelle einfügen
+    document.getElementById('successfulPassesPlayer1').textContent = successfulPassesPlayer1 + " (" + successfulPassesPlayer1Percent + "%)";
+    document.getElementById('successfulPassesPlayer2').textContent = successfulPassesPlayer2 + " (" + successfulPassesPlayer2Percent + "%)";
+
+    // Erfolgreiche Dribblings und deren Prozentwert berechnen
+    const successfulDribblingsPlayer1 = dribblingsPlayer1;
+    const totalDribblingsPlayer1 = dribblingsPlayer1 + faileddribblingsPlayer1;
+    const successfulDribblingsPlayer2 = dribblingsPlayer2;
+    const totalDribblingsPlayer2 = dribblingsPlayer2 + faileddribblingsPlayer2;
+    
+    const successfulDribblingsPlayer1Percent = totalDribblingsPlayer1 > 0 ? Math.round((successfulDribblingsPlayer1 / totalDribblingsPlayer1) * 100) : 0;
+    const successfulDribblingsPlayer2Percent = totalDribblingsPlayer2 > 0 ? Math.round((successfulDribblingsPlayer2 / totalDribblingsPlayer2) * 100) : 0;
+
+    // Erfolgreiche Dribblings und deren Prozentwert in der Tabelle einfügen
+    document.getElementById('successfulDribblingsPlayer1').textContent = successfulDribblingsPlayer1 + " (" + successfulDribblingsPlayer1Percent + "%)";
+    document.getElementById('successfulDribblingsPlayer2').textContent = successfulDribblingsPlayer2 + " (" + successfulDribblingsPlayer2Percent + "%)";
+
+    // Erfolgreiche Zweikämpfe und deren Prozentwert berechnen
+    const successfultacklesPlayer1 = tacklesPlayer1;
+    const totaltacklesPlayer1 = tacklesPlayer1 + failedtacklesPlayer1;
+    const successfultacklesPlayer2 = tacklesPlayer2;
+    const totaltacklesPlayer2 = tacklesPlayer2 + failedtacklesPlayer2;
+    
+    const successfultacklesPlayer1Percent = totaltacklesPlayer1 > 0 ? Math.round((successfultacklesPlayer1 / totaltacklesPlayer1) * 100) : 0;
+    const successfultacklesPlayer2Percent = totaltacklesPlayer2 > 0 ? Math.round((successfultacklesPlayer2 / totaltacklesPlayer2) * 100) : 0;
+
+    // Erfolgreiche Zweikämpfe und deren Prozentwert in der Tabelle einfügen
+    document.getElementById('successfultacklesPlayer1').textContent = successfultacklesPlayer1 + " (" + successfultacklesPlayer1Percent + "%)";
+    document.getElementById('successfultacklesPlayer2').textContent = successfultacklesPlayer2 + " (" + successfultacklesPlayer2Percent + "%)";
+    
+    // Berechnung des Gesamtballbesitzes und der Prozentwerte
+    const totalBallPossession = ballPossessionPlayer1 + ballPossessionPlayer2;
+    const ballPossessionPlayer1Percent = totalBallPossession > 0 ? Math.round((ballPossessionPlayer1 / totalBallPossession) * 100) : 0;  // Prozentwert für Spieler 1 berechnen und runden
+    const ballPossessionPlayer2Percent = totalBallPossession > 0 ? Math.round((ballPossessionPlayer2 / totalBallPossession) * 100) : 0;  // Prozentwert für Spieler 2 berechnen und runden
+
+    // Ballbesitz in der Tabelle einfügen
+    document.getElementById('ballPossessionPlayer1').textContent = ballPossessionPlayer1 + " (" + ballPossessionPlayer1Percent + "%)";
+    document.getElementById('ballPossessionPlayer2').textContent = ballPossessionPlayer2 + " (" + ballPossessionPlayer2Percent + "%)";
+
+    // Starspieler ausgespielt in der Tabelle einfügen
+    document.getElementById('starPlayer1').textContent = starPlayer1;
+    document.getElementById('starPlayer2').textContent = starPlayer2;
+
+    // Fouls anzeigen
+    document.getElementById('foulsPlayer1').textContent = foulsPlayer1;
+    document.getElementById('foulsPlayer2').textContent = foulsPlayer2;
+
+    // Gelbe Karten anzeigen
+    document.getElementById('yellowCardPlayer1').textContent = yellowCardCountPlayer1;
+    document.getElementById('yellowCardPlayer2').textContent = yellowCardCountPlayer2;
+
+    // Rote Karten anzeigen
+    document.getElementById('redCardsPlayer1').textContent = redCardsPlayer1;
+    document.getElementById('redCardsPlayer2').textContent = redCardsPlayer2;
+
+    // Gesamtzahl der Elfmeter im Modal anzeigen
+    document.getElementById('penaltiesPlayer1').textContent = penaltiesPlayer1;
+    document.getElementById('penaltiesPlayer2').textContent = penaltiesPlayer2;
+
+    // Berechnung der Gesamtzahl der Spielzüge
+    const totalTurns = ballPossessionPlayer1 + ballPossessionPlayer2;
+
+    // Gesamtzahl der Spielzüge im Modal anzeigen
+    document.getElementById('totalTurns').textContent = "In diesem Spiel wurden insgesamt " + totalTurns + " Spielzüge ausgeführt.";
+
+    // Spieler 1 Score und xG in die Modal-Tabelle einfügen
+    const player1Score = document.getElementById('player1Score').textContent;
+    const player1XGValue = document.getElementById('player1XGValue').textContent;
+
+    document.getElementById('player1ScoreModal').textContent = player1Score;
+    document.getElementById('player1XGModal').textContent = player1XGValue;
+
+    // Spieler 2 Score und xG in die Modal-Tabelle einfügen
+    const player2Score = document.getElementById('player2Score').textContent;
+    const player2XGValue = document.getElementById('player2XGValue').textContent;
+
+    document.getElementById('player2ScoreModal').textContent = player2Score;
+    document.getElementById('player2XGModal').textContent = player2XGValue;
+
+    // Zählen der xG-Einträge und im Modal anzeigen
+    const xGEntriesPlayer1 = countXGEntries(1);
+    const xGEntriesPlayer2 = countXGEntries(2);
+
+    document.getElementById('lastShotPlayer1').textContent = xGEntriesPlayer1;
+    document.getElementById('lastShotPlayer2').textContent = xGEntriesPlayer2;
+
+    // Modal anzeigen
+    document.getElementById('statsModal').style.display = 'block';
+}
+
+// Funktion, um das Statistiken-Modal zu schließen
+function closeStats() {
+    document.getElementById('statsModal').style.display = 'none';
+}
+
+// Ballbesitz-Werte initialisieren
+    let ballPossessionPlayer1 = 0;
+    let ballPossessionPlayer2 = 0;
+
+    // Funktion zur Handhabung der Ballbesitz-Abfrage
+    function confirmBallPossession(player) {
+        const message = "Hat dieser Spieler am Ende des Spielzugs Ballbesitz?";
+        
+        if (confirm(message)) {
+            // Wenn der Spieler "OK" klickt, wird der Ballbesitz-Wert erhöht
+            if (player === 1) {
+                ballPossessionPlayer1++;
+                alert("Der Ballbesitz dieses Spielers wurde auf " + ballPossessionPlayer1 + " erhöht.");
+            } else if (player === 2) {
+                ballPossessionPlayer2++;
+                alert("Der Ballbesitz dieses Spielers wurde auf " + ballPossessionPlayer2 + " erhöht.");
+            }
+        }
+    }
+
+// Erfolgreiche und fehlgeschlagene Pässe initialisieren
+let passesPlayer1 = 0;
+let missedpassesPlayer1 = 0;
+let passesPlayer2 = 0;
+let missedpassesPlayer2 = 0;
+
+// Funktion zur Handhabung der Erfolgreiche-Pässe-Abfrage
+function passes(player) {
+    const passExecutionMessage = "Hat dieser Spieler einen Pass ausgeführt?";
+    const successMessage = "War der Pass erfolgreich?";
+    
+    // Erst fragen, ob der Pass ausgeführt wurde
+    if (confirm(passExecutionMessage)) {
+        // Wenn der Pass ausgeführt wurde, frage, ob er erfolgreich war
+        if (confirm(successMessage)) {
+            // Wenn der Pass erfolgreich war, den Wert für erfolgreiche Pässe erhöhen
+            if (player === 1) {
+                passesPlayer1++;
+                alert("Die erfolgreichen Pässe dieses Spielers wurden auf " + passesPlayer1 + " erhöht.");
+            } else if (player === 2) {
+                passesPlayer2++;
+                alert("Die erfolgreichen Pässe dieses Spielers wurden auf " + passesPlayer2 + " erhöht.");
+            }
+        } else {
+            // Wenn der Pass nicht erfolgreich war, den Wert für fehlgeschlagene Pässe erhöhen
+            if (player === 1) {
+                missedpassesPlayer1++;
+                alert("Die fehlgeschlagenen Pässe dieses Spielers wurden auf " + missedpassesPlayer1 + " erhöht.");
+            } else if (player === 2) {
+                missedpassesPlayer2++;
+                alert("Die fehlgeschlagenen Pässe dieses Spielers wurden auf " + missedpassesPlayer2 + " erhöht.");
+            }
+        }
+    }
+}
+
+// Erfolgreiche und fehlgeschlagene Dribblings initialisieren
+let dribblingsPlayer1 = 0;
+let faileddribblingsPlayer1 = 0;
+let dribblingsPlayer2 = 0;
+let faileddribblingsPlayer2 = 0;
+
+// Funktion zur Handhabung der Erfolgreiche-Dribblings-Abfrage
+function dribblings(player) {
+    const dribblingExecutionMessage = "Hat dieser Spieler ein Dribbling ausgeführt?";
+    const successMessage = "War das Dribbling erfolgreich?";
+    
+    // Erst fragen, ob das Dribbling ausgeführt wurde
+    if (confirm(dribblingExecutionMessage)) {
+        // Wenn das Dribbling ausgeführt wurde, frage, ob es erfolgreich war
+        if (confirm(successMessage)) {
+            // Wenn das Dribbling erfolgreich war, den Wert für erfolgreiche Dribblings erhöhen
+            if (player === 1) {
+                dribblingsPlayer1++;
+                alert("Die erfolgreichen Dribblings dieses Spielers wurden auf " + dribblingsPlayer1 + " erhöht.");
+            } else if (player === 2) {
+                dribblingsPlayer2++;
+                alert("Die erfolgreichen Dribblings dieses Spielers wurden auf " + dribblingsPlayer2 + " erhöht.");
+            }
+        } else {
+            // Wenn das Dribbling nicht erfolgreich war, den Wert für fehlgeschlagene Dribblings erhöhen
+            if (player === 1) {
+                faileddribblingsPlayer1++;
+                alert("Die fehlgeschlagenen Dribblings dieses Spielers wurden auf " + faileddribblingsPlayer1 + " erhöht.");
+            } else if (player === 2) {
+               faileddribblingsPlayer2++;
+                alert("Die fehlgeschlagenen Dribblings dieses Spielers wurden auf " + faileddribblingsPlayer2 + " erhöht.");
+            }
+        }
+    }
+}
+
+// Erfolgreiche und fehlgeschlagene Zweikämpfe initialisieren
+let tacklesPlayer1 = 0;
+let failedtacklesPlayer1 = 0;
+let tacklesPlayer2 = 0;
+let failedtacklesPlayer2 = 0;
+
+// Funktion zur Handhabung der Erfolgreiche-Zweikampf-Abfrage
+function tackles(player) {
+    const tacklesExecutionMessage = "Hat dieser Spieler einen Zweikampf ausgeführt?";
+    const successMessage = "War der Zweikampf erfolgreich?";
+    
+    // Erst fragen, ob der Zweikampf ausgeführt wurde
+    if (confirm(tacklesExecutionMessage)) {
+        // Wenn der Zweikampf ausgeführt wurde, frage, ob er erfolgreich war
+        if (confirm(successMessage)) {
+            // Wenn der Zweikampf erfolgreich war, den Wert für erfolgreiche Zweikämpfe erhöhen
+            if (player === 1) {
+                tacklesPlayer1++;
+                alert("Die erfolgreichen Zweikämpfe dieses Spielers wurden auf " + tacklesPlayer1 + " erhöht.");
+            } else if (player === 2) {
+                tacklesPlayer2++;
+                alert("Die erfolgreichen Zweikämpfe dieses Spielers wurden auf " + tacklesPlayer2 + " erhöht.");
+            }
+        } else {
+            // Wenn der Zweikampf nicht erfolgreich war, den Wert für fehlgeschlagene Zweikämpfe erhöhen
+            if (player === 1) {
+                failedtacklesPlayer1++;
+                alert("Die fehlgeschlagenen Zweikämpfe dieses Spielers wurden auf " + failedtacklesPlayer1 + " erhöht.");
+            } else if (player === 2) {
+               failedtacklesPlayer2++;
+                alert("Die fehlgeschlagenen Zweikämpfe dieses Spielers wurden auf " + failedtacklesPlayer2 + " erhöht.");
+            }
+        }
+    }
+}
+
+// Initialisierung der neuen Variablen für Starspieler ausgespielt
+let starPlayer1 = 0;
+let starPlayer2 = 0;
+
+// Funktion zur Handhabung der Starspieler ausgespielt-Abfrage
+function starPlayer(player) {
+    const message = "Hat dieser Spieler einen Starspieler ausgespielt?";
+    
+    // Bestätigung, ob der Spieler einen Starspieler ausgespielt hat
+    if (confirm(message)) {
+        // Wenn der Spieler "OK" klickt, den Wert für den Starspieler erhöhen
+        if (player === 1) {
+            starPlayer1++;
+            alert("Die Anzahl der Starspieler, die dieser Spieler ausgespielt hat, wurde auf " + starPlayer1 + " erhöht.");
+        } else if (player === 2) {
+            starPlayer2++;
+            alert("Die Anzahl der Starspieler, die dieser Spieler ausgespielt hat, wurde auf " + starPlayer2 + " erhöht.");
+        }
+    }
+}
+
+// Funktion zum Zählen der xG-Einträge für einen Spieler
+function countXGEntries(playerId) {
+    const shotList = document.querySelector(`#xgPlayer${playerId}Shots`);
+    const shots = shotList.querySelectorAll('li');
+    
+    // Die Anzahl der xG-Einträge wird einfach durch die Anzahl der Listeneinträge ermittelt
+    return shots.length;
+}
+
+// Funktion zum Aktualisieren der Anzahl der xG-Einträge im Statistiken Modal
+function updateXGEntriesInStatsModal() {
+    const xGEntriesPlayer1 = countXGEntries(1);
+    const xGEntriesPlayer2 = countXGEntries(2);
+    
+    // Anzeige der xG-Einträge im Statistiken Modal
+    document.getElementById('lastShotPlayer1').textContent = xGEntriesPlayer1;
+    document.getElementById('lastShotPlayer2').textContent = xGEntriesPlayer2;
+}
+
+// Event-Listener für das Hinzufügen und Entfernen von Schüssen (bzw. xG-Einträgen)
+document.querySelectorAll('.xg-add-shot-btn').forEach(button => {
+    button.addEventListener('click', updateXGEntriesInStatsModal);
+});
+
+document.querySelectorAll('.xg-remove-shot-btn').forEach(button => {
+    button.addEventListener('click', updateXGEntriesInStatsModal);
+});
 </script>
 </body>
 </html>
