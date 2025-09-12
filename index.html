@@ -10,6 +10,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="graphics/apple-touch-icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 
 <audio id="goalSound" preload="auto">
     <source src="sounds/goal.mp3" type="audio/mpeg">
@@ -548,13 +550,13 @@ body {
 
 .winner-content .additional-text {
     font-size: 24px;
-    animation: pulse 2.5s infinite;
+    animation: pulse 1.0s infinite;
     margin-top: -20px;
 }
 
 .winner-content .bold-text {
     font-weight: bold;
-    animation: pulse 2.5s infinite;
+    animation: pulse 1.0s infinite;
     margin-top: -40px;
 }
 
@@ -699,6 +701,26 @@ body {
     right: 10px;
     font-size: 30px;
     cursor: pointer;
+}
+
+/* Puls-Effekt Rot: Hintergrundfarbe 8% der Farbe #ba3f1e, langsamer */
+.pulse-red {
+    animation: pulseRed 3s infinite;
+}
+@keyframes pulseRed {
+    0%   { background-color: #ffffff; }
+    50%  { background-color: #ffe6e1; } /* 8% von #ba3f1e */
+    100% { background-color: #ffffff; }
+}
+
+/* Puls-Effekt Blau: Hintergrundfarbe 8% der Farbe #0e477c, langsamer */
+.pulse-blue {
+    animation: pulseBlue 3s infinite;
+}
+@keyframes pulseBlue {
+    0%   { background-color: #ffffff; }
+    50%  { background-color: #e6f0fa; } /* 8% von #0e477c */
+    100% { background-color: #ffffff; }
 }
 </style>
 </head>
@@ -955,14 +977,28 @@ body {
                 <td>Starspieler ausgespielt</td>
                 <td id="starPlayer2">0</td>
             </tr>
-            <!-- Hier kannst du weitere Statistiken hinzufügen -->
             <tr>
-            <td></td>
-            </tr>
-            <tr>
-            <td colspan="3" id="totalTurns"></td>
+                <td colspan="3" id="totalTurns"></td>
             </tr>
         </table>
+
+        <!-- Export-Button unten zentriert -->
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="exportButton" onclick="exportStatsAsImage()" style="
+    margin-top: 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'DINCond Medium';
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+">Exportieren …</button>
+        </div>
     </div>
 </div>
 
@@ -2290,19 +2326,38 @@ function closeStats() {
 
     // Funktion zur Handhabung der Ballbesitz-Abfrage
     function confirmBallPossession(player) {
-        const message = "Hat dieser Spieler am Ende des Spielzugs Ballbesitz?";
-        
-        if (confirm(message)) {
-            // Wenn der Spieler "OK" klickt, wird der Ballbesitz-Wert erhöht
-            if (player === 1) {
-                ballPossessionPlayer1++;
-                alert("Der Ballbesitz dieses Spielers wurde auf " + ballPossessionPlayer1 + " erhöht.");
-            } else if (player === 2) {
-                ballPossessionPlayer2++;
-                alert("Der Ballbesitz dieses Spielers wurde auf " + ballPossessionPlayer2 + " erhöht.");
-            }
+    const message = "Hat dieser Spieler am Ende des Spielzugs Ballbesitz?";
+
+    if (confirm(message)) {
+        // Spieler-Container abrufen
+        const player1Container = document.getElementById("player1Container");
+        const player2Container = document.getElementById("player2Container");
+
+        // Aktuellen Pulse-Effekt prüfen
+        const player1HasPulse = player1Container.classList.contains("pulse-red") || player1Container.classList.contains("pulse-blue");
+        const player2HasPulse = player2Container.classList.contains("pulse-red") || player2Container.classList.contains("pulse-blue");
+
+        // Effekt stoppen
+        player1Container.classList.remove("pulse-red", "pulse-blue");
+        player2Container.classList.remove("pulse-red", "pulse-blue");
+
+        // Pulse-Effekt beim Spieler starten, der ihn vorher **nicht** hatte
+        if (player1HasPulse) {
+            player2Container.classList.add("pulse-blue");
+        } else if (player2HasPulse) {
+            player1Container.classList.add("pulse-red");
+        }
+
+        // Ballbesitz erhöhen
+        if (player === 1) {
+            ballPossessionPlayer1++;
+            alert("Der Ballbesitz dieses Spielers wurde auf " + ballPossessionPlayer1 + " erhöht.");
+        } else if (player === 2) {
+            ballPossessionPlayer2++;
+            alert("Der Ballbesitz dieses Spielers wurde auf " + ballPossessionPlayer2 + " erhöht.");
         }
     }
+}
 
 // Erfolgreiche und fehlgeschlagene Pässe initialisieren
 let passesPlayer1 = 0;
@@ -2460,6 +2515,201 @@ document.querySelectorAll('.xg-add-shot-btn').forEach(button => {
 document.querySelectorAll('.xg-remove-shot-btn').forEach(button => {
     button.addEventListener('click', updateXGEntriesInStatsModal);
 });
+
+  // Hilfsfunktion zum Stylen der Buttons
+function styleButton(btn) {
+    btn.style.marginTop = "20px";
+    btn.style.backgroundColor = "black";
+    btn.style.color = "white";
+    btn.style.border = "none";
+    btn.style.padding = "10px 20px";
+    btn.style.fontSize = "16px";
+    btn.style.cursor = "pointer";
+    btn.style.borderRadius = "5px";
+    btn.style.fontFamily = "DINCond Medium";
+}
+
+// ---------- Modal 1 (Spielaufbau) ----------
+function openSpielvorbereitungModal() {
+    const modalOverlay = document.createElement("div");
+    modalOverlay.classList.add("ht-modal-overlay");
+
+    const modalBox = document.createElement("div");
+    modalBox.classList.add("ht-modal-box");
+
+    const modalTitle = document.createElement("h2");
+    modalTitle.textContent = "Spielaufbau:";
+
+    const modalText = document.createElement("p");
+    modalText.innerHTML = `
+        1. Spielbrett auf den Tisch legen. Jeder Spieler setzt sich an eine farbige Seite des Spielbretts.<br>
+        2. Start-Mannschaftsstapel und Elfmeterkarten für jeden Spieler bereitlegen.<br>
+        3. Beide Spieler legen 10 Aufstellungsmarker vor sich bereit.<br>
+        4. Spielball auf den Anstoßkreis legen.<br>
+        5. Würfel, die Spielzeitmarker beider Spieler, die 2 Gelben Karten und die 2 Roten Karten bereitlegen.<br>
+        6. Aufstellungs- und Halbzeitansprachenstapel mischen und verdeckt bereitlegen.<br>
+        7. Starspielerstapel mischen und verdeckt auf das Spielbrett legen.<br>
+        8. Reservestapel mischen und verdeckt auf das Spielbrett legen.<br>
+        9. Die obersten 6 Karten des Reservestapels neben dem Spielbrett aufdecken und den „Transfermarkt“ bilden.
+    `;
+
+    const closeButton = document.createElement("button");
+    closeButton.textContent = "Erledigt";
+    styleButton(closeButton);
+
+    closeButton.addEventListener("click", () => {
+        document.body.removeChild(modalOverlay);
+        openSpielvorbereitung2Modal();
+    });
+
+    modalBox.appendChild(modalTitle);
+    modalBox.appendChild(modalText);
+    modalBox.appendChild(closeButton);
+    modalOverlay.appendChild(modalBox);
+    document.body.appendChild(modalOverlay);
+}
+
+// ---------- Modal 2 (Spielstart) ----------
+function openSpielvorbereitung2Modal() {
+    const modalOverlay2 = document.createElement("div");
+    modalOverlay2.classList.add("ht-modal-overlay");
+
+    const modalBox2 = document.createElement("div");
+    modalBox2.classList.add("ht-modal-box");
+
+    const modalTitle2 = document.createElement("h2");
+    modalTitle2.textContent = "Spielstart:";
+
+    const modalText2 = document.createElement("p");
+    modalText2.innerHTML = `
+        1. Beide Spieler würfeln. Der Spieler mit der höheren Augenzahl beginnt und ist aktiv.<br>
+        2. Aktiver Spieler: 3 Karten vom Aufstellungsstapel ziehen, 1 auswählen, Rest zurückmischen.<br>
+        3. Inaktiver Spieler: 3 Karten vom Aufstellungsstapel ziehen, 1 auswählen, Rest zurückmischen.<br>
+        4. Aktiver Spieler: 3 Karten vom Halbzeitansprachenstapel ziehen, 2 auswählen, Rest zurückmischen.<br>
+        5. Inaktiver Spieler: 3 Karten vom Halbzeitansprachenstapel ziehen, 2 auswählen, Rest zurückmischen.<br>
+        6. Spielball auf die Farbe des aktiven Spielers drehen.<br>
+        7. Spielzeitmarker des aktiven Spielers auf das Pfeifensymbol legen.<br>
+        8. Beide Spieler mischen ihren Mannschaftsstapel und ziehen dann 6 Karten.<br>
+        9. Inaktiver Spieler: Entscheiden, ob er alle 6 Handkarten ablegt und die übrigen 5 Karten auf die Hand nimmt.<br>
+       10. Der aktive Spieler beginnt mit seinem Spielzug ...
+    `;
+
+    const closeButton2 = document.createElement("button");
+    closeButton2.textContent = "Erledigt";
+    styleButton(closeButton2);
+
+    closeButton2.addEventListener("click", () => {
+        document.body.removeChild(modalOverlay2);
+        openSpielerwahlModal();
+    });
+
+    modalBox2.appendChild(modalTitle2);
+    modalBox2.appendChild(modalText2);
+    modalBox2.appendChild(closeButton2);
+    modalOverlay2.appendChild(modalBox2);
+    document.body.appendChild(modalOverlay2);
+}
+
+// ---------- Modal 3 (Spielerwahl) ----------
+function openSpielerwahlModal() {
+    const modalOverlay3 = document.createElement("div");
+    modalOverlay3.classList.add("ht-modal-overlay");
+
+    const modalBox3 = document.createElement("div");
+    modalBox3.classList.add("ht-modal-box");
+
+    const modalTitle3 = document.createElement("h2");
+    modalTitle3.textContent = "Welcher Spieler beginnt?";
+
+    // Container für Buttons
+    const buttonContainer = document.createElement("div");
+    buttonContainer.style.display = "flex";
+    buttonContainer.style.justifyContent = "center";
+    buttonContainer.style.gap = "15px";
+    buttonContainer.style.marginTop = "20px";
+
+    // Rot-Button
+    const btnRed = document.createElement("button");
+    btnRed.textContent = "Rot";
+    styleButton(btnRed);
+    btnRed.style.backgroundColor = "#ba3f1e"; // deine Rotfarbe
+    btnRed.style.color = "white";
+
+    // Blau-Button
+    const btnBlue = document.createElement("button");
+    btnBlue.textContent = "Blau";
+    styleButton(btnBlue);
+    btnBlue.style.backgroundColor = "#0e477c"; // deine Blaufarbe
+    btnBlue.style.color = "white";
+
+    // Events
+    btnRed.addEventListener("click", () => {
+        document.body.removeChild(modalOverlay3);
+
+        const player1 = document.getElementById("player1Container");
+        if (player1) {
+            player1.classList.add("pulse-red");
+        }
+    });
+
+    btnBlue.addEventListener("click", () => {
+        document.body.removeChild(modalOverlay3);
+
+        const player2 = document.getElementById("player2Container");
+        if (player2) {
+            player2.classList.add("pulse-blue");
+        }
+    });
+
+    buttonContainer.appendChild(btnRed);
+    buttonContainer.appendChild(btnBlue);
+
+    modalBox3.appendChild(modalTitle3);
+    modalBox3.appendChild(buttonContainer);
+    modalOverlay3.appendChild(modalBox3);
+
+    document.body.appendChild(modalOverlay3);
+}
+
+// Modal 1 direkt beim Laden öffnen
+window.addEventListener("load", () => {
+    openSpielvorbereitungModal();
+});
+
+function exportStatsAsImage() {
+    const statsModalContent = document.querySelector('.stats-modal-content');
+    const exportButton = document.getElementById('exportButton');
+    const closeButton = document.querySelector('.stats-modal-content .close');
+
+    // Button und X-Symbol vorübergehend ausblenden
+    exportButton.style.display = 'none';
+    closeButton.style.display = 'none';
+
+    // html2canvas Screenshot
+    html2canvas(statsModalContent).then(canvas => {
+        const image = canvas.toDataURL("image/png");
+
+        // Aktuelles Datum und Uhrzeit für Dateiname
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const filename = `Statistiken_${year}-${month}-${day}_${hours}-${minutes}-${seconds}.png`;
+
+        // Download auslösen
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = filename;
+        link.click();
+
+        // Button und X-Symbol wieder einblenden
+        exportButton.style.display = 'block';
+        closeButton.style.display = 'inline';
+    });
+}
 </script>
 </body>
 </html>
