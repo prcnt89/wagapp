@@ -1714,14 +1714,12 @@ function isHalftimeEntryPresent() {
 // Funktion, um die Halbzeit anzuzeigen
 function addHalftime() {
     if (isHalftimeEntryPresent()) {
-        alert("Die 1. Halbzeit wurde bereits abgeschlossen!"); // Fehlermeldung, falls vorhanden
+        alert("Die 1. Halbzeit wurde bereits abgeschlossen!"); 
         return;
     }
     const halftimeElement = document.createElement("div");
-    halftimeElement.classList.add("entry");
-    halftimeElement.classList.add("halftime-entry");
+    halftimeElement.classList.add("entry", "halftime-entry");
 
-    // Stil für die graue Hintergrundfläche mit abgerundeten Ecken und Anpassungen
     halftimeElement.style.backgroundColor = "rgba(0, 0, 0, 0.08)";
     halftimeElement.style.borderRadius = "10px";
     halftimeElement.style.padding = "3px 0";
@@ -1731,7 +1729,6 @@ function addHalftime() {
     halftimeContent.classList.add("halftime-content");
     halftimeContent.textContent = "Halbzeit";
 
-    // Halbzeit-Sound abspielen
     playHalftimeSound();
 
     const player1ScoreElement = document.getElementById("player1Score");
@@ -1740,20 +1737,13 @@ function addHalftime() {
     const player1EventsContainer = player1ScoreElement.parentElement;
     const player2EventsContainer = player2ScoreElement.parentElement;
 
-    const scoreSpacer = document.createElement("span");
-    scoreSpacer.classList.add("score-spacer");
-    scoreSpacer.textContent = "\u00A0"; // Unicode-Zeichen für ein schmales Leerzeichen
-
     halftimeElement.appendChild(halftimeContent);
-    halftimeElement.appendChild(scoreSpacer.cloneNode(true));
-    halftimeElement.appendChild(document.createTextNode(player1ScoreElement.textContent));
-    halftimeElement.appendChild(document.createTextNode("-"));
-    halftimeElement.appendChild(document.createTextNode(player2ScoreElement.textContent));
+    halftimeElement.appendChild(document.createTextNode(` ${player1ScoreElement.textContent}-${player2ScoreElement.textContent}`));
 
     player1EventsContainer.appendChild(halftimeElement.cloneNode(true));
     player2EventsContainer.appendChild(halftimeElement);
 
-    // Erstellung der Modalbox
+    // Modal Overlay
     const modalOverlay = document.createElement("div");
     modalOverlay.classList.add("ht-modal-overlay");
 
@@ -1765,12 +1755,12 @@ function addHalftime() {
 
     const modalText = document.createElement("p");
     modalText.innerHTML = `
-        1. Eine Halbzeitansprachenkarte aufdecken und ab Beginn der 2. Halbzeit beachten.<br>
+        1. Eine Halbzeitansprachenkarte aufdecken und beachten.<br>
         2. Den 2. Spielzeitmarker auf das Pfeifensymbol legen.<br>
-        3. Den Ball auf den Anstoßkreis legen und auf die Farbe des Spielzeitmarkers drehen.<br>
-        4. Alle Transfermarktkarten in das Reservedeck mischen und 6 neue Karten aufdecken.<br>
-        5. Alle Hand- und Ablagestapel in den Mannschaftsstapel mischen und 6 neue Karten ziehen.<br>
-        6. Sofern erwünscht, die Aufstellungsmarker neu anordnen (entsprechend der Aufstellungs- und Starspielerkarten).<br>
+        3. Ball auf den Anstoßkreis legen.<br>
+        4. Alle Transfermarktkarten neu mischen und 6 aufdecken.<br>
+        5. Alle Hand- und Ablagestapel mischen und 6 Karten ziehen.<br>
+        6. Aufstellungsmarker ggf. neu anordnen.<br>
         7. Ersten Spielzug der 2. Halbzeit beginnen.
     `;
 
@@ -1778,7 +1768,6 @@ function addHalftime() {
     closeButton.textContent = "Erledigt";
     closeButton.classList.add("modal-close-button");
 
-    // Stil für den "Erledigt"-Button
     closeButton.style.marginTop = "20px";
     closeButton.style.backgroundColor = "black";
     closeButton.style.color = "white";
@@ -1789,18 +1778,16 @@ function addHalftime() {
     closeButton.style.borderRadius = "5px";
     closeButton.style.fontFamily = "DINCond Medium";
 
-    // Hover-Stil für den Button
-    closeButton.addEventListener("mouseover", () => {
-    closeButton.style.backgroundColor = "black";
-    });
-
-    closeButton.addEventListener("mouseout", () => {
-    closeButton.style.backgroundColor = "black";
-    });
-
-    // Event Listener für den Button hinzufügen
+    // Puls-Effekte entfernen + Spielerwahl-Modal öffnen
     closeButton.addEventListener("click", () => {
-    document.body.removeChild(modalOverlay);
+        document.body.removeChild(modalOverlay);
+
+        // Puls-Effekte bei beiden Spielern deaktivieren
+        document.getElementById("player1Container")?.classList.remove("pulse-red", "pulse-blue");
+        document.getElementById("player2Container")?.classList.remove("pulse-red", "pulse-blue");
+
+        // Spielerwahl-Modal öffnen
+        openSpielerwahlModal();
     });
 
     modalBox.appendChild(modalTitle);
