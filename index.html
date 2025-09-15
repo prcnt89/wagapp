@@ -2672,8 +2672,29 @@ function exportStatsAsImage() {
     exportButton.style.display = 'none';
     closeButton.style.display = 'none';
 
-    // html2canvas Screenshot
-    html2canvas(statsModalContent).then(canvas => {
+    // Original-Stile sichern
+    const originalStyles = new Map();
+    const elementsToClean = [statsModalContent, ...statsModalContent.querySelectorAll('*')];
+
+    elementsToClean.forEach(el => {
+        const style = window.getComputedStyle(el);
+        originalStyles.set(el, {
+            boxShadow: el.style.boxShadow,
+            backgroundColor: el.style.backgroundColor,
+        });
+
+        // Schatten entfernen und Hintergrund ggf. setzen
+        el.style.boxShadow = 'none';
+        if (style.backgroundColor === 'rgba(0, 0, 0, 0)' || style.backgroundColor === 'transparent') {
+            el.style.backgroundColor = '#ffffff';
+        }
+    });
+
+    // Screenshot mit weißem Hintergrund
+    html2canvas(statsModalContent, {
+        backgroundColor: '#ffffff',
+        useCORS: true
+    }).then(canvas => {
         const image = canvas.toDataURL("image/png");
 
         // Aktuelles Datum und Uhrzeit für Dateiname
@@ -2691,6 +2712,12 @@ function exportStatsAsImage() {
         link.href = image;
         link.download = filename;
         link.click();
+
+        // Ursprüngliche Styles wiederherstellen
+        originalStyles.forEach((styles, el) => {
+            el.style.boxShadow = styles.boxShadow;
+            el.style.backgroundColor = styles.backgroundColor;
+        });
 
         // Button und X-Symbol wieder einblenden
         exportButton.style.display = 'block';
