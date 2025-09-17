@@ -1778,16 +1778,19 @@ function addHalftime() {
     closeButton.style.borderRadius = "5px";
     closeButton.style.fontFamily = "DINCond Medium";
 
-    // Puls-Effekte entfernen + Spielerwahl-Modal öffnen
+    // Puls-Effekte entfernen + automatisch anderen Spieler starten lassen
     closeButton.addEventListener("click", () => {
         document.body.removeChild(modalOverlay);
 
-        // Puls-Effekte bei beiden Spielern deaktivieren
         document.getElementById("player1Container")?.classList.remove("pulse-red", "pulse-blue");
         document.getElementById("player2Container")?.classList.remove("pulse-red", "pulse-blue");
 
-        // Spielerwahl-Modal öffnen
-        openSpielerwahlModal();
+        // Automatisch den anderen Spieler markieren
+        if (startingPlayer === "red") {
+            document.getElementById("player2Container")?.classList.add("pulse-blue");
+        } else if (startingPlayer === "blue") {
+            document.getElementById("player1Container")?.classList.add("pulse-red");
+        }
     });
 
     modalBox.appendChild(modalTitle);
@@ -2598,6 +2601,10 @@ function openSpielvorbereitung2Modal() {
 }
 
 // ---------- Modal 3 (Spielerwahl) ----------
+// globale Variable am Anfang des Skripts hinzufügen:
+let startingPlayer = null; // "red" oder "blue"
+
+// Spielerwahl beim Spielstart
 function openSpielerwahlModal() {
     const modalOverlay3 = document.createElement("div");
     modalOverlay3.classList.add("ht-modal-overlay");
@@ -2606,36 +2613,36 @@ function openSpielerwahlModal() {
     modalBox3.classList.add("ht-modal-box");
 
     const modalTitle3 = document.createElement("h2");
-    modalTitle3.textContent = "Welcher Spieler beginnt?";
+    modalTitle3.textContent = "Wer beginnt das Spiel?";
 
-    // Container für Buttons
-    const buttonContainer = document.createElement("div");
-    buttonContainer.style.display = "flex";
-    buttonContainer.style.justifyContent = "center";
-    buttonContainer.style.gap = "15px";
-    buttonContainer.style.marginTop = "20px";
-
-    // Rot-Button
     const btnRed = document.createElement("button");
-    btnRed.textContent = "Rot";
-    styleButton(btnRed);
-    btnRed.style.backgroundColor = "#ba3f1e"; // deine Rotfarbe
+    btnRed.textContent = "Spieler Rot";
+    btnRed.style.marginRight = "20px";
+    btnRed.style.backgroundColor = "#ba3f1e";
     btnRed.style.color = "white";
+    btnRed.style.padding = "10px 20px";
+    btnRed.style.border = "none";
+    btnRed.style.borderRadius = "5px";
+    btnRed.style.cursor = "pointer";
 
-    // Blau-Button
     const btnBlue = document.createElement("button");
-    btnBlue.textContent = "Blau";
-    styleButton(btnBlue);
-    btnBlue.style.backgroundColor = "#0e477c"; // deine Blaufarbe
+    btnBlue.textContent = "Spieler Blau";
+    btnBlue.style.backgroundColor = "#0e477c";
     btnBlue.style.color = "white";
+    btnBlue.style.padding = "10px 20px";
+    btnBlue.style.border = "none";
+    btnBlue.style.borderRadius = "5px";
+    btnBlue.style.cursor = "pointer";
 
-    // Events
     btnRed.addEventListener("click", () => {
         document.body.removeChild(modalOverlay3);
 
         const player1 = document.getElementById("player1Container");
         if (player1) {
             player1.classList.add("pulse-red");
+        }
+        if (startingPlayer === null) {
+            startingPlayer = "red"; // merken, dass Rot beginnt
         }
     });
 
@@ -2646,15 +2653,15 @@ function openSpielerwahlModal() {
         if (player2) {
             player2.classList.add("pulse-blue");
         }
+        if (startingPlayer === null) {
+            startingPlayer = "blue"; // merken, dass Blau beginnt
+        }
     });
 
-    buttonContainer.appendChild(btnRed);
-    buttonContainer.appendChild(btnBlue);
-
     modalBox3.appendChild(modalTitle3);
-    modalBox3.appendChild(buttonContainer);
+    modalBox3.appendChild(btnRed);
+    modalBox3.appendChild(btnBlue);
     modalOverlay3.appendChild(modalBox3);
-
     document.body.appendChild(modalOverlay3);
 }
 
