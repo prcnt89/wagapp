@@ -1008,6 +1008,10 @@ let player1GreenSquares = 0;
 let player2UnfilledSquares = 5;
 let player2GreenSquares = 0;
 
+let currentHalf = 1;  // 1 = erste Halbzeit, 2 = zweite Halbzeit
+let extraTimeFirstHalf = 0;
+let extraTimeSecondHalf = 0;
+
 // Funktion, um ein neues Spiel zu starten
 function startNewGame() {
     var confirmed = confirm("Neues Spiel starten?");
@@ -1117,43 +1121,30 @@ function addEmptyEntry(playerId) {
     playerScoreElement.parentElement.appendChild(entryElement);
 }
 
-// Funktion, um die Torzahl eines Spielers zu erhöhen
+// Tor
 function increaseScore(playerId) {
     const playerScoreElement = document.getElementById(playerId);
     let score = parseInt(playerScoreElement.textContent);
 
-    // Eingabeaufforderung für Spielminute und Torschützen
-    const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-    if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-    const scorerName = prompt("Torschützen eingeben (leer = 'Standardspieler'):");
-    const playerName = scorerName || "Standardspieler";
+    const formattedMinute = getFormattedMinute();
+    if (!formattedMinute) {
+        alert("Ungültige Eingabe. Tor wird nicht gezählt.");
+        return;
+    }
 
-    // Erstellen der neuen Einträge mit Ball-Symbol und Informationen
+    const scorerName = prompt("Torschützen eingeben (leer = 'Standardspieler'):") || "Standardspieler";
     const entryElement = document.createElement("div");
     entryElement.classList.add("entry");
-    entryElement.innerHTML = `<span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> ${minuteInput}' ${playerName}`;
+    entryElement.innerHTML = `<span class="fas fa-futbol" style="color: black; font-size: 16px;"></span> ${formattedMinute} ${scorerName}`;
     playerScoreElement.parentElement.appendChild(entryElement);
 
-    // Torzahl des Spielers um 1 erhöhen
     playerScoreElement.textContent = score + 1;
-
-    // Torsound abspielen
     playGoalSound();
-
-    // Punkt-Animation hinzufügen
     playerScoreElement.classList.add("score-animation");
+    setTimeout(() => playerScoreElement.classList.remove("score-animation"), 8000);
 
-    // Nach 8 Sekunden die Punkt-Animation entfernen
-    setTimeout(() => {
-    playerScoreElement.classList.remove("score-animation");
-    }, 8000);
-
-    // Einen leeren Eintrag für den anderen Spieler hinzufügen
     const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
     addEmptyEntry(otherPlayerId);
-    } else {
-    alert("Ungültige Eingabe. Tor wird nicht gezählt.");
-    }
 }
 
 // Funktion, um einen Listeneintrag zu löschen
@@ -1204,72 +1195,44 @@ function removeLastEntryAndDeductPoint(playerId) {
 let foulsPlayer1 = 0;  // Variable für Fouls von Spieler 1
 let foulsPlayer2 = 0;  // Variable für Fouls von Spieler 2
 
-// Funktion, um ein Foul für einen Spieler hinzuzufügen
+// Foul
 function addFoul(playerId) {
     const playerScoreElement = document.getElementById(playerId);
-
-    // Eingabeaufforderung für Spielminute
-    const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-    if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-        // Erstellen der neuen Einträge mit Foul und Informationen
-        const entryElement = document.createElement("div");
-        entryElement.classList.add("entry");
-        entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px; margin-right: -5px; margin-top: -6px;">sports</span> ${minuteInput}' Foul`;
-        playerScoreElement.parentElement.appendChild(entryElement);
-
-        // Einen leeren Eintrag für den anderen Spieler hinzufügen
-        const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
-        addEmptyEntry(otherPlayerId);
-
-        // Foul zählen und im Modal aktualisieren
-        if (playerId === "player1Score") {
-            foulsPlayer1++;  // Foul für Spieler 1
-        } else {
-            foulsPlayer2++;  // Foul für Spieler 2
-        }
-
-        // Foulzähler im Modal aktualisieren
-        document.getElementById('foulsPlayer1').textContent = foulsPlayer1;
-        document.getElementById('foulsPlayer2').textContent = foulsPlayer2;
-
-    } else {
+    const formattedMinute = getFormattedMinute();
+    if (!formattedMinute) {
         alert("Ungültige Eingabe. Das Foul wird nicht hinzugefügt.");
+        return;
     }
+
+    const entryElement = document.createElement("div");
+    entryElement.classList.add("entry");
+    entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px;">sports</span> ${formattedMinute} Foul`;
+    playerScoreElement.parentElement.appendChild(entryElement);
+
+    const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+    addEmptyEntry(otherPlayerId);
 }
 
 // Zählvariablen für gelbe Karten pro Spieler
 let yellowCardCountPlayer1 = 0;
 let yellowCardCountPlayer2 = 0;
 
-// Funktion, um eine gelbe Karte für einen Spieler hinzuzufügen
+// Gelbe Karte
 function addYellowCard(playerId) {
     const playerScoreElement = document.getElementById(playerId);
-
-    // Eingabeaufforderung für Spielminute
-    const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-    if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-        // Erstellen der neuen Einträge mit gelber Karte und Informationen
-        const entryElement = document.createElement("div");
-        entryElement.classList.add("entry");
-        entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' Gelbe Karte`;
-        playerScoreElement.parentElement.appendChild(entryElement);
-
-        // Erhöhen der gelben Karten-Zählung für den jeweiligen Spieler
-        if (playerId === "player1Score") {
-            yellowCardCountPlayer1++;
-        } else if (playerId === "player2Score") {
-            yellowCardCountPlayer2++;
-        }
-
-        // Einen leeren Eintrag für den anderen Spieler hinzufügen
-        const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
-        addEmptyEntry(otherPlayerId);
-        
-        // Optional: Ausgabe der aktuellen Anzahl der gelben Karten für den Spieler
-        console.log(`${playerId} hat jetzt ${playerId === "player1Score" ? yellowCardCountPlayer1 : yellowCardCountPlayer2} gelbe Karte(n).`);
-    } else {
+    const formattedMinute = getFormattedMinute();
+    if (!formattedMinute) {
         alert("Ungültige Eingabe. Die gelbe Karte wird nicht hinzugefügt.");
+        return;
     }
+
+    const entryElement = document.createElement("div");
+    entryElement.classList.add("entry");
+    entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px;"></span> ${formattedMinute} Gelbe Karte`;
+    playerScoreElement.parentElement.appendChild(entryElement);
+
+    const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+    addEmptyEntry(otherPlayerId);
 }
 
 // Eine Funktion erstellen, um einen leeren Eintrag für den anderen Spieler hinzuzufügen
@@ -1288,40 +1251,23 @@ function addEmptyEntry(playerId) {
 let redCardsPlayer1 = 0;
 let redCardsPlayer2 = 0;
 
-// Funktion, um eine rote Karte für einen Spieler hinzuzufügen
+// Rote Karte
 function addRedCard(playerId) {
     const playerScoreElement = document.getElementById(playerId);
-
-    // Eingabeaufforderung für Spielminute und Spielername
-    const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-    if (minuteInput && /^\d{2}$/.test(minuteInput)) {
-        const scorerName = prompt("Spielernamen eingeben (leer = 'Standardspieler'):");
-        const playerName = scorerName || "Standardspieler";
-
-        // Erstellen der neuen Einträge mit roter Karte und Informationen
-        const entryElement = document.createElement("div");
-        entryElement.classList.add("entry");
-        entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px; margin-top: -2px;"></span> ${minuteInput}' ${playerName}`;
-        playerScoreElement.parentElement.appendChild(entryElement);
-
-        // Einen leeren Eintrag für den anderen Spieler hinzufügen
-        const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
-        addEmptyEntry(otherPlayerId);
-
-        // Rote Karte zählen und im Modal aktualisieren
-        if (playerId === "player1Score") {
-            redCardsPlayer1++;  // Rote Karte für Spieler 1
-        } else {
-            redCardsPlayer2++;  // Rote Karte für Spieler 2
-        }
-
-        // Rote Karten im Modal aktualisieren
-        document.getElementById('redCardsPlayer1').textContent = redCardsPlayer1;
-        document.getElementById('redCardsPlayer2').textContent = redCardsPlayer2;
-
-    } else {
+    const formattedMinute = getFormattedMinute();
+    if (!formattedMinute) {
         alert("Ungültige Eingabe. Die rote Karte wird nicht hinzugefügt.");
+        return;
     }
+
+    const playerName = prompt("Spielernamen eingeben (leer = 'Standardspieler'):") || "Standardspieler";
+    const entryElement = document.createElement("div");
+    entryElement.classList.add("entry");
+    entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px;"></span> ${formattedMinute} ${playerName}`;
+    playerScoreElement.parentElement.appendChild(entryElement);
+
+    const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+    addEmptyEntry(otherPlayerId);
 }
 
 // Variablen zur Speicherung der Elfmeter-Statistiken
@@ -1332,49 +1278,22 @@ let penaltiesScoredPlayer2 = 0;
 let penaltiesMissedPlayer1 = 0;
 let penaltiesMissedPlayer2 = 0;
 
+// Elfmeter
 function addPenalty(playerId) {
     const playerScoreElement = document.getElementById(playerId);
-
-    // Abfrage, ob der Elfmeter verwandelt wurde
     const penaltyConverted = window.confirm("Elfmeter verwandelt?");
-    
-    // Eingabe der Spielminute
-    const minuteInput = prompt("Spielminute eingeben (2-stellige Zahl):");
-    if (!(minuteInput && /^\d{2}$/.test(minuteInput))) {
+    const formattedMinute = getFormattedMinute();
+    if (!formattedMinute) {
         alert("Ungültige Eingabe. Tor wird nicht gezählt.");
         return;
     }
 
-    // Festlegen des Icons für verwandelten oder verschossenen Elfmeter
     const iconSrc = penaltyConverted ? "graphics/elfmeter_black.svg" : "graphics/elfmeter_missed.svg";
-    
-    // Erstellen des Eintrags für den Elfmeter
     const entryElement = document.createElement("div");
     entryElement.classList.add("entry");
-    entryElement.innerHTML = `<img src="${iconSrc}" alt="" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${minuteInput}' Elfmeter`;
+    entryElement.innerHTML = `<img src="${iconSrc}" alt="" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${formattedMinute} Elfmeter`;
     playerScoreElement.parentElement.appendChild(entryElement);
 
-    // Statistiken aktualisieren
-    if (playerId === "player1Score") {
-        penaltiesPlayer1++;
-        if (penaltyConverted) {
-            penaltiesScoredPlayer1++;
-        } else {
-            penaltiesMissedPlayer1++;
-        }
-    } else {
-        penaltiesPlayer2++;
-        if (penaltyConverted) {
-            penaltiesScoredPlayer2++;
-        } else {
-            penaltiesMissedPlayer2++;
-        }
-    }
-
-    console.log(`Spieler 1: ${penaltiesPlayer1} Elfmeter (${penaltiesScoredPlayer1} getroffen, ${penaltiesMissedPlayer1} verschossen)`);
-    console.log(`Spieler 2: ${penaltiesPlayer2} Elfmeter (${penaltiesScoredPlayer2} getroffen, ${penaltiesMissedPlayer2} verschossen)`);
-
-    // Falls der Elfmeter verwandelt wurde, Torzahl aktualisieren und Animation/Sound ausführen
     if (penaltyConverted) {
         let score = parseInt(playerScoreElement.textContent);
         playerScoreElement.textContent = score + 1;
@@ -1383,12 +1302,8 @@ function addPenalty(playerId) {
         setTimeout(() => playerScoreElement.classList.remove("score-animation"), 8000);
     }
 
-    // Leeren Eintrag für den anderen Spieler hinzufügen
     const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
     addEmptyEntry(otherPlayerId);
-
-    // Statistiken im Modal aktualisieren
-    updatePenaltyStats();
 }
 
 // Funktion zur Aktualisierung der Elfmeter-Statistiken im Modal
@@ -1674,17 +1589,23 @@ function showPenaltyResultModal(playerNumber) {
     }
 }
 
-// Funktion, um die Nachspielzeit hinzuzufügen
+// Nachspielzeit-Eintrag
 function addExtraTime() {
     const extraTimeInput = prompt("Wie viel Nachspielzeit gibt es? (Zahl von 1 bis 15):");
-
     const isValidInput = /^\d{1,2}$/.test(extraTimeInput);
     const extraTimeValue = parseInt(extraTimeInput);
 
     if (isValidInput && extraTimeValue >= 1 && extraTimeValue <= 15) {
+        // Speichern der Nachspielzeit pro Halbzeit
+        if (currentHalf === 1) {
+            extraTimeFirstHalf = extraTimeValue;
+        } else if (currentHalf === 2) {
+            extraTimeSecondHalf = extraTimeValue;
+        }
+
+        // Erstellen des Listeneintrags
         const extraTimeElement = document.createElement("div");
-        extraTimeElement.classList.add("entry");
-        extraTimeElement.classList.add("extra-time-entry");
+        extraTimeElement.classList.add("entry", "extra-time-entry");
 
         const extraTimeContent = document.createElement("span");
         extraTimeContent.classList.add("extra-time-content");
@@ -1692,6 +1613,7 @@ function addExtraTime() {
 
         extraTimeElement.appendChild(extraTimeContent);
 
+        // Hinzufügen zu beiden Spielern
         const player1ScoreElement = document.getElementById("player1Score");
         const player2ScoreElement = document.getElementById("player2Score");
 
@@ -1700,8 +1622,9 @@ function addExtraTime() {
 
         player1EventsContainer.appendChild(extraTimeElement.cloneNode(true));
         player2EventsContainer.appendChild(extraTimeElement);
+
     } else {
-        alert("Ungültige Eingabe. Die Nachspielzeit wird nicht hinzugefügt.");
+        alert("Ungültige Eingabe.");
     }
 }
 
@@ -1711,11 +1634,12 @@ function isHalftimeEntryPresent() {
     return halftimeEntries.length > 0;
 }
 
-// Funktion, um die Halbzeit anzuzeigen
+// Halbzeit-Wechsel
 function addHalftime() {
-    if (isHalftimeEntryPresent()) {
-        alert("Die 1. Halbzeit wurde bereits abgeschlossen!"); 
-        return;
+    if (currentHalf === 1) {
+        currentHalf = 2;
+    } else {
+        alert("Die 2. Halbzeit läuft bereits.");
     }
     const halftimeElement = document.createElement("div");
     halftimeElement.classList.add("entry", "halftime-entry");
@@ -1798,6 +1722,39 @@ function addHalftime() {
     modalBox.appendChild(closeButton);
     modalOverlay.appendChild(modalBox);
     document.body.appendChild(modalOverlay);
+}
+
+// Hilfsfunktion für Zeitformatierung
+function getFormattedMinute() {
+    let maxMinute;
+
+    if (currentHalf === 1) {
+        maxMinute = extraTimeFirstHalf === 0 ? 45 : extraTimeFirstHalf;
+    } else if (currentHalf === 2) {
+        maxMinute = extraTimeSecondHalf === 0 ? 45 : extraTimeSecondHalf;
+    }
+
+    // Dynamische Prompt-Nachricht
+    let input = prompt(`Spielminute eingeben (0-${maxMinute}):`);
+    let minute = parseInt(input);
+
+    if (isNaN(minute)) return null;
+
+    if (currentHalf === 1) {
+        if (extraTimeFirstHalf === 0) {
+            if (minute >= 0 && minute <= 45) return `${minute}'`;
+        } else {
+            if (minute >= 1 && minute <= extraTimeFirstHalf) return `45+${minute}'`;
+        }
+    } else if (currentHalf === 2) {
+        if (extraTimeSecondHalf === 0) {
+            if (minute >= 0 && minute <= 45) return `${45 + minute}'`;
+        } else {
+            if (minute >= 1 && minute <= extraTimeSecondHalf) return `90+${minute}'`;
+        }
+    }
+
+    return null;
 }
 
 // Funktion, um den Endstand anzuzeigen
