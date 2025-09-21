@@ -1209,6 +1209,15 @@ function addFoul(playerId) {
     entryElement.innerHTML = `<span class="material-icons" style="color: black; font-size: 21px; position: relative; top: 5px; left: -2px;">sports</span> ${formattedMinute} Foul`;
     playerScoreElement.parentElement.appendChild(entryElement);
 
+    // --- Statistik updaten ---
+    if (playerId === "player1Score") {
+        foulsPlayer1++;
+        document.getElementById("foulsPlayer1").textContent = foulsPlayer1;
+    } else {
+        foulsPlayer2++;
+        document.getElementById("foulsPlayer2").textContent = foulsPlayer2;
+    }
+
     const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
     addEmptyEntry(otherPlayerId);
 }
@@ -1230,6 +1239,15 @@ function addYellowCard(playerId) {
     entryElement.classList.add("entry");
     entryElement.innerHTML = `<span class="yellow-rectangle-list" style="position: relative; top: 1px; left: 2px;"></span> ${formattedMinute} Gelbe Karte`;
     playerScoreElement.parentElement.appendChild(entryElement);
+
+    // --- Statistik updaten ---
+    if (playerId === "player1Score") {
+        yellowCardCountPlayer1++;
+        document.getElementById("yellowCardPlayer1").textContent = yellowCardCountPlayer1;
+    } else {
+        yellowCardCountPlayer2++;
+        document.getElementById("yellowCardPlayer2").textContent = yellowCardCountPlayer2;
+    }
 
     const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
     addEmptyEntry(otherPlayerId);
@@ -1265,6 +1283,15 @@ function addRedCard(playerId) {
     entryElement.classList.add("entry");
     entryElement.innerHTML = `<span class="red-rectangle-list" style="position: relative; top: 1px; left: 2px;"></span> ${formattedMinute} ${playerName}`;
     playerScoreElement.parentElement.appendChild(entryElement);
+
+    // --- Statistik updaten ---
+    if (playerId === "player1Score") {
+        redCardsPlayer1++;
+        document.getElementById("redCardsPlayer1").textContent = redCardsPlayer1;
+    } else {
+        redCardsPlayer2++;
+        document.getElementById("redCardsPlayer2").textContent = redCardsPlayer2;
+    }
 
     const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
     addEmptyEntry(otherPlayerId);
