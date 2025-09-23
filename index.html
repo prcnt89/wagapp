@@ -804,24 +804,28 @@ body {
 <!-- Menü Spieler 1 -->
 <div id="menu1" class="active" style="display: none;">
     <ul>
-    <span class="close" onclick="closeMenu1()">&times;</span>
-    <li onclick="confirmBallPossession(1);closeMenu1();">Ballbesitz zum Spielzugende</li>
-    <li onclick="passes(1);closeMenu1();">Pass</li>
-    <li onclick="dribblings(1);closeMenu1();">Dribbling</li>
-    <li onclick="tackles(1);closeMenu1();">Zweikampf</li>
-    <li onclick="starPlayer(1);closeMenu1();">Starspieler ausgespielt</li>
+        <span class="close" onclick="closeMenu1()">&times;</span>
+        <li onclick="confirmBallPossession(1);closeMenu1();">Ballbesitz zum Spielzugende</li>
+        <li onclick="passes(1);closeMenu1();">Pass</li>
+        <li onclick="dribblings(1);closeMenu1();">Dribbling</li>
+        <li onclick="tackles(1);closeMenu1();">Zweikampf</li>
+        <li onclick="starPlayer(1);closeMenu1();">Starspieler ausgespielt</li>
+        <!-- Neuer Menüpunkt -->
+        <li onclick="removeLastEntryAndDeductPoint('player1Score');closeMenu1();">Letzten Eintrag löschen</li>
     </ul>
 </div>
 
 <!-- Menü Spieler 2 -->
 <div id="menu2" class="active" style="display: none;">
     <ul>
-    <span class="close" onclick="closeMenu2()">&times;</span>
-    <li onclick="confirmBallPossession(2);closeMenu2();">Ballbesitz zum Spielzugende</li>
-    <li onclick="passes(2);closeMenu2();">Pass</li>
-    <li onclick="dribblings(2);closeMenu2();">Dribbling</li>
-    <li onclick="tackles(2);closeMenu2();">Zweikampf</li>
-    <li onclick="starPlayer(2);closeMenu2();">Starspieler ausgespielt</li>
+        <span class="close" onclick="closeMenu2()">&times;</span>
+        <li onclick="confirmBallPossession(2);closeMenu2();">Ballbesitz zum Spielzugende</li>
+        <li onclick="passes(2);closeMenu2();">Pass</li>
+        <li onclick="dribblings(2);closeMenu2();">Dribbling</li>
+        <li onclick="tackles(2);closeMenu2();">Zweikampf</li>
+        <li onclick="starPlayer(2);closeMenu2();">Starspieler ausgespielt</li>
+        <!-- Neuer Menüpunkt -->
+        <li onclick="removeLastEntryAndDeductPoint('player2Score');closeMenu2();">Letzten Eintrag löschen</li>
     </ul>
 </div>
 
@@ -1150,45 +1154,131 @@ function increaseScore(playerId) {
 // Funktion, um einen Listeneintrag zu löschen
 function removeLastEntryAndDeductPoint(playerId) {
     const playerScoreElement = document.getElementById(playerId);
-    const entryElements = playerScoreElement.parentElement.getElementsByClassName("entry");
+    if (!playerScoreElement) return;
 
-    if (entryElements.length > 0) {
-        const lastEntry = entryElements[entryElements.length - 1];
-        const futbolIcon = lastEntry.querySelector(".fas.fa-futbol");
-        const elfmeterIcon = lastEntry.querySelector("img[src='graphics/elfmeter_black.svg']");
+    const playerContainer = playerScoreElement.parentElement;
+    const entries = Array.from(playerContainer.getElementsByClassName("entry"));
 
-        if (futbolIcon || elfmeterIcon) {
-            // Remove 1 point if the futbol or elfmeter icon is present
-            let score = parseInt(playerScoreElement.textContent);
-            if (score > 0) {
-                playerScoreElement.textContent = score - 1;
+    if (entries.length === 0) {
+        alert("Keine Einträge vorhanden.");
+        return;
+    }
+
+    // Helper: Prüft, ob ein Eintrag nur ein leerer Platzhalter ist
+    function isEmptyEntry(el) {
+        if (!el) return true;
+        const html = (el.innerHTML || "").trim();
+        const text = (el.textContent || "").trim();
+        // &nbsp; oder komplett leer behandeln wir als "leer"
+        if (html === "&nbsp;" || text === "" || html === "") return true;
+        return false;
+    }
+
+    // Finde den letzten nicht-leeren Eintrag (rückwärts)
+    let removeIndex = -1;
+    for (let i = entries.length - 1; i >= 0; i--) {
+        if (!isEmptyEntry(entries[i])) {
+            removeIndex = i;
+            break;
+        }
+    }
+
+    if (removeIndex === -1) {
+        alert("Kein nicht-leerer Eintrag gefunden.");
+        return;
+    }
+
+    const lastEntry = entries[removeIndex];
+
+    // Erkennung des Eintragstyps
+    const hasGoalIcon = lastEntry.querySelector(".fas.fa-futbol") !== null;
+    const img = lastEntry.querySelector("img");
+    const imgSrc = img ? (img.getAttribute("src") || "") : "";
+    const hasPenaltyConverted = imgSrc.includes("elfmeter_black");
+    const hasPenaltyMissed = imgSrc.includes("elfmeter_missed");
+    const hasYellow = lastEntry.querySelector(".yellow-rectangle-list") !== null || lastEntry.textContent.includes("Gelbe Karte");
+    const hasRed = lastEntry.querySelector(".red-rectangle-list") !== null || lastEntry.textContent.includes("Rote Karte");
+    const hasFoul = lastEntry.textContent.includes("Foul");
+
+    // Punkte / Statistiken zurücksetzen, falls nötig
+    try {
+        // Tore (auch Elfmetertor)
+        if (hasGoalIcon || hasPenaltyConverted) {
+            const score = parseInt(playerScoreElement.textContent) || 0;
+            if (score > 0) playerScoreElement.textContent = score - 1;
+        }
+
+        // Fouls
+        if (hasFoul) {
+            if (playerId === "player1Score") {
+                foulsPlayer1 = Math.max(0, (typeof foulsPlayer1 !== "undefined" ? foulsPlayer1 : 0) - 1);
+                const el = document.getElementById("foulsPlayer1");
+                if (el) el.textContent = foulsPlayer1;
+            } else {
+                foulsPlayer2 = Math.max(0, (typeof foulsPlayer2 !== "undefined" ? foulsPlayer2 : 0) - 1);
+                const el = document.getElementById("foulsPlayer2");
+                if (el) el.textContent = foulsPlayer2;
             }
         }
 
-        // Prüfe, ob der andere Spieler an gleicher Position einen nicht-leeren Eintrag hat
-        const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
-        const otherPlayerScoreElement = document.getElementById(otherPlayerId);
-        const otherEntryElements = otherPlayerScoreElement.parentElement.getElementsByClassName("entry");
-
-        if (otherEntryElements.length > 0) {
-            const lastOtherEntry = otherEntryElements[otherEntryElements.length - 1];
-            if (lastOtherEntry.textContent.trim() !== "") {
-                // Eintrag mit Text vorhanden, zeige einen Fehler an
-                alert("Dieser Eintrag kann nicht gelöscht werden.");
-                return; // Beende die Funktion ohne weiteren Aktionen
+        // Gelbe Karte
+        if (hasYellow) {
+            if (playerId === "player1Score") {
+                yellowCardCountPlayer1 = Math.max(0, (typeof yellowCardCountPlayer1 !== "undefined" ? yellowCardCountPlayer1 : 0) - 1);
+                const el = document.getElementById("yellowCardPlayer1");
+                if (el) el.textContent = yellowCardCountPlayer1;
+            } else {
+                yellowCardCountPlayer2 = Math.max(0, (typeof yellowCardCountPlayer2 !== "undefined" ? yellowCardCountPlayer2 : 0) - 1);
+                const el = document.getElementById("yellowCardPlayer2");
+                if (el) el.textContent = yellowCardCountPlayer2;
             }
         }
 
-        // Den letzten Eintrag entfernen
-        lastEntry.remove();
-
-        // Entferne die leere Zeile des anderen Spielers
-        if (otherEntryElements.length > 0) {
-            const lastOtherEntry = otherEntryElements[otherEntryElements.length - 1];
-            if (lastOtherEntry.textContent.trim() === "") {
-                lastOtherEntry.remove();
+        // Rote Karte
+        if (hasRed) {
+            if (playerId === "player1Score") {
+                redCardsPlayer1 = Math.max(0, (typeof redCardsPlayer1 !== "undefined" ? redCardsPlayer1 : 0) - 1);
+                const el = document.getElementById("redCardsPlayer1");
+                if (el) el.textContent = redCardsPlayer1;
+            } else {
+                redCardsPlayer2 = Math.max(0, (typeof redCardsPlayer2 !== "undefined" ? redCardsPlayer2 : 0) - 1);
+                const el = document.getElementById("redCardsPlayer2");
+                if (el) el.textContent = redCardsPlayer2;
             }
         }
+
+        // Hinweis: In deinem aktuellen addPenalty() werden die penalty-Zähler (penaltiesPlayerX/penaltiesScoredX) nicht erhöht.
+        // Deshalb passe ich hier nur die sichtbaren Punkte an (score), nicht die separaten penalty-Zähler.
+    } catch (e) {
+        // Falls eine Variable fehlt — weiter machen, statt zu brechen
+        console.warn("Beim Zurücksetzen der Statistiken ist ein Fehler aufgetreten:", e);
+    }
+
+    // Eintrag entfernen
+    lastEntry.remove();
+
+    // Entferne die korrespondierende leere Zeile beim anderen Spieler, falls vorhanden
+    const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
+    const otherPlayerScoreElement = document.getElementById(otherPlayerId);
+    if (otherPlayerScoreElement) {
+        const otherContainer = otherPlayerScoreElement.parentElement;
+        const otherEntries = Array.from(otherContainer.getElementsByClassName("entry"));
+        if (otherEntries.length > removeIndex) {
+            const corresponding = otherEntries[removeIndex];
+            if (isEmptyEntry(corresponding)) {
+                corresponding.remove();
+            } // falls dort ein echter Eintrag steht, lassen wir ihn stehen (keine automatische Löschung)
+        }
+    }
+
+    // Aktualisiere ggf. das Statistik-Modal, damit Zahlen sofort sichtbar sind
+    try {
+        document.getElementById('player1ScoreModal').textContent = document.getElementById('player1Score').textContent;
+        document.getElementById('player2ScoreModal').textContent = document.getElementById('player2Score').textContent;
+        if (typeof updateXGEntriesInStatsModal === "function") updateXGEntriesInStatsModal();
+        if (typeof updatePenaltyStats === "function") updatePenaltyStats();
+    } catch (e) {
+        /* ignore */
     }
 }
 
