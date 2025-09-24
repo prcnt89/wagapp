@@ -810,8 +810,6 @@ body {
         <li onclick="dribblings(1);closeMenu1();">Dribbling</li>
         <li onclick="tackles(1);closeMenu1();">Zweikampf</li>
         <li onclick="starPlayer(1);closeMenu1();">Starspieler ausgespielt</li>
-        <!-- Neuer Menüpunkt -->
-        <li onclick="removeLastEntryAndDeductPoint('player1Score');closeMenu1();">Letzten Eintrag löschen</li>
     </ul>
 </div>
 
@@ -824,8 +822,6 @@ body {
         <li onclick="dribblings(2);closeMenu2();">Dribbling</li>
         <li onclick="tackles(2);closeMenu2();">Zweikampf</li>
         <li onclick="starPlayer(2);closeMenu2();">Starspieler ausgespielt</li>
-        <!-- Neuer Menüpunkt -->
-        <li onclick="removeLastEntryAndDeductPoint('player2Score');closeMenu2();">Letzten Eintrag löschen</li>
     </ul>
 </div>
 
@@ -1247,8 +1243,6 @@ function removeLastEntryAndDeductPoint(playerId) {
             }
         }
 
-        // Hinweis: In deinem aktuellen addPenalty() werden die penalty-Zähler (penaltiesPlayerX/penaltiesScoredX) nicht erhöht.
-        // Deshalb passe ich hier nur die sichtbaren Punkte an (score), nicht die separaten penalty-Zähler.
     } catch (e) {
         // Falls eine Variable fehlt — weiter machen, statt zu brechen
         console.warn("Beim Zurücksetzen der Statistiken ist ein Fehler aufgetreten:", e);
@@ -1405,19 +1399,42 @@ function addPenalty(playerId) {
         return;
     }
 
+    // --- Eintrag im Spielprotokoll ---
     const iconSrc = penaltyConverted ? "graphics/elfmeter_black.svg" : "graphics/elfmeter_missed.svg";
     const entryElement = document.createElement("div");
     entryElement.classList.add("entry");
     entryElement.innerHTML = `<img src="${iconSrc}" alt="" style="width: 16px; height: 16px; position: relative; top: 3px;"> ${formattedMinute} Elfmeter`;
     playerScoreElement.parentElement.appendChild(entryElement);
 
-    if (penaltyConverted) {
-        let score = parseInt(playerScoreElement.textContent);
-        playerScoreElement.textContent = score + 1;
-        playGoalSound();
-        playerScoreElement.classList.add("score-animation");
-        setTimeout(() => playerScoreElement.classList.remove("score-animation"), 8000);
+    // --- Statistik updaten ---
+    if (playerId === "player1Score") {
+        penaltiesPlayer1++; // insgesamt
+        if (penaltyConverted) {
+            penaltiesScoredPlayer1++;
+            let score = parseInt(playerScoreElement.textContent);
+            playerScoreElement.textContent = score + 1;
+            playGoalSound();
+            playerScoreElement.classList.add("score-animation");
+            setTimeout(() => playerScoreElement.classList.remove("score-animation"), 8000);
+        } else {
+            penaltiesMissedPlayer1++;
+        }
+    } else {
+        penaltiesPlayer2++;
+        if (penaltyConverted) {
+            penaltiesScoredPlayer2++;
+            let score = parseInt(playerScoreElement.textContent);
+            playerScoreElement.textContent = score + 1;
+            playGoalSound();
+            playerScoreElement.classList.add("score-animation");
+            setTimeout(() => playerScoreElement.classList.remove("score-animation"), 8000);
+        } else {
+            penaltiesMissedPlayer2++;
+        }
     }
+
+    // --- Statistik im Modal aktualisieren ---
+    updatePenaltyStats();
 
     const otherPlayerId = playerId === "player1Score" ? "player2Score" : "player1Score";
     addEmptyEntry(otherPlayerId);
